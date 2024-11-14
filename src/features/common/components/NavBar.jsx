@@ -1,11 +1,9 @@
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
-import { logout, selectCurrentToken } from "../../auth/slice/authSlice"
+import { logout, selectCurrentStatus } from "../../auth/slice/authSlice"
 
 function NavBar() {
-  const token = useSelector(selectCurrentToken)
-  console.log(token);
-
+  const authStatus = useSelector(selectCurrentStatus);
   const dispatch = useDispatch();
   return (
     <div className="fixed z-10 w-full bg-black h-[10%] border-b border-white flex justify-between items-center px-2">
@@ -17,7 +15,7 @@ function NavBar() {
         </div>
         <input type="text" placeholder="Search" className="text-white bg-transparent outline-none w-[80%]" />
       </div>
-      {token === null ? (
+      {authStatus === false ? (
          <div className="h-[60%] flex select-none">
          <Link to={"/login"}>
        <div className="w-20 h-[90%] hover:bg-[#3432326b] text-white flex flex-col text-center justify-center">Log in</div>
@@ -26,7 +24,7 @@ function NavBar() {
        <div className="w-20 h-[90%] bg-[#ae7aff] text-black font-bold shadow-[5px_5px_#4f4e4e] active:shadow-none active:translate-x-1 active:translate-y-1 flex flex-col text-center justify-center ">Sign up</div>
        </Link>
      </div>
-      ):  <div className="h-[60%] flex select-none">
+      ) :  <div className="h-[60%] flex select-none">
     <div
     className="w-20 h-[90%] bg-[#ae7aff] text-black font-bold shadow-[5px_5px_#4f4e4e] active:shadow-none active:translate-x-1 active:translate-y-1 flex flex-col text-center justify-center "
     onClick={() => dispatch(logout())}

@@ -15,24 +15,13 @@ export const registerUser = createAsyncThunk(
       formData.append("userName", userName)
       formData.append("email", email)
       formData.append("password", password)
-      formData.append("avatar", avatarBlob)
-      formData.append("coverImage", coverBlob)
-      // const formData = createFormData({
-      //   fullName,
-      //   userName,
-      //   email,
-      //   password,
-      //   avatar: avatarBlob,
-      //   coverImage: coverBlob,
-      // });
-      console.log(userName);
-      
-      console.log(Object.fromEntries(formData.entries()));
-
+      formData.append("avatar", avatarBlob, 'default-avatar.png')
+      formData.append("coverImage", coverBlob, 'default-cover.png')
       const response = await apiMultipartClient.post(
         "/users/register",
         formData
       );
+      toast.success("Register successfully")
       return response.data;
     } catch (error) {
       console.log(error);
@@ -89,14 +78,15 @@ export const updateAccountDetails = createAsyncThunk(
 );
 export const getCurrentUser = createAsyncThunk(
   "currentUser",
-  async ({ rejectWithValue }) => {
+  async () => {
     try {
-      const response = await apiClient.post("/users/current-user", {});
+      const response = await apiClient.get("/users/current-user");
       return response.data;
     } catch (error) {
+      console.log(error);
       const errorMessage =
         error.response?.data?.message || "failed to get current user";
-      return rejectWithValue(errorMessage);
+      return errorMessage
     }
   }
 );
@@ -158,38 +148,24 @@ export const coverImageUpdate = createAsyncThunk(
 
 const initialState = {
   user: null,
-  token: null,
-  // idle, loading, succeeded, failed
-  status: "idle",
+  status: false,
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    resetStatus: (state) => {
-      state.status = "idle";
-    },
     logout: (state) => {
       state.user = null;
       state.token = null;
-      state.status = "idle";
+      state.status = false;
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(registerUser.fulfilled, (state, action) => {
-      state.user = action.payload;
-      toast.success("Register successfully")
-    });
     builder.addCase(loginUser.fulfilled, (state, action) => {
-      console.log(action.payload);
       state.user = action.payload.data.user;
-      state.token = action.payload.data.accessToken;
+      state.status = true;
       toast.success("login successfully")
-    });
-    builder.addCase(RefreshAccessToken.fulfilled, (state, action) => {
-      const { accessToken } = action.payload;
-      state.token = accessToken;
     });
     builder.addCase(updateAccountDetails.fulfilled, (state, action) => {
       state.user = action.payload;
@@ -201,31 +177,9 @@ const authSlice = createSlice({
       state.user = action.payload;
     });
     builder.addCase(getCurrentUser.fulfilled, (state, action) => {
-      state.user = action.payload;
+      state.user = action.payload.data;
+      state.status = true;
     });
-    builder
-      .addMatcher(
-        (action) => action.type.endsWith("/pending"),
-        (state) => {
-          state.status = "loading";
-        }
-      )
-      .addMatcher(
-        (action) => action.type.endsWith("/rejected"),
-        (state, action) => {
-          state.status = "failed";
-          console.log(action);
-
-          toast.error(action.payload || "Request failed");
-        }
-      )
-      .addMatcher(
-        (action) => action.type.endsWith("/fulfilled"),
-        (state, action) => {
-          state.status = "succeeded";
-          toast.success(action.payload || "Request succeeded");
-        }
-      );
   },
 });
 
@@ -233,5 +187,4 @@ export const { resetStatus, logout } = authSlice.actions;
 export default authSlice.reducer;
 
 export const selectCurrentUser = (state) => state.auth.user
-export const selectCurrentToken = (state) => state.auth.token
 export const selectCurrentStatus = (state) => state.auth.status

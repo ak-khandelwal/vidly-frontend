@@ -1,9 +1,6 @@
 import axios from "axios";
-// const BASE_URL = import.meta.env.VITE_BASE_URL_LOCAL_HOST
-const BASE_URL =  import.meta.env.VITE_BASE_URL_PRODUCTION
-
-console.log("BASE_URL:", BASE_URL);
-console.log("POST request to:", `${BASE_URL}/users/register`);
+const BASE_URL = import.meta.env.VITE_BASE_URL_LOCAL_HOST
+// const BASE_URL =  import.meta.env.VITE_BASE_URL_PRODUCTION
 
 const apiClient = axios.create({
   baseURL: BASE_URL,

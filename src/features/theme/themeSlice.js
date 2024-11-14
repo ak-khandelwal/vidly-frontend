@@ -9,7 +9,6 @@ export const themeSlice = createSlice({
     initialState,
     reducers: {
         ThemeSwitcher: (state) => {
-            console.log(state.themes);
             if (state.themes === 'light') {
                 state.themes = 'dark'
             } else {

@@ -10,7 +10,6 @@ function FileUploader({ setImage, setBulb, image, width, children}) {
           className="absolute inset-0 input-field w-full h-full opacity-0 cursor-pointer"
           onChange={({ target: { files } }) => {
             files[0] && setBulb(files[0]);
-            console.log(files);
 
             if (files) {
               setImage(URL.createObjectURL(files[0]));

@@ -19,8 +19,6 @@ function FormThree({setFormTurn, setCoverImageCredential}) {
   const handleSkip = async () => {
     const coverResponse = await fetch(defaultCover);
     const coverBlob = await coverResponse.blob();
-    console.log("coverBlob", coverBlob);
-
     setLoading(true);
     setCoverImage(coverBlob);
     setCoverImageCredential(() => coverBlob)

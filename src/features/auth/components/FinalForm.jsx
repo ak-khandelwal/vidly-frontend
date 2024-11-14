@@ -19,7 +19,6 @@ function FinalForm({
     coverImageCredential !== null
       ? URL.createObjectURL(coverImageCredential)
       : "src/assets/auth/cover.svg";
-
   const handleEdit = () => {
     setFormTurn(0);
   };

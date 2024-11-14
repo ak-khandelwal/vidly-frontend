@@ -19,7 +19,6 @@ function FormTwo({setFormTurn, setAvatarCredential}) {
   const handleSkip = async () => {
     const avatarResponse = await fetch(defaultAvatar);
     const avatarBlob = await avatarResponse.blob();
-
     setLoading(true);
     setAvatarCredential(() => avatarBlob)
     setFormTurn(() => 2)

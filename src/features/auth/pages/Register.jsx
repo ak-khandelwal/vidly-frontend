@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { ToastContainer } from "react-toastify";
 import GradientBg from "../../auth/components/GradientBg";
-import { registerUser } from "../../auth/slice/authSlice";
+import { loginUser, registerUser } from "../../auth/slice/authSlice";
 import { FormOne, FormTwo, FormThree,FinalForm} from "../components/index";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
@@ -22,17 +22,27 @@ function Register() {
 
   const handleSubmit = async () => {
     setLoading(true);
-    dispatch(
+    const registerResult  = await dispatch(
       registerUser({
         ...userCredential,
         avatarBlob: avatarCredential,
         coverBlob: coverImageCredential,
       })
-    ).then((req) => {
-      if(req.payload.success){
-        navigate("/login")
+    )
+    if (registerResult?.type === "registerUser/fulfilled") {
+      const userName = userCredential.userName;
+      const email = userCredential.email
+      const password = userCredential.password;
+      const loginResult = await dispatch(
+          loginUser({ userName,email, password })
+      );
+
+      if (loginResult?.type === "loginUser/fulfilled") {
+          navigate("/terms&conditions");
+      } else {
+          navigate("/login");
       }
-    })
+  }
     setLoading(false);
   };
   const [buttonDisabled, setButtonDisabled] = useState(true);
