@@ -4,7 +4,6 @@ import './index.css'
 import { Provider } from 'react-redux';
 import { store } from './app/store';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
-import BaseLayout from "./features/common/components/BaseLayout";
 import Login from "./features/auth/pages/Login";
 import Register from "./features/auth/pages/Register";
 import TermsAndConditions from "./features/LegalAndPolicy/components/TermsAndConditions";
@@ -21,10 +20,14 @@ import {
   Videos,
 } from "./features/channel/index";
 import AuthLayout from './features/auth/components/AuthLayout';
+import App from './App';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <BaseLayout />,
+    element: <App />,
     children: [
       {
         path: "/Setting",
@@ -72,6 +75,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
     <RouterProvider router={router}/>
+      <ToastContainer position="top-right" />
     </Provider>
   </StrictMode>,
 )

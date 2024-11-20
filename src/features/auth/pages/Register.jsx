@@ -1,11 +1,10 @@
 import { useDispatch } from "react-redux";
 import { useState } from "react";
-import { ToastContainer } from "react-toastify";
 import GradientBg from "../../auth/components/GradientBg";
 import { loginUser, registerUser } from "../../auth/slice/authSlice";
 import { FormOne, FormTwo, FormThree,FinalForm} from "../components/index";
-import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+
 function Register() {
   const dispatch = useDispatch();
   const navigate = useNavigate()
@@ -38,7 +37,7 @@ function Register() {
       );
 
       if (loginResult?.type === "loginUser/fulfilled") {
-          navigate("/terms&conditions");
+          // navigate("/terms&conditions");
       } else {
           navigate("/login");
       }
@@ -49,7 +48,6 @@ function Register() {
 
   return (
     <div className="text-white h-screen w-full flex flex-col gap-10 justify-center items-center p-6">
-      <ToastContainer position="top-right" />
       <Header formTurn={formTurn} />
       {formTurn === 0 && (
         <FormOne

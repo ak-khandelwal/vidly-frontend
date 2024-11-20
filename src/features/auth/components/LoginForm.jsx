@@ -3,6 +3,7 @@ import GradientBg from './GradientBg'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser, selectCurrentStatus } from '../slice/authSlice';
+import { toast } from 'react-toastify';
 
 function LoginForm() {
   const dispatch = useDispatch();
@@ -40,7 +41,7 @@ function LoginForm() {
       <div className="relative h-[80%] w-full">
         <GradientBg style1={"w-[100%]"} style3={"flex m-1 flex-col justify-between p-8 px-8 "} >
             <Input
-            lable={"userName"}
+            lable={"user name"}
             value={user.userName}
             onChange={(e) => setUser({ ...user, userName: e.target.value })} />
             <Input
