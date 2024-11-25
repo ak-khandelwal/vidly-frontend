@@ -1,17 +1,15 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { logoutUser, selectCurrentStatus } from "../../auth/slice/authSlice";
 import { IoSearch } from "react-icons/io5";
 
 function NavBar() {
   const authStatus = useSelector(selectCurrentStatus);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const handleLogout = async () => {
     try {
       const res = await dispatch(logoutUser()).unwrap(); // Unwrap the result to handle success or errors.
       console.log(res);
-      navigate("/"); // Navigate to the homepage on successful logout.
     } catch (error) {
       console.error("Logout failed:", error);
     }
