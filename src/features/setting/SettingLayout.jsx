@@ -25,6 +25,7 @@ function SettingLayout() {
       const res = await dispatch(avatarUpdate({avatar}));
       if(res.type === "avatarUpdate/fulfilled"){
         setLoading(false);
+        setImage(null)
         cancelPopUp();
       }else{
         setLoading(false);
@@ -37,6 +38,7 @@ function SettingLayout() {
       const res = await dispatch(coverImageUpdate({coverImage:cover}));
       if(res.type === "CoverImageUpdate/fulfilled"){
         cancelPopUp();
+        setImage(null);
         setLoading(false);
       }else{
         setLoading(false);
@@ -78,7 +80,7 @@ function SettingLayout() {
             </div>
           </div>
           <Link
-            to="/Channel"
+            to={`/Channel/${user?.userName}`}
             className="h-full flex justify-between items-center"
           >
             <div className="w-32 h-[40%] bg-[#ae7aff] text-black font-bold shadow-[5px_5px_#4f4e4e] active:shadow-none active:translate-x-1 active:translate-y-1 flex flex-col text-center justify-center mr-9 select-none">
