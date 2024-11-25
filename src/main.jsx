@@ -43,7 +43,7 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: "/Channel",
+        path: "/Channel/:userName",
         element: (
           <AuthLayout authentication>
             <ChannelLayout />

@@ -172,10 +172,13 @@ const authSlice = createSlice({
       state.user = action.payload.data;
       state.status = true;
     });
+    builder.addCase(getCurrentUser.rejected, (state) => {
+      state.user = null;
+      state.status = false;
+    });
   },
 });
 
-export const { resetStatus, logout } = authSlice.actions;
 export default authSlice.reducer;
 
 export const selectCurrentUser = (state) => state.auth.user;
