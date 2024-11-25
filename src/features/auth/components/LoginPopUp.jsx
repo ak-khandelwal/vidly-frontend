@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser, selectCurrentStatus } from '../slice/authSlice';
 
-function LoginForm() {
+function LoginPopUp() {
   const dispatch = useDispatch();
   const navigate = useNavigate()
   const state = useSelector(selectCurrentStatus);
@@ -18,11 +18,6 @@ function LoginForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     dispatch(loginUser(user))
-    .then((req) => {
-      if(req.payload.success){
-        navigate("/")
-      }
-    })
   }
 
   useEffect(() => {
@@ -36,7 +31,9 @@ function LoginForm() {
   }, [user]);
 
   return (
-    <div className='h-[90%] w-[35%] flex flex-col gap-6 '>
+    <div className='h-[100%] w-[100%] flex justify-center items-center '>
+      <div className="h-[80%] w-[40%] mt-20">
+
       <div className="relative h-[80%] w-full">
         <GradientBg style1={"w-[100%]"} style3={"flex m-1 flex-col justify-between p-8 px-8 "} >
             <Input
@@ -63,6 +60,7 @@ function LoginForm() {
         </GradientBg>
       </div>
       <Footer handleSubmit={handleSubmit} buttonDisabled={buttonDisabled} loading={state.status === "loading" ? true: false} />
+          </div>
     </div>
   )
 }
@@ -83,7 +81,7 @@ function Input({lable,value,onChange}){
 
 function Footer({handleSubmit,buttonDisabled,loding}) {
   return (
-    <div className="h-[10%] w-full flex gap-4 ">
+    <div className="h-[10%] w-full flex ">
       <GradientBg  style1={"w-[70%]"} style3={"flex text-xl font-bold justify-center items-center m-[2px]"} >
       {"Login An Account"}
       </GradientBg>
@@ -104,4 +102,4 @@ function Footer({handleSubmit,buttonDisabled,loding}) {
 
 }
 
-export default LoginForm
+export default LoginPopUp

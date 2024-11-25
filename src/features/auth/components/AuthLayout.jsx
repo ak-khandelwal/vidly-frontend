@@ -1,23 +1,17 @@
-import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { selectCurrentStatus } from "../slice/authSlice";
+import LoginPopUp from "./LoginPopUp";
 
-function AuthLayout({children , authentication = true}) {
-  const navigate = useNavigate();
-  const [loader, setLoader] = useState(true);
+function AuthLayout({ children, authentication = true }) {
   const authStatus = useSelector(selectCurrentStatus);
 
-  useEffect(() => {
-    if (authentication && authStatus !== authentication) {
-      navigate("/login");
-    } else if (!authentication && authStatus !== authentication) {
-      navigate("/");
-    }
-    setLoader(false);
-  }, [authStatus, authentication, navigate]);
+  // If authentication is required but the user is not authenticated, show the login popup
+  if (authentication && !authStatus) {
+    return <LoginPopUp />;
+  }
 
-  return loader ? <h1>Loading...</h1> : <>{children}</>;
+  // If authentication is not required, render children unconditionally
+  return <>{children}</>;
 }
 
 export default AuthLayout;
