@@ -12,17 +12,15 @@ import {
   ChangePassword,
   SettingLayout,
 } from "./features/setting";
-import {
-  ChannelLayout,
-  PlayList,
-  Subscribed,
-  Tweets,
-  Videos,
-} from "./features/channel/index";
+import ChannelLayout from "./features/channel/ChannelLayout"
 import AuthLayout from './features/auth/components/AuthLayout';
 import App from './App';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ChannelVideos from './features/videos/pages/ChannelVideos';
+import ChannelPlaylist from './features/playList/pages/ChannelPlaylist';
+import ChannelTweets from './features/tweets/pages/ChannelTweets';
+import ChannelSubscribers from './features/subscribers/pages/ChannelSubscribers';
 
 const router = createBrowserRouter([
   {
@@ -51,10 +49,10 @@ const router = createBrowserRouter([
         ),
         children: [
           { index: true, element: <Navigate to="Videos" replace /> },
-          { path: "Videos", element: <Videos /> },
-          { path: "PlayList", element: <PlayList /> },
-          { path: "Tweets", element: <Tweets /> },
-          { path: "Subscribed", element: <Subscribed /> },
+          { path: "Videos", element: <ChannelVideos /> },
+          { path: "PlayList", element: <ChannelPlaylist /> },
+          { path: "Tweets", element: <ChannelTweets /> },
+          { path: "Subscribed", element: <ChannelSubscribers /> },
         ],
       },
     ],

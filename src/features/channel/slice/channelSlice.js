@@ -6,12 +6,9 @@ export const getChannel = createAsyncThunk(
   async (userName) => {
     try {
       const response = await apiClient.get("users/channel/"+userName);
-      console.log(response);
-
       return response.data.data;
     } catch (error) {
       console.log(error);
-
       toast.error("Failed to get channel");
       throw error?.message || error;
     }
@@ -34,7 +31,6 @@ const channel = createSlice({
     builder.addCase(getChannel.fulfilled, (state,action) =>{
       state.channel = action.payload;
       state.loading = false;
-      console.log(state);
     })
   }
 })

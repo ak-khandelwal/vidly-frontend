@@ -38,7 +38,7 @@ function ChannelLayout() {
     if (newActive[0] == 1) navigate("Videos");
     if (newActive[1] == 1) navigate("Playlist");
     if (newActive[2] == 1) navigate("Tweets");
-    if (newActive[3] == 1 && sameUser) navigate("Subscribed");
+    if (newActive[3] == 1) navigate("Subscribed");
   };
 
   if (error) {
@@ -115,7 +115,7 @@ function ChannelLayout() {
           </div>
         </div>
       </div>
-      <div className="h-[55%] text-white">
+      <div className="text-white">
         <Outlet />
       </div>
     </div>
