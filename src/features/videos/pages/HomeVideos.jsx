@@ -1,31 +1,21 @@
+
 import { useEffect, useRef, useState } from "react";
 import VideoList from "../components/VideoList";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  clearVideoState,
   getUserVideos,
   selectCurrentVideos,
   selectCurrentHasMore,
 } from "../slice/videoSlice";
-import { selectCurrentChannel } from "../../channel/slice/channelSlice";
 
-function ChannelVideos() {
+function HomeVideos() {
   const dispatch = useDispatch();
   const videos = useSelector(selectCurrentVideos);
   const hasMore = useSelector(selectCurrentHasMore);
-  const user = useSelector(selectCurrentChannel);
 
   const [page, setPage] = useState(1); // Tracks current page
   const [loading, setLoading] = useState(false)
   const elementRef = useRef(null);
-
-  // Clear video state on component mount or when the user changes
-  useEffect(() => {
-    if (user) {
-      dispatch(clearVideoState());
-      setPage(1); // Reset pagination
-    }
-  }, [dispatch, user]);
 
   // Fetch videos when the observer detects the element
   useEffect(() => {
@@ -35,7 +25,7 @@ function ChannelVideos() {
         if (entry.isIntersecting && hasMore && !loading) {
           console.log("page ------->",page);
           setLoading(true)
-          dispatch(getUserVideos({ userId: user?._id, page, limit: 6 }))
+          dispatch(getUserVideos({ page, limit: 6 }))
             .unwrap()
             .then(() => {
               console.log("req after =>",page);
@@ -58,10 +48,10 @@ function ChannelVideos() {
     return () => {
       if (observer) observer.disconnect();
     };
-  }, [dispatch, page, user, hasMore, loading]);
+  }, [dispatch, page, hasMore, loading]);
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-end p-4">
+    <div className="w-full h-full flex flex-col items-center justify-end text-white">
       <div className="w-full h-full grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {videos.map((video,i) => (
           <VideoList
@@ -69,6 +59,7 @@ function ChannelVideos() {
             thumbnail={video.thumbnail}
             description={video.description}
             title={video.title}
+            views={video.views}
           />
         ))}
       </div>
@@ -81,4 +72,4 @@ function ChannelVideos() {
   );
 }
 
-export default ChannelVideos;
+export default HomeVideos;

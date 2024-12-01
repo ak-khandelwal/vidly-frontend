@@ -15,7 +15,7 @@ function NavBar() {
     }
   };
   return (
-    <div className="fixed z-10 w-full bg-black h-[10%] border-b border-white flex justify-between items-center px-2">
+    <div className="fixed w-full bg-black h-[10%] border-b border-white flex justify-between items-center px-2">
       <img src="src/assets/ytlogo.jpeg" className="size-14" />
       <div className="border border-white h-[60%] w-2/6  flex">
         <div className="w-[10%] h-full  pr-1 flex flex-col items-center justify-center">

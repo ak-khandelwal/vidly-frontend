@@ -19,7 +19,6 @@ function ChannelLayout() {
   const { userName } = useParams();
   const [active, setActive] = useState([1, 0, 0, 0]);
   const [error, setError] = useState(false);
-  const sameUser = user?.userName === channel?.userName;
   const activeClass =
     "bg-white h-[60%] text-purple-600 border-b-2 border-purple-500";
   useEffect(() => {
@@ -43,7 +42,7 @@ function ChannelLayout() {
 
   if (error) {
     return (
-      <div className="w-full h-full flex justify-center items-center">
+      <div className="w-full h-full flex justify-center bg-white items-center">
         <div className="bg-[#4e4a4a7a] border-4 border-red-500 w-[50%] h-[30%] flex flex-col gap-6 justify-center items-center text-center font-extrabold text-4xl text-red-500">
           unable to get this user
           <CgDanger />
@@ -56,7 +55,7 @@ function ChannelLayout() {
       <AiOutlineLoading3Quarters className="animate-spin" />
     </div>
   ) : (
-    <div className="h-full mt-[80px] overflow-y-scroll no-scrollbar">
+    <div className="h-full overflow-y-scroll no-scrollbar">
       <div className="h-[45%]">
         <div className="h-[50%] relative">
           <img

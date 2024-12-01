@@ -1,15 +1,22 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { apiClient } from "../../../app/api/axiosInstance";
-
+import { BASE_URL } from "../../../constants/BASE_URL";
 // Get all videos by userId
 export const getUserVideos = createAsyncThunk(
   "getUserVideos",
-  async ({ userId, page = 1, limit = 9 }) => {
-    try {
-      if (!userId) throw new Error("UserId is required");
-      const response = await apiClient.get(
-        `/videos/?userId=${userId}&page=${page}&limit=${limit}`
-      );
+ async ({ userId, sortBy, sortType, query, page, limit }) => {
+        try {
+            const url = new URL(`${BASE_URL}/videos/`);
+
+            if (userId) url.searchParams.set("userId", userId);
+            if (query) url.searchParams.set("query", query);
+            if (page) url.searchParams.set("page", page);
+            if (limit) url.searchParams.set("limit", limit);
+            if (sortBy && sortType) {
+                url.searchParams.set("sortBy", sortBy);
+                url.searchParams.set("sortType", sortType);
+            }
+      const response = await apiClient.get(url);
       return response.data.data;
     } catch (error) {
       throw new Error(error?.message || error);

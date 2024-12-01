@@ -17,16 +17,25 @@ import AuthLayout from './features/auth/components/AuthLayout';
 import App from './App';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ChannelVideos from './features/videos/pages/ChannelVideos';
 import ChannelPlaylist from './features/playList/pages/ChannelPlaylist';
 import ChannelTweets from './features/tweets/pages/ChannelTweets';
 import ChannelSubscribers from './features/subscribers/pages/ChannelSubscribers';
+import ChannelVideos from './features/videos/pages/ChannelVideos';
+import HomeVideos from './features/videos/pages/HomeVideos';
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
+      {
+        path: "/",
+        element: (
+          <AuthLayout>
+            <HomeVideos />
+          </AuthLayout>
+        )
+      },
       {
         path: "/Setting",
         element: (

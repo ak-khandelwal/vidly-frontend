@@ -39,7 +39,6 @@ function SettingLayout() {
       if(res.type === "CoverImageUpdate/fulfilled"){
         cancelPopUp();
         setImage(null);
-        setLoading(false);
       }else{
         setLoading(false);
       }
@@ -66,7 +65,7 @@ function SettingLayout() {
   };
 
   return (
-    <div className="h-full mt-[80px] overflow-y-scroll no-scrollbar">
+    <div className="h-full overflow-y-scroll no-scrollbar">
       <div className="h-[45%]">
         <CoverImage user={user} handlePopUp={handlePopUp} />
         <div className="h-[25%] flex justify-between items-center">

@@ -1,13 +1,21 @@
-const VideoList = (({ thumbnail, title, description }) => (
-  <div className="video-card m-2 w-80" >
+const VideoList = (({ thumbnail, title, description, views }) => (
+  <div className="video-card flex flex-col justify-center items-center w-full" >
     <img
       src={thumbnail}
       alt="Video Thumbnail"
-      className="w-full h-44 rounded-lg bg-white"
+      className="w-80 h-44"
     />
-    <div className="mt-2">
-      <h3 className="text-lg font-semibold truncate">{title}</h3>
-      <p className="text-sm text-gray-500 truncate">{description}</p>
+    <div className="mt-2 w-80 flex gap-2">
+       <img
+      src={thumbnail}
+      alt="Video Thumbnail"
+      className="size-10 rounded-full"
+    />
+     <div className="">
+     <h3 className="text-lg font-semibold truncate">{title}</h3>
+     <p className="text-sm text-gray-500 truncate">{description}</p>
+      <p className="text-sm text-gray-500 truncate">{views} views</p>
+     </div>
     </div>
   </div>
 ));

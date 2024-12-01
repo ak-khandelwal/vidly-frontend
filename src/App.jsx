@@ -12,13 +12,15 @@ function App() {
   }, [dispatch]);
 
   return (
-    <div className="w-screen h-screen">
-    <NavBar />
-    <div className="h-[100%] flex ">
-      <div className="relative w-[20%]">
+    <div className="w-screen h-screen overflow-x-hidden">
+      <div className="relative w-full h-[10%]">
+        <NavBar />
+      </div>
+    <div className="h-[90%] flex w-full">
+      <div className="relative w-[20%] h-full">
         <SideBar />
       </div>
-      <div className="w-[80%] h-[90%] ">
+      <div className="w-[80%] h-full ">
         <Outlet />
       </div>
     </div>
