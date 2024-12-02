@@ -7,7 +7,7 @@ import {
   selectCurrentVideos,
   selectCurrentHasMore,
 } from "../slice/videoSlice";
-import { selectCurrentChannel } from "../../channel/slice/channelSlice";
+import { selectCurrentChannel, setActive } from "../../channel/slice/channelSlice";
 
 function ChannelVideos() {
   const dispatch = useDispatch();
@@ -26,19 +26,19 @@ function ChannelVideos() {
       setPage(1); // Reset pagination
     }
   }, [dispatch, user]);
-
+  useEffect(()=>{
+    dispatch(setActive([1,0,0,0]));
+  },[dispatch])
   // Fetch videos when the observer detects the element
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
         if (entry.isIntersecting && hasMore && !loading) {
-          console.log("page ------->",page);
           setLoading(true)
           dispatch(getUserVideos({ userId: user?._id, page, limit: 6 }))
             .unwrap()
             .then(() => {
-              console.log("req after =>",page);
               setPage((prev) => prev + 1); // Increment page on success
               setLoading(false)
             })

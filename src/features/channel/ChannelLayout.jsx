@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
-import { selectCurrentUser } from "../auth/slice/authSlice";
+import { Link, Outlet, useParams } from "react-router-dom";
 import {
   getChannel,
+  selectActive,
   selectCurrentChannel,
   selectLoading,
 } from "./slice/channelSlice";
@@ -11,13 +11,11 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { CgDanger } from "react-icons/cg";
 
 function ChannelLayout() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const channel = useSelector(selectCurrentChannel);
-  const user = useSelector(selectCurrentUser);
   const loading = useSelector(selectLoading);
+  const active = useSelector(selectActive)
   const { userName } = useParams();
-  const [active, setActive] = useState([1, 0, 0, 0]);
   const [error, setError] = useState(false);
   const activeClass =
     "bg-white h-[60%] text-purple-600 border-b-2 border-purple-500";
@@ -29,16 +27,6 @@ function ChannelLayout() {
       }
     })();
   }, [dispatch, userName]);
-
-  const handleTabClick = (index) => {
-    const newActive = [0, 0, 0, 0];
-    newActive[index] = 1;
-    setActive(newActive);
-    if (newActive[0] == 1) navigate("Videos");
-    if (newActive[1] == 1) navigate("Playlist");
-    if (newActive[2] == 1) navigate("Tweets");
-    if (newActive[3] == 1) navigate("Subscribed");
-  };
 
   if (error) {
     return (
@@ -80,38 +68,42 @@ function ChannelLayout() {
           </div>
         </div>
         <div className="h-[20%] cursor-pointer border-b-2 flex px-10 text-white items-center justify-around">
+          <Link to={"Videos"}>
           <div
             className={`px-24 flex text-center items-center ${
               active[0] === 1 ? activeClass : ""
-            }`}
-            onClick={() => handleTabClick(0)}
-          >
+              }`}
+              >
             Videos
           </div>
+          </Link>
+          <Link to={"PlayList"}>
           <div
             className={`px-24 flex text-center items-center ${
               active[1] === 1 ? activeClass : ""
-            }`}
-            onClick={() => handleTabClick(1)}
-          >
+              }`}
+              >
             PlayList
           </div>
+          </Link>
+          <Link to={"Tweets"}>
           <div
             className={`px-24 flex text-center items-center ${
               active[2] === 1 ? activeClass : ""
-            }`}
-            onClick={() => handleTabClick(2)}
-          >
+              }`}
+              >
             Tweets
           </div>
+          </Link>
+          <Link to={"Subscribed"}>
           <div
             className={`px-24 flex text-center items-center ${
               active[3] === 1 ? activeClass : ""
-            }`}
-            onClick={() => handleTabClick(3)}
-          >
+              }`}
+              >
             Subscribed
           </div>
+          </Link>
         </div>
       </div>
       <div className="text-white">

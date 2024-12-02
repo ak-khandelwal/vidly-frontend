@@ -6,10 +6,9 @@ import { IoSearch } from "react-icons/io5";
 function NavBar() {
   const authStatus = useSelector(selectCurrentStatus);
   const dispatch = useDispatch();
-  const handleLogout = async () => {
+  const handleLogout =() => {
     try {
-      const res = await dispatch(logoutUser()).unwrap(); // Unwrap the result to handle success or errors.
-      console.log(res);
+      dispatch(logoutUser()).unwrap(); // Unwrap the result to handle success or errors.
     } catch (error) {
       console.error("Logout failed:", error);
     }

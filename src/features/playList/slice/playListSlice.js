@@ -36,5 +36,3 @@ const PlayListSlice = createSlice({
 export default PlayListSlice.reducer;
 export const { clearPlayListState } = PlayListSlice.actions;
 export const selectCurrentPlayLists = (state) => state.playlist.playLists;
-export const selectCurrentPlayListCount = (state) => state.playlist.totalPlaylists;
-export const selectPlayListHasMore = (state) => state.playlist.hasMore;

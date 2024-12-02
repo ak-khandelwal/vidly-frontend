@@ -20,7 +20,6 @@ function ChangePassword() {
     const res = await dispatch(passwordChange({ oldPassword,newPassword }));
     if (res?.type === "passwordChange/fulfilled") {
       toast.success("Successfully changed account details");
-      console.log(res);
     }
   };
 

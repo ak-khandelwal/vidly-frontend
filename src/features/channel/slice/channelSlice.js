@@ -8,7 +8,6 @@ export const getChannel = createAsyncThunk(
       const response = await apiClient.get("users/channel/"+userName);
       return response.data.data;
     } catch (error) {
-      console.log(error);
       toast.error("Failed to get channel");
       throw error?.message || error;
     }
@@ -17,13 +16,18 @@ export const getChannel = createAsyncThunk(
 
 const initialState = {
   channel: null,
+  active: [1,0,0,0],
   loading: false,
 }
 
 const channel = createSlice({
   name: 'channel',
   initialState,
-  reducers:{},
+  reducers:{
+    setActive: (state,action) => {
+      state.active = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(getChannel.pending, (state) =>{
       state.loading = true;
@@ -36,6 +40,7 @@ const channel = createSlice({
 })
 
 export default channel.reducer;
-
+export const {setActive} = channel.actions;
 export const selectCurrentChannel = (state) => state.channel.channel;
 export const selectLoading = (state) => state.channel.loading;
+export const selectActive = (state) => state.channel.active;

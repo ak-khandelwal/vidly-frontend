@@ -1,20 +1,25 @@
 import { useDispatch, useSelector } from "react-redux";
-import { selectCurrentChannel } from "../../channel/slice/channelSlice";
+import { selectCurrentChannel, setActive } from "../../channel/slice/channelSlice";
 import PlayList from "../components/PlayList";
 import {
+  clearPlayListState,
   getUserPlaylist,
   selectCurrentPlayLists,
-} from "../slice/playList";
+} from "../slice/playListSlice";
 import { useEffect } from "react";
 
 function ChannelPlaylist() {
   const dispatch = useDispatch();
   const playList = useSelector(selectCurrentPlayLists);
   const user = useSelector(selectCurrentChannel);
-
+  useEffect(()=>{
+    dispatch(setActive([0,1,0,0]));
+  },[dispatch])
   useEffect(() => {
-    if(user)
-    dispatch(getUserPlaylist({userId: user._id}))
+    if(user){
+      dispatch(clearPlayListState())
+      dispatch(getUserPlaylist({userId: user._id}))
+    }
   },[dispatch,user])
 
   return (

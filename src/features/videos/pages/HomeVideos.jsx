@@ -23,12 +23,10 @@ function HomeVideos() {
       (entries) => {
         const entry = entries[0];
         if (entry.isIntersecting && hasMore && !loading) {
-          console.log("page ------->",page);
           setLoading(true)
           dispatch(getUserVideos({ page, limit: 6 }))
             .unwrap()
             .then(() => {
-              console.log("req after =>",page);
               setPage((prev) => prev + 1); // Increment page on success
               setLoading(false)
             })

@@ -38,7 +38,6 @@ export const loginUser = createAsyncThunk(
       toast.success("successfully login");
       return response.data;
     } catch (error) {
-      console.log("error", error);
       toast.error("failed to login user");
       throw error?.message || error;
     }
@@ -135,7 +134,6 @@ export const coverImageUpdate = createAsyncThunk(
       return response.data.data;
     } catch (error) {
       toast.error("failed to update cover image");
-      console.log(error);
       throw error;
     }
   }
