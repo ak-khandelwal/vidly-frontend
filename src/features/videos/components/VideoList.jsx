@@ -1,4 +1,4 @@
-const VideoList = (({ thumbnail, title, description, views }) => (
+const VideoList = (({ thumbnail,avatar, title, description, views }) => (
   <div className="video-card flex flex-col justify-center items-center w-full" >
     <img
       src={thumbnail}
@@ -7,7 +7,7 @@ const VideoList = (({ thumbnail, title, description, views }) => (
     />
     <div className="mt-2 w-80 flex gap-2">
        <img
-      src={thumbnail}
+      src={avatar}
       alt="Video Thumbnail"
       className="size-10 rounded-full"
     />

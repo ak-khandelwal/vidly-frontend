@@ -55,6 +55,7 @@ function HomeVideos() {
           <VideoList
             key={i} // Use a unique identifier for better rendering
             thumbnail={video.thumbnail}
+            avatar={video.owner.avatar}
             description={video.description}
             title={video.title}
             views={video.views}
