@@ -4,19 +4,34 @@ import { BASE_URL } from "../../../constants/BASE_URL";
 // Get all videos by userId
 export const getUserVideos = createAsyncThunk(
   "getUserVideos",
- async ({ userId, sortBy, sortType, query, page, limit }) => {
-        try {
-            const url = new URL(`${BASE_URL}/videos/`);
+  async ({ userId, sortBy, sortType, query, page, limit }) => {
+    try {
+      const url = new URL(`${BASE_URL}/videos/`);
 
-            if (userId) url.searchParams.set("userId", userId);
-            if (query) url.searchParams.set("query", query);
-            if (page) url.searchParams.set("page", page);
-            if (limit) url.searchParams.set("limit", limit);
-            if (sortBy && sortType) {
-                url.searchParams.set("sortBy", sortBy);
-                url.searchParams.set("sortType", sortType);
-            }
+      if (userId) url.searchParams.set("userId", userId);
+      if (query) url.searchParams.set("query", query);
+      if (page) url.searchParams.set("page", page);
+      if (limit) url.searchParams.set("limit", limit);
+      if (sortBy && sortType) {
+        url.searchParams.set("sortBy", sortBy);
+        url.searchParams.set("sortType", sortType);
+      }
       const response = await apiClient.get(url);
+      return response.data.data;
+    } catch (error) {
+      throw new Error(error?.message || error);
+    }
+  }
+);
+export const getVideoById = createAsyncThunk(
+  "getVideoById",
+  async ({ videoId }) => {
+    try {
+      if (!videoId) {
+        throw new Error("wrong videoId");
+      }
+      const response = await apiClient(`/videos/${videoId}`);
+      console.log(response);
       return response.data.data;
     } catch (error) {
       throw new Error(error?.message || error);
@@ -26,6 +41,7 @@ export const getUserVideos = createAsyncThunk(
 
 const initialState = {
   videos: [],
+  videoPlay: {},
   videoCount: 0,
   hasMore: true,
 };
@@ -47,11 +63,15 @@ const videoSlice = createSlice({
       state.videoCount = action.payload.totalVideos;
       state.hasMore = state.videos.length < state.videoCount;
     });
+    builder.addCase(getVideoById.fulfilled, (state, action) => {
+      state.videoPlay = action.payload;
+    });
   },
 });
 
 export default videoSlice.reducer;
 export const { clearVideoState } = videoSlice.actions;
 export const selectCurrentVideos = (state) => state.video.videos;
+export const selectVideoPlay = (state) => state.video.videoPlay;
 export const selectCurrentVideosCount = (state) => state.video.videoCount;
 export const selectCurrentHasMore = (state) => state.video.hasMore;

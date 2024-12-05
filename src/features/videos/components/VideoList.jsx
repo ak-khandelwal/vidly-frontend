@@ -1,5 +1,7 @@
-const VideoList = (({ thumbnail,avatar, title, description, views }) => (
-  <div className="video-card flex flex-col justify-center items-center w-full" >
+import { Link } from "react-router-dom";
+
+const VideoList = (({videoId, thumbnail,avatar, title, description, views }) => (
+  <Link to={"/watch/"+videoId} className="video-card flex flex-col justify-center items-center w-full" >
     <img
       src={thumbnail}
       alt="Video Thumbnail"
@@ -17,6 +19,6 @@ const VideoList = (({ thumbnail,avatar, title, description, views }) => (
       <p className="text-sm text-gray-500 truncate">{views} views</p>
      </div>
     </div>
-  </div>
+  </Link>
 ));
 export default VideoList;

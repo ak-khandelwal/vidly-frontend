@@ -59,6 +59,7 @@ function HomeVideos() {
             description={video.description}
             title={video.title}
             views={video.views}
+            videoId={video._id}
           />
         ))}
       </div>

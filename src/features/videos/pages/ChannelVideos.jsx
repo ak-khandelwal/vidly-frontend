@@ -70,6 +70,7 @@ function ChannelVideos() {
             avatar={video.owner.avatar}
             description={video.description}
             title={video.title}
+            videoId={video._id}
           />
         ))}
       </div>

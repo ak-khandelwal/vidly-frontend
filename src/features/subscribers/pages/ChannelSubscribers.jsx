@@ -27,7 +27,6 @@ function ChannelSubscribers() {
   }, [dispatch, user]);
   return (
     <div>
-      dcdsc
       <div className="p-4 flex flex-col gap-6">
         {subscribers.map((item, index) => (
           <SubscriberList
