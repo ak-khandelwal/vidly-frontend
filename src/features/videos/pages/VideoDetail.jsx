@@ -19,12 +19,12 @@ function VideoDetail() {
     setLike((state) => !state);
   };
   return (
-    <div className="w-full h-full p-4 pl-20 text-white">
+    <div className="w-full h-full p-4 text-white">
       <div className="w-[70%]">
         <video
           src={video.videoFile}
           controls
-          className="w-[60rem] h-[33rem]"
+          className="w-[70rem] h-[30rem]"
         ></video>
         <div className="border-2 rounded-t-xl p-4">
           <div className="w-full flex justify-between">
