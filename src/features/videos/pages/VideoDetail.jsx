@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getVideoById, selectVideoPlay } from "../slice/videoSlice";
+import { getVideoById, likeVideo, selectVideoPlay } from "../slice/videoSlice";
 import { BiLike, BiSolidLike } from "react-icons/bi";
 function VideoDetail() {
   const dispatch = useDispatch();
@@ -15,7 +15,8 @@ function VideoDetail() {
   }, [dispatch, videoId]);
   const handleLike = (e) => {
     e.preventDefault();
-
+    if(videoId)
+      dispatch(likeVideo({ videoId }))
     setLike((state) => !state);
   };
   return (

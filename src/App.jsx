@@ -9,7 +9,7 @@ function App() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getCurrentUser());
-  }, [dispatch]);
+  }, [dispatch])
 
   return (
     <div className="w-screen h-screen overflow-x-hidden">

@@ -29,6 +29,7 @@ import HomeVideos from "./features/videos/pages/HomeVideos";
 import VideoDetail from "./features/videos/pages/VideoDetail";
 import NavBar from "./features/common/components/NavBar";
 import SideBar from "./features/common/components/SideBar";
+import VideoDetailLayout from "./features/videos/components/VideoDetailLayout";
 
 const router = createBrowserRouter([
   {
@@ -75,23 +76,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/watch/:videoId",
-    element: (
-      <div className="w-screen h-screen overflow-x-hidden">
-        <AuthLayout authentication>
-          <div className="relative w-full h-[10%]">
-            <NavBar />
-          </div>
-          <div className="flex w-full">
-            <div className="relative h-full w-[5%] z-20">
-              <SideBar collapse={true}/>
-            </div>
-            <div className="h-full">
-              <VideoDetail />
-            </div>
-          </div>
-        </AuthLayout>
-      </div>
-    ),
+    element: (<VideoDetailLayout />),
   },
   {
     path: "/login",

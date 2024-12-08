@@ -30,8 +30,7 @@ export const getVideoById = createAsyncThunk(
       if (!videoId) {
         throw new Error("wrong videoId");
       }
-      const response = await apiClient(`/videos/${videoId}`);
-      console.log(response);
+      const response = await apiClient.get(`/videos/${videoId}`);
       return response.data.data;
     } catch (error) {
       throw new Error(error?.message || error);
@@ -39,9 +38,24 @@ export const getVideoById = createAsyncThunk(
   }
 );
 
+export const likeVideo = createAsyncThunk(
+  "likeVideo",
+  async ({videoId}) => {
+    if (!videoId) {
+      throw new Error("video id is reqired");
+    }
+    console.log("sdssad");
+
+    const response = await apiClient.post("/likes/toggle/v/"+videoId);
+    console.log(response);
+    return response;
+  }
+)
+
 const initialState = {
   videos: [],
   videoPlay: {},
+  videoLike: 0,
   videoCount: 0,
   hasMore: true,
 };
@@ -75,3 +89,4 @@ export const selectCurrentVideos = (state) => state.video.videos;
 export const selectVideoPlay = (state) => state.video.videoPlay;
 export const selectCurrentVideosCount = (state) => state.video.videoCount;
 export const selectCurrentHasMore = (state) => state.video.hasMore;
+export const selectVideoLike = (state) => state.video.videoLike;
