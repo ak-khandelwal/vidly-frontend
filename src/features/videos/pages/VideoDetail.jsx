@@ -1,23 +1,27 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getVideoById, likeVideo, selectVideoPlay } from "../slice/videoSlice";
+import { getVideoById, getVideoLike, likeVideo, selectLiked, selectVideoLike, selectVideoPlay } from "../slice/videoSlice";
 import { BiLike, BiSolidLike } from "react-icons/bi";
 function VideoDetail() {
   const dispatch = useDispatch();
   const video = useSelector(selectVideoPlay);
-  const [like, setLike] = useState(false);
+  const videoLike = useSelector(selectVideoLike);
+  const liked = useSelector(selectLiked);
   const { videoId } = useParams();
   useEffect(() => {
     if (videoId) {
       dispatch(getVideoById({ videoId }));
+      dispatch(getVideoLike({ videoId }));
     }
   }, [dispatch, videoId]);
-  const handleLike = (e) => {
+  const handleLike = async (e) => {
     e.preventDefault();
-    if(videoId)
-      dispatch(likeVideo({ videoId }))
-    setLike((state) => !state);
+    if(videoId){
+      const response = await dispatch(likeVideo({ videoId }))
+      if(response.type === "likeVideo/fulfilled")
+        dispatch(getVideoLike({ videoId }));
+    }
   };
   return (
     <div className="w-full h-full p-4 text-white">
@@ -38,9 +42,9 @@ function VideoDetail() {
               onClick={(e) => handleLike(e)}
             >
               <span className="border-r-2 items-center pr-3">
-                {!like ? <BiLike className="size-5" /> : <BiSolidLike className="size-5"/>}
+                {liked ? <BiSolidLike className="size-5"/> : <BiLike className="size-5" />}
               </span>
-              <span>100</span>
+              <span>{videoLike}</span>
             </div>
           </div>
           <div className="flex justify-between mt-6">

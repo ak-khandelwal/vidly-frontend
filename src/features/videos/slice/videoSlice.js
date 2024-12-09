@@ -37,17 +37,25 @@ export const getVideoById = createAsyncThunk(
     }
   }
 );
-
+export const getVideoLike = createAsyncThunk(
+  "getVideoLike",
+  async ({videoId}) => {
+    if (!videoId) {
+      throw new Error("video id required")
+    }
+    const response = await apiClient.get(`/likes/video/${videoId}`)
+    return response.data.data;
+  }
+)
 export const likeVideo = createAsyncThunk(
   "likeVideo",
   async ({videoId}) => {
     if (!videoId) {
-      throw new Error("video id is reqired");
+      throw new Error("video id is required");
     }
-    console.log("sdssad");
 
     const response = await apiClient.post("/likes/toggle/v/"+videoId);
-    console.log(response);
+    console.log("likeVideo : ", response);
     return response;
   }
 )
@@ -56,6 +64,7 @@ const initialState = {
   videos: [],
   videoPlay: {},
   videoLike: 0,
+  liked: false,
   videoCount: 0,
   hasMore: true,
 };
@@ -80,6 +89,11 @@ const videoSlice = createSlice({
     builder.addCase(getVideoById.fulfilled, (state, action) => {
       state.videoPlay = action.payload;
     });
+    builder.addCase(getVideoLike.fulfilled, (state, action) => {
+      console.log(action.payload);
+      state.videoLike = action.payload.likeCount;
+      state.liked = action.payload.likedByUser;
+    });
   },
 });
 
@@ -90,3 +104,4 @@ export const selectVideoPlay = (state) => state.video.videoPlay;
 export const selectCurrentVideosCount = (state) => state.video.videoCount;
 export const selectCurrentHasMore = (state) => state.video.hasMore;
 export const selectVideoLike = (state) => state.video.videoLike;
+export const selectLiked = (state) => state.video.liked;

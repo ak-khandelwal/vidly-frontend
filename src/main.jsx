@@ -26,9 +26,6 @@ import ChannelTweets from "./features/tweets/pages/ChannelTweets";
 import ChannelSubscribers from "./features/subscribers/pages/ChannelSubscribers";
 import ChannelVideos from "./features/videos/pages/ChannelVideos";
 import HomeVideos from "./features/videos/pages/HomeVideos";
-import VideoDetail from "./features/videos/pages/VideoDetail";
-import NavBar from "./features/common/components/NavBar";
-import SideBar from "./features/common/components/SideBar";
 import VideoDetailLayout from "./features/videos/components/VideoDetailLayout";
 
 const router = createBrowserRouter([
