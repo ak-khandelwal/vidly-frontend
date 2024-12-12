@@ -9,11 +9,43 @@ export  const getChannelSubscribers = createAsyncThunk(
     if(!channelId){
       throw new Error("channelId required");
     }
-    const response = await apiClient(`/subscriptions/c/${channelId}`)
+    const response = await apiClient.get(`/subscriptions/c/${channelId}`)
     return response.data.data
   }
 )
 
+export const toggleSubscription = createAsyncThunk(
+  "toggleSubscription",
+  async ({channelId}) => {
+   try {
+    if(!channelId){
+      throw new Error("channelId required");
+    }
+    const res = await apiClient.post(`/subscriptions/c/${channelId}`);
+    console.log(res);
+
+   } catch (error) {
+    console.log(error);
+   }
+  }
+)
+
+export const getSubscriber = createAsyncThunk(
+  "getSubscriber",
+  async ({channelId}) => {
+   try {
+    if(!channelId){
+      throw new Error("channelId required");
+    }
+    const response = await apiClient.get(`/subscriptions/${channelId}`);
+    console.log(response.data.data);
+
+    return response.data.data;
+   } catch (error) {
+    console.log(error);
+   }
+  }
+)
 const initialState = {
   ChannelSubscribers: [],
   SubscribedChannels: []

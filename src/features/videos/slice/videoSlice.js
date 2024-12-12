@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { apiClient } from "../../../app/api/axiosInstance";
 import { BASE_URL } from "../../../constants/BASE_URL";
+import { getSubscriber } from "../../subscribers/slice/SubscriberSlice";
 // Get all videos by userId
 export const getUserVideos = createAsyncThunk(
   "getUserVideos",
@@ -63,8 +64,10 @@ export const likeVideo = createAsyncThunk(
 const initialState = {
   videos: [],
   videoPlay: {},
+  videoPlayStatus: false,
   videoLike: 0,
   liked: false,
+  subscribed: false,
   videoCount: 0,
   hasMore: true,
 };
@@ -88,12 +91,16 @@ const videoSlice = createSlice({
     });
     builder.addCase(getVideoById.fulfilled, (state, action) => {
       state.videoPlay = action.payload;
+      state.videoPlayStatus = true;
     });
     builder.addCase(getVideoLike.fulfilled, (state, action) => {
       console.log(action.payload);
       state.videoLike = action.payload.likeCount;
       state.liked = action.payload.likedByUser;
     });
+    builder.addCase(getSubscriber.fulfilled, (state,action)=>{
+      state.subscribed = action.payload.subscribeByUser
+    })
   },
 });
 
@@ -101,7 +108,9 @@ export default videoSlice.reducer;
 export const { clearVideoState } = videoSlice.actions;
 export const selectCurrentVideos = (state) => state.video.videos;
 export const selectVideoPlay = (state) => state.video.videoPlay;
+export const selectVideoPlayStatus = (state) => state.video.videoPlayStatus;
 export const selectCurrentVideosCount = (state) => state.video.videoCount;
 export const selectCurrentHasMore = (state) => state.video.hasMore;
 export const selectVideoLike = (state) => state.video.videoLike;
 export const selectLiked = (state) => state.video.liked;
+export const selectSubscribed = (state) => state.video.subscribed;
