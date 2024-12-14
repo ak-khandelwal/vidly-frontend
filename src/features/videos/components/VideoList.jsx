@@ -5,7 +5,7 @@ const VideoList = (({videoId, thumbnail,avatar, title, description, views }) => 
     <img
       src={thumbnail}
       alt="Video Thumbnail"
-      className="w-80 h-44"
+      className="w-80 h-44 object-cover"
     />
     <div className="mt-2 w-80 flex gap-2">
        <img
