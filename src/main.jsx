@@ -27,6 +27,7 @@ import ChannelSubscribers from "./features/subscribers/pages/ChannelSubscribers"
 import ChannelVideos from "./features/videos/pages/ChannelVideos";
 import HomeVideos from "./features/videos/pages/HomeVideos";
 import VideoDetailLayout from "./features/videos/components/VideoDetailLayout";
+import PrivacyPolicy from "./features/LegalAndPolicy/components/PrivacyPolicy";
 
 const router = createBrowserRouter([
   {
@@ -92,6 +93,7 @@ const router = createBrowserRouter([
     ),
   },
   { path: "/TermsAndConditions", element: <TermsAndConditions /> },
+  { path: "/PrivacyPolicy", element: <PrivacyPolicy /> },
 ]);
 createRoot(document.getElementById("root")).render(
   <StrictMode>

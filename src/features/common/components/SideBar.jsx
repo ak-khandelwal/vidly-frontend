@@ -42,7 +42,7 @@ function SideBar({collapse = false}) {
     {
       iconComponent: <MdOutlineContactSupport className="w-full h-full" />,
       name: "Support",
-      path: "/TermsAndConditions"
+      path: "/PrivacyPolicy"
     },
     {
       iconComponent: <IoSettingsOutline className="w-full h-full" />,
