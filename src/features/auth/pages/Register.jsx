@@ -37,7 +37,7 @@ function Register() {
       );
 
       if (loginResult?.type === "loginUser/fulfilled") {
-          // navigate("/terms&conditions");
+          navigate("/TermsAndConditions");
       } else {
           navigate("/login");
       }
