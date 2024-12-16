@@ -28,6 +28,7 @@ import ChannelVideos from "./features/videos/pages/ChannelVideos";
 import HomeVideos from "./features/videos/pages/HomeVideos";
 import VideoDetailLayout from "./features/videos/components/VideoDetailLayout";
 import PrivacyPolicy from "./features/LegalAndPolicy/components/PrivacyPolicy";
+import SearchVideo from "./features/videos/pages/SearchVideo";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,14 @@ const router = createBrowserRouter([
         element: (
           <AuthLayout authentication={false}>
             <HomeVideos />
+          </AuthLayout>
+        ),
+      },
+      {
+        path: "/search",
+        element: (
+          <AuthLayout authentication={false}>
+            <SearchVideo />
           </AuthLayout>
         ),
       },

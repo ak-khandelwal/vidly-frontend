@@ -1,37 +1,24 @@
+import { useSearchParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import VideoCard from "../components/VideoCard";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  clearVideoState,
   getUserVideos,
   selectCurrentVideos,
   selectCurrentHasMore,
+  clearVideoState,
 } from "../slice/videoSlice";
-import {
-  selectCurrentChannel,
-  setActive,
-} from "../../channel/slice/channelSlice";
+import VideoList from "../components/VideoList";
 
-function ChannelVideos() {
+function SearchVideo() {
+  const [searchParams] = useSearchParams();
   const dispatch = useDispatch();
   const videos = useSelector(selectCurrentVideos);
   const hasMore = useSelector(selectCurrentHasMore);
-  const user = useSelector(selectCurrentChannel);
 
   const [page, setPage] = useState(1); // Tracks current page
   const [loading, setLoading] = useState(false);
   const elementRef = useRef(null);
 
-  // Clear video state on component mount or when the user changes
-  useEffect(() => {
-    if (user) {
-      dispatch(clearVideoState());
-      setPage(1); // Reset pagination
-    }
-  }, [dispatch, user]);
-  useEffect(() => {
-    dispatch(setActive([1, 0, 0, 0]));
-  }, [dispatch]);
   // Fetch videos when the observer detects the element
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -39,7 +26,7 @@ function ChannelVideos() {
         const entry = entries[0];
         if (entry.isIntersecting && hasMore && !loading) {
           setLoading(true);
-          dispatch(getUserVideos({ userId: user?._id, page, limit: 6 }))
+          dispatch(getUserVideos({ query:searchParams }))
             .unwrap()
             .then(() => {
               setPage((prev) => prev + 1); // Increment page on success
@@ -51,7 +38,6 @@ function ChannelVideos() {
             });
         }
       },
-      { threshold: 1.0 } // Trigger when the element is fully visible
     );
 
     if (elementRef.current) {
@@ -61,19 +47,26 @@ function ChannelVideos() {
     return () => {
       if (observer) observer.disconnect();
     };
-  }, [dispatch, page, user, hasMore, loading]);
+  }, [dispatch, page, hasMore, loading, searchParams]);
+
+  useEffect(() => {
+      dispatch(clearVideoState());
+      setPage(1); // Reset pagination
+  }, [dispatch, searchParams]);
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-end p-4">
-      <div className="w-full h-full grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+    <div className="w-full h-full flex flex-col p-8 text-white">
+      <div className="w-full flex flex-col gap-8">
         {videos.map((video, i) => (
-          <VideoCard
+          <VideoList
             key={i} // Use a unique identifier for better rendering
             thumbnail={video.thumbnail}
             avatar={video.owner.avatar}
             description={video.description}
             title={video.title}
+            views={video.views}
             videoId={video._id}
+            channalName={video.owner.fullName}
           />
         ))}
       </div>
@@ -86,4 +79,4 @@ function ChannelVideos() {
   );
 }
 
-export default ChannelVideos;
+export default SearchVideo;
