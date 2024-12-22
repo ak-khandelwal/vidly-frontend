@@ -1,8 +1,29 @@
-# React + Vite
+---
+description: bulding doc's projects where user can create doc's
+layout:
+  title:
+    visible: true
+  description:
+    visible: true
+  tableOfContents:
+    visible: true
+  outline:
+    visible: true
+  pagination:
+    visible: true
+---
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Doc's project
 
-Currently, two official plugins are available:
+## Demo Documentation
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Overview <a href="#overview" id="overview"></a>
+
+This document provides a guide to demonstrate the basic features and functionalities of the software.
+
+### Getting Started
+
+1. **Installation**
+   * Download the software from the [official website](http://example.com).
+   * Run the installer and follow the on-screen instructions.
+2. \*\*
