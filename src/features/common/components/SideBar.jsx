@@ -34,8 +34,8 @@ function SideBar({collapse = false}) {
     },
     {
       iconComponent: <RiUserHeartLine className="w-full h-full" />,
-      name: "Subscribers",
-      path: "/"
+      name: "Subscriptions",
+      path: "/Subscriptions"
     },
   ]
   const itemsList2 = [
