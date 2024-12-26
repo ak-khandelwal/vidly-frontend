@@ -9,34 +9,49 @@ import {
   clearSubscriberState,
   getChannelSubscribers,
   selectChannelSubscriber,
+  toggleSubscription,
 } from "../slice/SubscriberSlice";
 
 function ChannelSubscribers() {
   const dispatch = useDispatch();
-  const subscribers = useSelector(selectChannelSubscriber);
   const user = useSelector(selectCurrentChannel);
-  useEffect(() => {
-    dispatch(setActive([0, 0, 0, 1]));
-  }, [dispatch]);
-  useEffect(() => {
+  const subscribers = useSelector(selectChannelSubscriber);
 
+  useEffect(() => {
     if (user) {
-      dispatch(clearSubscriberState());
-      dispatch(getChannelSubscribers({channelId: user?._id }));
+      dispatch(getChannelSubscribers({ channelId: user?._id }));
     }
   }, [dispatch, user]);
+
+  const handleSubscribe = async (e, channelId) => {
+    e.preventDefault();
+
+    try {
+      await dispatch(toggleSubscription({ channelId })).unwrap();
+      await dispatch(getChannelSubscribers({ channelId: user._id }));
+    } catch (error) {
+      console.error("Error handling subscription:", error);
+    }
+  };
+  useEffect(() => {
+    dispatch(setActive([0, 0, 0, 1]));
+    dispatch(clearSubscriberState());
+  }, [dispatch]);
+
   return (
-    <div>
-      <div className="p-4 flex flex-col gap-6">
-        {subscribers.map((item, index) => (
-          <SubscriberList
-            key={index}
-            subscribers={0}
-            avatar={item.avatar}
-            fullname={item.fullName}
-          />
-        ))}
-      </div>
+    <div className="p-4 pr-8 flex flex-col gap-6">
+      {subscribers.map((item, index) => (
+        <SubscriberList
+          key={index}
+          subscribers={item?.subscriberCount}
+          avatar={item?.avatar}
+          fullname={item?.fullName}
+          userName={item?.userName}
+          subscribed={item?.isSubscribed}
+          channelId={item?._id}
+          handleSubscribe={handleSubscribe}
+        />
+      ))}
     </div>
   );
 }

@@ -30,25 +30,17 @@ export const toggleSubscription = createAsyncThunk(
   }
 )
 
-export const getSubscriber = createAsyncThunk(
-  "getSubscriber",
-  async ({channelId}) => {
-   try {
-    if(!channelId){
-      throw new Error("channelId required");
-    }
-    const response = await apiClient.get(`/subscriptions/${channelId}`);
-    console.log(response.data.data);
-
-    return response.data.data;
-   } catch (error) {
-    console.log(error);
-   }
+export const getSubscribedChannel = createAsyncThunk(
+  "getSubscribedChannel",
+  async () => {
+    const res = await apiClient("/subscriptions/")
+    return res.data.data;
   }
 )
+
 const initialState = {
   ChannelSubscribers: [],
-  SubscribedChannels: []
+  SubscribedChannels: [],
 }
 
 const subscriberSlice = createSlice({
@@ -57,15 +49,20 @@ const subscriberSlice = createSlice({
   reducers:{
     clearSubscriberState: (state)=>{
       state.ChannelSubscribers = [];
-    }
+      state.SubscribedChannels = [];
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getChannelSubscribers.fulfilled, (state,action) => {
       state.ChannelSubscribers = action.payload;
+    })
+    builder.addCase(getSubscribedChannel.fulfilled, (state, action) => {
+      state.SubscribedChannels = action.payload;
     })
   }
 })
 
 export default subscriberSlice.reducer;
 export const {clearSubscriberState} = subscriberSlice.actions;
-export const selectChannelSubscriber = (state) => state.subscriber.ChannelSubscribers
+export const selectChannelSubscriber = (state) => state.subscriber.ChannelSubscribers;
+export const selectSubscribedChannels =(state) => state.subscriber.SubscribedChannels;
