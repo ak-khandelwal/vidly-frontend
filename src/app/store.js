@@ -1,10 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "../features/auth/slice/authSlice"
-import channelReducer from "../features/channel/slice/channelSlice"
-import videoReducer from '../features/videos/slice/videoSlice';
-import playlistReducer from '../features/playList/slice/playListSlice';
-import tweetReducer from '../features/tweets/slice/TweetsSlice';
-import subscriberReducer from '../features/subscribers/slice/SubscriberSlice';
+import authReducer from "./slices/authSlice"
+import channelReducer from "./slices/channelSlice"
+import videoReducer from "./slices/videoSlice";
+import playlistReducer from "./slices/playListSlice";
+import tweetReducer from "./slices/TweetsSlice";
+import subscriberReducer from "./slices/SubscriberSlice";
 export const store = configureStore({
   reducer: {
     auth: authReducer,

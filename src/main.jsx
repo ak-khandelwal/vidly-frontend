@@ -8,28 +8,36 @@ import {
   Navigate,
   RouterProvider,
 } from "react-router-dom";
-import Login from "./features/auth/pages/Login";
-import Register from "./features/auth/pages/Register";
-import TermsAndConditions from "./features/LegalAndPolicy/components/TermsAndConditions";
-import {
-  ChangeInformation,
-  ChangePassword,
-  SettingLayout,
-} from "./features/setting";
-import ChannelLayout from "./features/channel/ChannelLayout";
-import AuthLayout from "./features/auth/components/AuthLayout";
+
+// Pages
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import ChannelPlaylist from "./pages/ChannelPlaylist";
+import ChannelTweets from "./pages/ChannelTweets";
+import ChannelSubscribers from "./pages/subsctiptions/ChannelSubscribers";
+import SubscribedChannel from "./pages/subsctiptions/SubscribedChannel";
+import ChannelVideos from "./pages/videos/ChannelVideos";
+import HomeVideos from "./pages/videos/HomeVideos";
+import SearchVideo from "./pages/videos/SearchVideo";
+import TermsAndConditions from "./pages/LegalAndPolicy/TermsAndConditions";
+import PrivacyPolicy from "./pages/LegalAndPolicy/PrivacyPolicy";
+
+// Layouts and others
+import AuthLayout from "./components/auth/AuthLayout";
 import App from "./App";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import ChannelPlaylist from "./features/playList/pages/ChannelPlaylist";
-import ChannelTweets from "./features/tweets/pages/ChannelTweets";
-import ChannelSubscribers from "./features/subscribers/pages/ChannelSubscribers";
-import ChannelVideos from "./features/videos/pages/ChannelVideos";
-import HomeVideos from "./features/videos/pages/HomeVideos";
-import VideoDetailLayout from "./features/videos/components/VideoDetailLayout";
-import PrivacyPolicy from "./features/LegalAndPolicy/components/PrivacyPolicy";
-import SearchVideo from "./features/videos/pages/SearchVideo";
 
+// Setting
+import ChangeInformation from "./components/setting/ChangeInformation";
+import ChangePassword from "./components/setting/ChangePassword";
+import SettingLayout from "./components/setting/SettingLayout";
+
+// Channel
+import ChannelLayout from "./components/ChannelLayout";
+import VideoDetailLayout from "./components/videos/VideoDetailLayout";
+
+// Configure router
 const router = createBrowserRouter([
   {
     path: "/",
@@ -65,6 +73,14 @@ const router = createBrowserRouter([
         ],
       },
       {
+        path: "/Subscriptions",
+        element: (
+          <AuthLayout authentication>
+            <SubscribedChannel />
+          </AuthLayout>
+        ),
+      },
+      {
         path: "/Channel/:userName",
         element: (
           <AuthLayout authentication>
@@ -83,7 +99,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/watch/:videoId",
-    element: (<VideoDetailLayout />),
+    element: <VideoDetailLayout />,
   },
   {
     path: "/login",
@@ -110,5 +126,5 @@ createRoot(document.getElementById("root")).render(
       <RouterProvider router={router} />
       <ToastContainer position="top-right" />
     </Provider>
-  </StrictMode>
+  </StrictMode>,
 );
