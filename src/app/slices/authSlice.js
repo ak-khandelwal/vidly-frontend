@@ -141,9 +141,22 @@ export const coverImageUpdate = createAsyncThunk(
     }
   }
 );
-
+export const getHistory = createAsyncThunk(
+  "getHistory", 
+  async () => {
+    try {
+     const response = await apiClient.get("/users/history") 
+      return response.data.data;
+    } catch (
+      error
+    ) {
+     throw new Error(error) 
+    }
+  }
+)
 const initialState = {
   user: null,
+  userHistory: [],
   status: false,
 };
 
@@ -177,6 +190,9 @@ const authSlice = createSlice({
       state.user = null;
       state.status = false;
     });
+    builder.addCase(getHistory.fulfilled, (state, action) => {
+      state.userHistory = action.payload;
+    })
   },
 });
 
@@ -184,3 +200,4 @@ export default authSlice.reducer;
 
 export const selectCurrentUser = (state) => state.auth.user;
 export const selectCurrentStatus = (state) => state.auth.status;
+export const selectHistory = (state) => state.auth.userHistory;
