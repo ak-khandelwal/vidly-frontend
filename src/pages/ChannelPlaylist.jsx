@@ -3,7 +3,7 @@ import { selectCurrentChannel, setActive } from "../app/slices/channelSlice";
 import PlayList from "../components/PlayList";
 import {
   clearPlayListState,
-  getUserPlaylist,
+  getUserPlaylists,
   selectCurrentPlayLists,
 } from "../app/slices/playListSlice";
 import { useEffect } from "react";
@@ -18,7 +18,7 @@ function ChannelPlaylist() {
   useEffect(() => {
     if (user) {
       dispatch(clearPlayListState());
-      dispatch(getUserPlaylist({ userId: user._id }));
+      dispatch(getUserPlaylists({ userId: user._id }));
     }
   }, [dispatch, user]);
 
@@ -30,6 +30,7 @@ function ChannelPlaylist() {
           thumbnail={items.thumbnail}
           description={items.description}
           playlistName={items.playlistName}
+          playlistId={items._id}
         />
       ))}
     </div>

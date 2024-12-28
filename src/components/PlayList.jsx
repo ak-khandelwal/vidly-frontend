@@ -1,9 +1,12 @@
-function PlayList({ thumbnail, playlistName, description, views }) {
+import { Link } from "react-router-dom";
+
+function PlayList({ thumbnail, playlistName, description, views, playlistId }) {
   return (
+    <Link to={`/Playlist/${playlistId}`} >
      <div className="bg-gray-800 flex flex-col justify-center items-center w-full overflow-hidden shadow-lg">
       <img
         className="w-full h-auto"
-        src={thumbnail || "https://via.placeholder.com/400x200"  }
+        src={thumbnail || "/src/assets/EmptyPlaylist.png"}
         alt="React Mastery"
       />
       <div className="p-4">
@@ -16,6 +19,7 @@ function PlayList({ thumbnail, playlistName, description, views }) {
         </div>
       </div>
     </div>
+    </Link>
   );
 }
 
