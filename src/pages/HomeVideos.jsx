@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import VideoCard from "../../components/videos/VideoCard";
+import VideoCard from "../components/videos/VideoCard";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getVideos,
@@ -7,7 +7,7 @@ import {
   selectCurrentHasMore,
   clearVideoState,
   selectError,
-} from "../../app/slices/videoSlice";
+} from "../app/slices/videoSlice";
 
 function HomeVideos() {
   const dispatch = useDispatch();
@@ -30,7 +30,6 @@ function HomeVideos() {
         if (error) {
           time = 3000;
         }
-        console.log(time);
         // Debounce the dispatch
         const newTimeout = setTimeout(() => {
           dispatch(getVideos({ page, limit: 9 }))

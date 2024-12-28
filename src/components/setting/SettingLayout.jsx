@@ -69,27 +69,27 @@ function SettingLayout() {
       <div className="h-[45%]">
         <CoverImage user={user} handlePopUp={handlePopUp} />
         <div className="h-[25%] flex justify-between items-center">
-          <div className="h-full flex gap-16 items-center ">
+          <div className="h-full flex gap-16 sm:items-center">
             <AvatarImage user={user} handlePopUp={handlePopUp} />
             <div>
               <h2 className="font-semibold text-white text-xl">
                 {user?.fullName}
               </h2>
-              <h2 className=" text-white text-lg">@{user?.userName}</h2>
+              <h2 className="text-white text-lg">@{user?.userName}</h2>
             </div>
           </div>
           <Link
             to={`/Channel/${user?.userName}`}
-            className="h-full flex justify-between items-center"
+            className="h-full flex justify-between sm:items-center"
           >
-            <div className="w-32 h-[40%] bg-[#ae7aff] text-black font-bold shadow-[5px_5px_#4f4e4e] active:shadow-none active:translate-x-1 active:translate-y-1 flex flex-col text-center justify-center mr-9 select-none">
+            <div className="w-32 h-[40%] bg-[#ae7aff] py-4 text-black font-bold shadow-[5px_5px_#4f4e4e] active:shadow-none active:translate-x-1 active:translate-y-1 flex flex-col text-center justify-center mr-9 select-none">
               View Channel
             </div>
           </Link>
         </div>
-        <div className="h-[20%] border-b-2 flex px-10 text-white items-center justify-around">
+        <div className="h-[20%] border-b-2 flex px-4 sm:px-10 text-white items-center overflow-x-auto justify-around">
           <div
-            className={`px-32 flex text-center items-center cursor-pointer ${
+            className={`px-20 sm:px-32 flex text-center items-center cursor-pointer ${
               active[0] === 1 ? activeClass : ""
             }`}
             onClick={() => handleActive(0)}
@@ -97,7 +97,7 @@ function SettingLayout() {
             Personal information
           </div>
           <div
-            className={`px-32 flex text-center items-center cursor-pointer ${
+            className={`px-20 sm:px-32 flex text-center items-center cursor-pointer ${
               active[1] === 1 ? activeClass : ""
             }`}
             onClick={() => handleActive(1)}
@@ -138,14 +138,14 @@ function SettingLayout() {
 }
 function CoverImage({ user, handlePopUp }) {
   return (
-    <div className="h-[55%] relative" onClick={() => handlePopUp(0)}>
+    <div className="h-[55%] sm:relative" onClick={() => handlePopUp(0)}>
       <img
         src={user?.coverImage}
         className="h-full bg-cover object-cover w-full"
       />
       <RiImageAddFill
         src="src/assets/auth/upload.svg"
-        className="absolute inset-0 m-auto h-10 w-10 cursor-pointer text-yellow-300"
+        className="absolute top-[18%] left-1/2 h-10 w-10 cursor-pointer text-yellow-300"
         alt="edit"
       />
     </div>
@@ -160,7 +160,7 @@ function AvatarImage({ user, handlePopUp }) {
     >
       <img
         src={user?.avatar}
-        className=" bg-cover object-cover size-28 rounded-full -translate-y-8 translate-x-10 "
+        className="bg-cover object-cover size-20 sm:size-28 rounded-full -translate-y-8 translate-x-10 "
       />
       <RiImageAddFill
         src="src/assets/auth/upload.svg"

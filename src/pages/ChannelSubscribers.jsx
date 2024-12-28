@@ -1,13 +1,13 @@
 import { useEffect } from "react";
-import { selectCurrentChannel, setActive } from "../../app/slices/channelSlice";
+import { selectCurrentChannel, setActive } from "../app/slices/channelSlice";
 import { useDispatch, useSelector } from "react-redux";
-import SubscriberList from "../../components/SubscriberList";
+import SubscriberList from "../components/SubscriberList";
 import {
   clearSubscriberState,
   getChannelSubscribers,
   selectChannelSubscriber,
   toggleSubscription,
-} from "../../app/slices/SubscriberSlice";
+} from "../app/slices/SubscriberSlice";
 
 function ChannelSubscribers() {
   const dispatch = useDispatch();

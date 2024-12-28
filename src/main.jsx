@@ -10,17 +10,19 @@ import {
 } from "react-router-dom";
 
 // Pages
-import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 import ChannelPlaylist from "./pages/ChannelPlaylist";
 import ChannelTweets from "./pages/ChannelTweets";
-import ChannelSubscribers from "./pages/subsctiptions/ChannelSubscribers";
-import SubscribedChannel from "./pages/subsctiptions/SubscribedChannel";
-import ChannelVideos from "./pages/videos/ChannelVideos";
-import HomeVideos from "./pages/videos/HomeVideos";
-import SearchVideo from "./pages/videos/SearchVideo";
-import TermsAndConditions from "./pages/LegalAndPolicy/TermsAndConditions";
-import PrivacyPolicy from "./pages/LegalAndPolicy/PrivacyPolicy";
+import ChannelSubscribers from "./pages/ChannelSubscribers";
+import SubscribedChannel from "./pages/SubscribedChannel";
+import ChannelVideos from "./pages/ChannelVideos";
+import HomeVideos from "./pages/HomeVideos";
+import SearchVideo from "./pages/SearchVideo";
+import TermsAndConditions from "./pages/TermsAndConditions";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import History from "./pages/History";
+import Playlist from "./pages/Playlist";
 
 // Layouts and others
 import AuthLayout from "./components/auth/AuthLayout";
@@ -36,6 +38,7 @@ import SettingLayout from "./components/setting/SettingLayout";
 // Channel
 import ChannelLayout from "./components/ChannelLayout";
 import VideoDetailLayout from "./components/videos/VideoDetailLayout";
+import Dashboard from "./pages/Dashboard";
 
 // Configure router
 const router = createBrowserRouter([
@@ -81,6 +84,22 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/History",
+        element: (
+          <AuthLayout authentication>
+            <History />
+          </AuthLayout>
+        ),
+      },
+      {
+        path: "/Playlist/:playListId",
+        element: (
+          <AuthLayout authentication>
+            <Playlist />
+          </AuthLayout>
+        ),
+      },
+      {
         path: "/Channel/:userName",
         element: (
           <AuthLayout authentication>
@@ -115,6 +134,12 @@ const router = createBrowserRouter([
       <AuthLayout authentication={false}>
         <Register />
       </AuthLayout>
+    ),
+  },
+  {
+    path: "/Dashboard",
+    element: (
+        <Dashboard />
     ),
   },
   { path: "/TermsAndConditions", element: <TermsAndConditions /> },

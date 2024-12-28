@@ -6,7 +6,6 @@ import { loginUser, selectCurrentStatus } from '../../app/slices/authSlice';
 
 function LoginPopUp() {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
   const state = useSelector(selectCurrentStatus);
   const [user, setUser] = useState({
     email: "",
@@ -31,11 +30,9 @@ function LoginPopUp() {
   }, [user]);
 
   return (
-    <div className='h-[100%] w-[100%] flex justify-center items-center '>
-      <div className="h-[80%] w-[40%] mt-20">
-
-      <div className="relative h-[80%] w-full">
-        <GradientBg style1={"w-[100%]"} style3={"flex m-1 flex-col justify-between p-8 px-8 "} >
+    <div className='h-full w-full sm:w-[40%] flex flex-col gap-6 items-center justify-center'>
+      <div className="relative h-[60%] sm:h-[80%] w-full">
+        <GradientBg style1={"w-[100%]"} style3={"flex m-1 flex-col justify-between p-8"} >
             <Input
             lable={"user name"}
             value={user.userName}
@@ -60,7 +57,6 @@ function LoginPopUp() {
         </GradientBg>
       </div>
       <Footer handleSubmit={handleSubmit} buttonDisabled={buttonDisabled} loading={state.status === "loading" ? true: false} />
-          </div>
     </div>
   )
 }

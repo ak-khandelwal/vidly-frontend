@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-import VideoCard from "../../components/videos/VideoCard";
+import VideoCard from "../components/videos/VideoCard";
 import { useDispatch, useSelector } from "react-redux";
 import {
   clearVideoState,
   getVideos,
   selectCurrentVideos,
   selectCurrentHasMore,
-} from "../../app/slices/videoSlice";
+} from "../app/slices/videoSlice";
 import {
   selectCurrentChannel,
   setActive,
-} from "../../app/slices/channelSlice";
+} from "../app/slices/channelSlice";
 
 function ChannelVideos() {
   const dispatch = useDispatch();

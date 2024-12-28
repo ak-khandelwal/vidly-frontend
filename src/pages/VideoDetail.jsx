@@ -10,14 +10,14 @@ import {
   selectLiked,
   selectVideoLike,
   selectVideoPlay,
-} from "../../app/slices/videoSlice";
+} from "../app/slices/videoSlice";
 import { BiLike, BiSolidLike } from "react-icons/bi";
 import {
   toggleSubscription,
-} from "../../app/slices/SubscriberSlice";
-import VideoSuggested from "../../components/videos/VideoSuggested";
-import Comments from "../../components/videos/Comments";
-import { selectCurrentUser } from "../../app/slices/authSlice";
+} from "../app/slices/SubscriberSlice";
+import VideoSuggested from "../components/videos/VideoSuggested";
+import Comments from "../components/videos/Comments";
+import { selectCurrentUser } from "../app/slices/authSlice";
 function VideoDetail() {
   const dispatch = useDispatch();
   const video = useSelector(selectVideoPlay);
@@ -53,14 +53,14 @@ function VideoDetail() {
     dispatch(clearCommentState());
   }, [dispatch, videoId]);
   return (
-    <div className="w-full h-full p-4 text-white flex gap-4">
-      <div className="w-[65%]">
+    <div className="w-full h-full pl-4 text-white flex flex-col sm:flex-row gap-4">
+      <div className="w-full sm:w-[65%]">
         <div className="w-full">
           <video
             src={video.videoFile}
             poster={video?.thumbnail}
             controls
-            className="w-[70rem] h-[30rem] border-2"
+            className="w-full sm:w-[70rem] h-auto sm:h-[30rem] border-2"
           ></video>
           <div className="border-2 p-4">
             <div className="w-full flex justify-between">
@@ -112,7 +112,6 @@ function VideoDetail() {
               )}
             </div>
           </div>
-          <div></div>
         </div>
         <div className="border-2 rounded-b-xl p-2">
           <h1>{video?.description}</h1>

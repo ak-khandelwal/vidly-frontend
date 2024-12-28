@@ -21,9 +21,7 @@ export const toggleSubscription = createAsyncThunk(
     if(!channelId){
       throw new Error("channelId required");
     }
-    const res = await apiClient.post(`/subscriptions/c/${channelId}`);
-    console.log(res);
-
+    await apiClient.post(`/subscriptions/c/${channelId}`);
    } catch (error) {
     console.log(error);
    }

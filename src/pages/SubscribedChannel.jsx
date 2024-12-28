@@ -3,7 +3,7 @@ import {
   getSubscribedChannel,
   selectSubscribedChannels,
   toggleSubscription,
-} from "../../app/slices/SubscriberSlice";
+} from "../app/slices/SubscriberSlice";
 import { useEffect } from "react";
 
 function SubscribedChannel() {

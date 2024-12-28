@@ -36,9 +36,9 @@ function LoginForm() {
   }, [user]);
 
   return (
-    <div className='h-[90%] w-[35%] flex flex-col gap-6 '>
-      <div className="relative h-[80%] w-full">
-        <GradientBg style1={"w-[100%]"} style3={"flex m-1 flex-col justify-between p-8 px-8 "} >
+    <div className='h-full w-full sm:w-[35%] flex flex-col gap-6 items-center justify-center'>
+      <div className="relative h-[60%] sm:h-[80%] w-full">
+        <GradientBg style1={"w-[100%]"} style3={"flex m-1 flex-col justify-between p-8"} >
             <Input
             lable={"user name"}
             value={user.userName}
@@ -83,7 +83,7 @@ function Input({lable,value,onChange}){
 
 function Footer({handleSubmit,buttonDisabled,loding}) {
   return (
-    <div className="h-[10%] w-full flex gap-4 ">
+    <div className=" h-[7%] sm:h-[10%] w-full flex gap-4 ">
       <GradientBg  style1={"w-[70%]"} style3={"flex text-xl font-bold justify-center items-center m-[2px]"} >
       {"Login An Account"}
       </GradientBg>

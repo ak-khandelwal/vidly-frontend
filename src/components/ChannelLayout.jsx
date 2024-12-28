@@ -45,18 +45,18 @@ function ChannelLayout() {
   ) : (
     <div className="h-full overflow-y-scroll no-scrollbar">
       <div className="h-[45%]">
-        <div className="h-[50%] relative">
+        <div className="h-[50%]">
           <img
             src={channel?.coverImage}
             className="h-full bg-cover object-cover w-full"
           />
         </div>
-        <div className="h-[30%] flex justify-between items-center">
-          <div className="h-full flex gap-16 items-center ">
-            <div className="h-full relative flex justify-center items-center ">
+        <div className="h-[20%] flex justify-between items-center">
+          <div className="h-full flex gap-16 sm:items-center ">
+            <div className="h-full relative flex justify-center items-center">
               <img
                 src={channel?.avatar}
-                className=" bg-cover object-cover size-28 rounded-full -translate-y-8 translate-x-10 "
+                className=" bg-cover object-cover size-20 sm:size-28 rounded-full -translate-y-8 translate-x-10 "
               />
             </div>
             <div>
@@ -67,10 +67,10 @@ function ChannelLayout() {
             </div>
           </div>
         </div>
-        <div className="h-[20%] cursor-pointer border-b-2 flex px-10 text-white items-center justify-around">
+        <div className="h-[20%] cursor-pointer border-b-2 flex px-4 sm:px-10 text-white items-center justify-around overflow-x-auto">
           <Link to={"Videos"}>
           <div
-            className={`px-24 flex text-center items-center ${
+            className={`px-16 sm:px-24 flex text-center items-center ${
               active[0] === 1 ? activeClass : ""
               }`}
               >
@@ -79,7 +79,7 @@ function ChannelLayout() {
           </Link>
           <Link to={"PlayList"}>
           <div
-            className={`px-24 flex text-center items-center ${
+            className={`px-16 flex text-center items-center ${
               active[1] === 1 ? activeClass : ""
               }`}
               >
@@ -88,7 +88,7 @@ function ChannelLayout() {
           </Link>
           <Link to={"Tweets"}>
           <div
-            className={`px-24 flex text-center items-center ${
+            className={`px-16 flex text-center items-center ${
               active[2] === 1 ? activeClass : ""
               }`}
               >
@@ -97,7 +97,7 @@ function ChannelLayout() {
           </Link>
           <Link to={"Subscribed"}>
           <div
-            className={`px-24 flex text-center items-center ${
+            className={`px-16 flex text-center items-center ${
               active[3] === 1 ? activeClass : ""
               }`}
               >

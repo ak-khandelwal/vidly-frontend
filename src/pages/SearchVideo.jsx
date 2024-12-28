@@ -6,8 +6,8 @@ import {
   selectCurrentVideos,
   selectCurrentHasMore,
   clearVideoState,
-} from "../../app/slices/videoSlice";
-import VideoList from "../../components/videos/VideoList";
+} from "../app/slices/videoSlice";
+import VideoList from "../components/videos/VideoList";
 
 function SearchVideo() {
   const [searchParams] = useSearchParams();
@@ -66,6 +66,7 @@ function SearchVideo() {
             views={video.views}
             videoId={video._id}
             channalName={video.owner.fullName}
+            createdAt={video?.createdAt}
           />
         ))}
       </div>

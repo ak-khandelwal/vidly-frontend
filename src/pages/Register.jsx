@@ -1,8 +1,8 @@
 import { useDispatch } from "react-redux";
 import { useState } from "react";
-import GradientBg from "../../components/auth/GradientBg";
-import { loginUser, registerUser } from "../../app/slices/authSlice";
-import { FormOne, FormTwo, FormThree,FinalForm} from "../../components/auth/index";
+import GradientBg from "../components/auth/GradientBg";
+import { loginUser, registerUser } from "../app/slices/authSlice";
+import { FormOne, FormTwo, FormThree,FinalForm} from "../components/auth/index";
 import { useNavigate } from "react-router-dom";
 
 function Register() {

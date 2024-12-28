@@ -53,7 +53,6 @@ export const likeVideo = createAsyncThunk("likeVideo", async ({ videoId }) => {
   }
 
   const response = await apiClient.post("/likes/toggle/v/" + videoId);
-  console.log("likeVideo : ", response);
   return response;
 });
 export const getComments = createAsyncThunk(
@@ -67,7 +66,6 @@ export const getComments = createAsyncThunk(
       if (page) url.searchParams.set("page", page);
       if (limit) url.searchParams.set("limit", limit);
       const response = await apiClient.get(url);
-      console.log(response);
       return response.data.data;
     } catch (error) {
       throw new Error(error?.message || error);

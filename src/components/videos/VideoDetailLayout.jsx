@@ -4,7 +4,8 @@ import { getCurrentUser } from "../../app/slices/authSlice";
 import AuthLayout from "../auth/AuthLayout";
 import NavBar from "../NavBar"
 import SideBar from "../SideBar"
-import VideoDetail from '../../pages/videos/VideoDetail'
+import VideoDetail from "../../pages/VideoDetail"
+import BottomBar from "../BottomBar";
 function VideoDetailLayout() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -18,13 +19,14 @@ function VideoDetailLayout() {
           <NavBar />
         </div>
         <div className="flex w-full">
-          <div className="relative h-full w-[5%] z-20">
+          <div className="hidden sm:block relative h-full w-[5%] z-20">
             <SideBar collapse={true} />
           </div>
           <div className="h-full w-[95%]">
             <VideoDetail />
           </div>
         </div>
+        <BottomBar />
       </AuthLayout>
     </div>
   );
