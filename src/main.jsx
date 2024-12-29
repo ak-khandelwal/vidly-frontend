@@ -39,6 +39,11 @@ import SettingLayout from "./components/setting/SettingLayout";
 import ChannelLayout from "./components/ChannelLayout";
 import VideoDetailLayout from "./components/videos/VideoDetailLayout";
 import Dashboard from "./pages/Dashboard";
+import DashboardContent from "./pages/DashboardContent";
+import DashboardAnalytics from "./pages/DashboardAnalytics";
+import ContentVideo from "./components/dashboard/ContentVideo";
+import ContentTweets from "./components/dashboard/ContentTweets";
+import ContentPlaylist from "./components/dashboard/ContentPlaylist";
 
 // Configure router
 const router = createBrowserRouter([
@@ -138,9 +143,21 @@ const router = createBrowserRouter([
   },
   {
     path: "/Dashboard",
-    element: (
-        <Dashboard />
-    ),
+    element: <Dashboard />,
+    children: [
+      { index: true, element: <Navigate to="Content" replace /> },
+      {
+        path: "Content",
+        element: <DashboardContent />,
+        children: [
+          { index: true, element: <Navigate to="videos" replace /> },
+          { path: "videos", element: <ContentVideo /> },
+          { path: "tweets", element: <ContentTweets /> },
+          { path: "Playlists", element: <ContentPlaylist /> },
+        ],
+      },
+      { path: "Analytics", element: <DashboardAnalytics /> },
+    ],
   },
   { path: "/TermsAndConditions", element: <TermsAndConditions /> },
   { path: "/PrivacyPolicy", element: <PrivacyPolicy /> },

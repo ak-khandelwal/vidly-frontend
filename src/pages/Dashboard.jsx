@@ -1,9 +1,17 @@
-import BottomBar from "../components/BottomBar";
 import NavBar from "../components/NavBar";
-import SideBar from "../components/SideBar";
+import DashBoardSideBar from "../components/dashboard/DashBoardSideBar";
 import { AuthLayout } from "../components/auth";
+import DashBoardBottomBar from "../components/dashboard/DashBoardBottomBar";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { getCurrentUser } from "../app/slices/authSlice";
+import { Outlet } from "react-router-dom";
 
 function Dashboard() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getCurrentUser());
+  }, [dispatch]);
   return (
     <div className="w-screen h-screen overflow-x-hidden text-white">
       <AuthLayout>
@@ -11,26 +19,12 @@ function Dashboard() {
           <NavBar />
         </div>
         <div className="flex w-full">
-          <div className="hidden sm:block relative h-full w-[5%] z-20">
-            <SideBar collapse={true} />
-          </div>
+          <DashBoardSideBar />
           <div className="h-full p-4 w-[95%]">
-            <div className="">
-              <div>
-                <h1 className="font-bold text-xl">
-                  Welcome Back, React Patterns
-                </h1>
-                <p className="text-gray-200">
-                  Seamless Video Management, Elevated Results.
-                </p>
-              </div>
-              <div className="">+ Upload video</div>
-            </div>
-            <div></div>
-            <div></div>
+            <Outlet />
           </div>
         </div>
-        <BottomBar />
+        <DashBoardBottomBar />
       </AuthLayout>
     </div>
   );
