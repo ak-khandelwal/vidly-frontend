@@ -5,6 +5,7 @@ import videoReducer from "./slices/videoSlice";
 import playlistReducer from "./slices/playListSlice";
 import tweetReducer from "./slices/TweetsSlice";
 import subscriberReducer from "./slices/SubscriberSlice";
+import dashboardRudecer from "./slices/dashboard";
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -13,5 +14,6 @@ export const store = configureStore({
     playlist: playlistReducer,
     tweet: tweetReducer,
     subscriber: subscriberReducer,
+    dashboard: dashboardRudecer,
   }
 });
