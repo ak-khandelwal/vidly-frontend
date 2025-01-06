@@ -15,7 +15,7 @@ function Dashboard() {
   return (
     <div className="w-screen h-screen overflow-x-hidden text-white">
       <AuthLayout>
-        <div className="relative w-full h-[7%] sm:h-[10%]">
+        <div className="relative w-full h-[7%] sm:h-[10%] z-40">
           <NavBar />
         </div>
         <div className="flex w-full">

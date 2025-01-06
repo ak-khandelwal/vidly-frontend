@@ -40,7 +40,7 @@ function DashBoardSideBar() {
   const handalCollapse = () => setCollapse((i) => !i);
 
   return (
-    <aside className={`${collapse ? "w-[5%]" : "w-[25%]"} relative hidden sm:block`}>
+    <aside className={`${collapse ? "w-[5%] mr-14" : "w-[25%] mr-14 lg:mr-0"} relative hidden sm:block z-40`}>
       <div
         className={`fixed h-[90%] bg-black border-r border-white flex flex-col justify-between ${collapse ? "w-fit" : "w-[20%]"} `}
       >

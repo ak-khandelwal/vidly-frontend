@@ -7,24 +7,20 @@ import { RiPlayListAddFill } from "react-icons/ri";
 import { useState } from "react";
 import VideoPopUp from "../components/dashboard/VideoPopUp";
 import PlaylistPopup from "../components/dashboard/PlaylistPopup";
+import TweetPopUp from "../components/dashboard/TweetPopUp";
 const DashboardContent = () => {
   const active = useSelector(selectActive);
-  const activeClass = " border-x-2 px-9 border-purple-400 bg-[#5e3f65b4] ";
+  const activeClass = "border-x-2 px-9 border-purple-400 bg-[#5e3f65b4] ";
   const [uploadPopup, setUploadPopup] = useState(false);
   const handleUploadPopup = () => setUploadPopup((i) => !i);
-  const [showUploads, setShowUploads] = useState([1, 1, 1]);
 
   const [popUps, setPopups] = useState([0, 0, 0]);
   const handlePopUps = (index) => {
-    const temp = [1, 1, 1];
-    temp[(index + 1) % 3] = popUps[index] == 0 ? 0 : 1;
-    temp[(index + 2) % 3] = popUps[index] == 0 ? 0 : 1;
-    setShowUploads(temp);
-
     const newArray = [0, 0, 0];
     newArray[index] = popUps[index] == 1 ? 0 : 1;
     setPopups(newArray);
   };
+  console.log(popUps)
 
   return (
     <div className="relative">
@@ -38,50 +34,25 @@ const DashboardContent = () => {
         <div className="relative mb-10 sm:mb-4">
           {uploadPopup && (
             <div className="absolute w-56 sm:w-80 min-h-10 right-40 flex flex-col gap-3 sm:right-52">
-              {showUploads[0] == 1 && (
-                <div
-                  className="bg-[#4f4e4e7d] border-x-2 border-purple-400 w-full h-full flex items-center justify-center gap-4 py-1 "
-                  onClick={() => handlePopUps(0)}
-                >
-                  {popUps[0] == 1 ? (
-                    <span className="font-bold text-xl">X</span>
-                  ) : (
-                    <>
-                      <TbUpload className="size-6 sm:size-7" /> Upload Video{" "}
-                    </>
-                  )}
-                </div>
-              )}
-              {showUploads[1] == 1 && (
-                <div
-                  className="bg-[#4f4e4e7d] border-x-2 border-purple-400 w-full h-full flex items-center justify-center gap-4 py-1 "
-                  onClick={() => handlePopUps(1)}
-                >
-                  {popUps[1] == 1 ? (
-                    <span className="font-bold text-xl">X</span>
-                  ) : (
-                    <>
-                      <RiPlayListAddFill className="size-6 sm:size-7" /> Create
-                      Playlist{" "}
-                    </>
-                  )}
-                </div>
-              )}
-              {showUploads[2] == 1 && (
-                <div
-                  className="bg-[#4f4e4e7d] border-x-2 border-purple-400 w-full h-full flex items-center justify-center gap-4 py-1 "
-                  onClick={() => handlePopUps(2)}
-                >
-                  {popUps[2] == 1 ? (
-                    <span className="font-bold text-xl">X</span>
-                  ) : (
-                    <>
-                      <IoCreateOutline className="size-6 sm:size-7" /> Post
-                      Tweet{" "}
-                    </>
-                  )}
-                </div>
-              )}
+              <div
+                className="bg-[#4f4e4e7d] border-x-2 border-purple-400 w-full h-full flex items-center justify-center gap-4 py-1 "
+                onClick={() => handlePopUps(0)}
+              >
+                <TbUpload className="size-6 sm:size-7" /> Upload Video{" "}
+              </div>
+              <div
+                className="bg-[#4f4e4e7d] border-x-2 border-purple-400 w-full h-full flex items-center justify-center gap-4 py-1 "
+                onClick={() => handlePopUps(1)}
+              >
+                <RiPlayListAddFill className="size-6 sm:size-7" /> Create
+                Playlist{" "}
+              </div>
+              <div
+                className="bg-[#4f4e4e7d] border-x-2 border-purple-400 w-full h-full flex items-center justify-center gap-4 py-1 "
+                onClick={() => handlePopUps(2)}
+              >
+                <IoCreateOutline className="size-6 sm:size-7" /> Post Tweet{" "}
+              </div>
             </div>
           )}
           <button
@@ -109,18 +80,14 @@ const DashboardContent = () => {
           </div>
         </Link>
       </div>
-      {popUps[0] == 1 && (
-        <div className="absolute mx-auto left-0 right-0 top-20 h-[60vh] sm:w-[70vw] sm:h-[75vh] bg-black border-2 border-white overflow-y-auto">
-          <VideoPopUp />
-        </div>
+      {popUps[0] === 1 && (
+          <VideoPopUp onClose={() => handlePopUps(0)} />
       )}
-      {popUps[1] == 1 && (
-        <div className="absolute mx-auto left-0 right-0 top-20 w-[80%] h-[75vh] bg-black border-2 border-white">
-        <PlaylistPopup />
-        </div>
+      {popUps[1] === 1 && (
+          <PlaylistPopup onClose={() => handlePopUps(1)} />
       )}
-      {popUps[2] == 1 && (
-        <div className="absolute mx-auto bg-green-400 left-0 right-0 top-20 w-[80%] h-[75vh] bg-black border-2 border-white"></div>
+      {popUps[2] === 1 && (
+        <TweetPopUp onClose={() => handlePopUps(2)}/> 
       )}
       <div className="border-t-2 mt-4">
         <Outlet />
