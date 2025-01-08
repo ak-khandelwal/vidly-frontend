@@ -8,11 +8,13 @@ import {
 } from "../../app/slices/videoSlice";
 import { useDispatch } from "react-redux";
 import DeleteConfirmationModal from "./DeleteConformationModal";
+import PlaylistSelectorModal from "./PlaylistSelectorModal";
 
 const VideoDropdown = ({ video, setPage }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isPlaylistModalOpen, setIsPlaylistModalOpen] = useState(false);
   const dispatch = useDispatch();
 
   const toggleDropdown = (e) => {
@@ -30,14 +32,19 @@ const VideoDropdown = ({ video, setPage }) => {
     setIsDeleteModalOpen(true);
     setIsOpen(false);
   };
+  const handleAddToPlaylist = (e) => {
+    e.stopPropagation();
+    setIsPlaylistModalOpen(true);
+    setIsOpen(false);
+  };
   const confirmDelete = async () => {
     try {
       await dispatch(deleteVideo({ videoId: video?._id })).unwrap();
-      await dispatch(clearVideoState());
+      dispatch(clearVideoState());
+      setPage(1);
       setIsDeleteModalOpen(false);
     } catch (error) {
       console.error("Failed to delete video:", error);
-      // You might want to show an error notification here
     }
   };
   const handleTogglePublish = async (e) => {
@@ -46,7 +53,7 @@ const VideoDropdown = ({ video, setPage }) => {
       await dispatch(togglePublishStatus({ videoId: video?._id })).unwrap();
       dispatch(clearVideoState());
       setPage(1);
-      setIsOpen(false); // Close dropdown after action
+      setIsOpen(false); 
     } catch (error) {
       console.error("Failed to toggle publish status:", error);
     }
@@ -71,7 +78,7 @@ const VideoDropdown = ({ video, setPage }) => {
           <HiDotsVertical />
         </button>
         {isOpen && (
-          <span className="absolute bg-black -right-4 top-0 font-bold text-center z-10">
+          <span className="absolute bg-black -left-32 -top-10 font-bold text-center z-10">
             <h1
               onClick={handleEdit}
               className="border-purple-400 border-x bg-[#5e3f65b4] px-2 mb-2 cursor-pointer hover:bg-[#6b4975]"
@@ -90,6 +97,12 @@ const VideoDropdown = ({ video, setPage }) => {
             >
               Delete
             </h1>
+            <h1
+              onClick={handleAddToPlaylist}
+              className="border-purple-400 border-x bg-[#5e3f65b4] text-nowrap px-2 mb-2 cursor-pointer hover:bg-[#6b4975]"
+            >
+              Add to Playlist
+            </h1>
           </span>
         )}
       </div>
@@ -103,6 +116,11 @@ const VideoDropdown = ({ video, setPage }) => {
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={confirmDelete}
         videoTitle={video?.title}
+      />
+      <PlaylistSelectorModal
+        isOpen={isPlaylistModalOpen}
+        onClose={() => setIsPlaylistModalOpen(false)}
+        video={video}
       />
     </>
   );

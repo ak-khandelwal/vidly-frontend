@@ -32,7 +32,7 @@ const ContentVideo = () => {
       const entry = entries[0];
       if (entry.isIntersecting && hasMore && !loading) {
         setLoading(true);
-        dispatch(getVideos({ userId: user?._id, page, limit: 6 }))
+          dispatch(getVideos({ userId: user?._id, page, limit: 6 }))
           .unwrap()
           .then(() => {
             setPage((prev) => prev + 1);
@@ -43,6 +43,7 @@ const ContentVideo = () => {
             setLoading(false);
           });
       }
+      if (!hasMore) setPage(1);
     });
 
     if (elementRef.current) {
@@ -61,7 +62,7 @@ const ContentVideo = () => {
       <div className="flex justify-around p-4">
         <div className="min-w-64 ms:min-w-52">Videos</div>
         <div className="pr-20">Visibility</div>
-        <div className="pr-20">likes</div>
+        <div className="pr-20">Views</div>
         <div className="pr-20">Date</div>
         <div className="pr-20">options</div>
       </div>
@@ -107,8 +108,8 @@ const ContentVideo = () => {
                 )}
               </div>
 
-              {/* Likes */}
-              <div className="pr-20 text-center">{item?.likes || 0}</div>
+              {/* Views */}
+              <div className="pr-20 text-center">{item?.views || 0}</div>
 
               {/* Date */}
               <div className="pr-20 text-sm text-gray-300">

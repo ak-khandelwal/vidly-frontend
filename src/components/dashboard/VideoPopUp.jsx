@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addVideo } from "../../app/slices/videoSlice";
+import { addVideo, clearVideoState } from "../../app/slices/videoSlice";
 
 const VideoPopUp = ({ onClose }) => {
   const dispatch = useDispatch();
@@ -11,6 +11,8 @@ const VideoPopUp = ({ onClose }) => {
     video: null,
   });
   const [previewUrl, setPreviewUrl] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -43,8 +45,17 @@ const VideoPopUp = ({ onClose }) => {
       alert("All fields marked with * are required!");
       return;
     }
-
+    setIsUploading(true);
     try {
+      // Simulate upload progress
+      const simulateProgress = () => {
+        setUploadProgress((prev) => {
+          if (prev < 90) return prev + 10;
+          return prev;
+        });
+      };
+      const progressInterval = setInterval(simulateProgress, 500);
+
       await dispatch(
         addVideo({
           title,
@@ -53,12 +64,68 @@ const VideoPopUp = ({ onClose }) => {
           videoFile: video,
         }),
       ).unwrap();
-      onClose?.();
+      clearInterval(progressInterval);
+      setUploadProgress(100);
+      dispatch(clearVideoState())
+      setTimeout(() => {
+        onClose?.();
+      }, 1000);
     } catch (error) {
       console.error("Failed to upload video:", error);
     }
   };
 
+  if (isUploading) {
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-40">
+        <div className="bg-black border-2 border-purple-400 rounded-lg p-8 w-full max-w-md">
+          <h2 className="text-2xl font-bold text-white text-center mb-2">
+            Uploading Video...
+          </h2>
+          <p className="text-gray-300 text-center mb-6">
+            Track your video uploading process.
+          </p>
+
+          <div className="mb-6">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="flex-1">
+                <p className="text-white mb-2">{formData.video?.name}</p>
+                <p className="text-sm text-gray-400">
+                  {(formData.video?.size / (1024 * 1024)).toFixed(2)} MB
+                </p>
+              </div>
+              <span className="text-purple-400">{uploadProgress}%</span>
+            </div>
+
+            <div className="w-full bg-gray-700 rounded-full h-2">
+              <div
+                className="bg-purple-400 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${uploadProgress}%` }}
+              ></div>
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-4">
+            <button
+              onClick={onClose}
+              className="px-6 py-2 border border-purple-400 rounded-md text-sm 
+                       font-medium text-white hover:bg-purple-400/20"
+            >
+              Cancel
+            </button>
+            <button
+              disabled={uploadProgress < 100}
+              onClick={onClose}
+              className={`px-6 py-2 border border-purple-400 rounded-md text-sm 
+                       font-medium text-white ${uploadProgress === 100 ? "bg-purple-400/40 hover:bg-purple-400/60" : "bg-purple-400/20"}`}
+            >
+              {uploadProgress === 100 ? "Finish" : "Uploading..."}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-40">
       <div className="bg-black border-2 border-purple-400 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">

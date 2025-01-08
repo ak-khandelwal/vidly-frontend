@@ -20,7 +20,6 @@ const DashboardContent = () => {
     newArray[index] = popUps[index] == 1 ? 0 : 1;
     setPopups(newArray);
   };
-  console.log(popUps)
 
   return (
     <div className="relative">

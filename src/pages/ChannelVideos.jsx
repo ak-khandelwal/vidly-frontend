@@ -7,10 +7,7 @@ import {
   selectCurrentVideos,
   selectCurrentHasMore,
 } from "../app/slices/videoSlice";
-import {
-  selectCurrentChannel,
-  setActive,
-} from "../app/slices/channelSlice";
+import { selectCurrentChannel, setActive } from "../app/slices/channelSlice";
 
 function ChannelVideos() {
   const dispatch = useDispatch();
@@ -25,7 +22,7 @@ function ChannelVideos() {
   useEffect(() => {
     if (user) {
       dispatch(clearVideoState());
-      setPage(1); 
+      setPage(1);
     }
   }, [dispatch, user]);
   useEffect(() => {
@@ -40,7 +37,7 @@ function ChannelVideos() {
           dispatch(getVideos({ userId: user?._id, page, limit: 6 }))
             .unwrap()
             .then(() => {
-              setPage((prev) => prev + 1); 
+              setPage((prev) => prev + 1);
               setLoading(false);
             })
             .catch((err) => {
@@ -49,7 +46,7 @@ function ChannelVideos() {
             });
         }
       },
-      { threshold: 1.0 }
+      { threshold: 1.0 },
     );
 
     if (elementRef.current) {
@@ -69,8 +66,10 @@ function ChannelVideos() {
             key={i}
             title={video.title}
             videoId={video._id}
-          createdAt={video.createdAt}
-          views={video.views}
+            createdAt={video.createdAt}
+            views={video.views}
+            thumbnail={video?.thumbnail}
+            avatar={video?.owner?.avatar}
           />
         ))}
       </div>
