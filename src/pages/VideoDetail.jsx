@@ -12,9 +12,7 @@ import {
   selectVideoPlay,
 } from "../app/slices/videoSlice";
 import { BiLike, BiSolidLike } from "react-icons/bi";
-import {
-  toggleSubscription,
-} from "../app/slices/SubscriberSlice";
+import { toggleSubscription } from "../app/slices/SubscriberSlice";
 import VideoSuggested from "../components/videos/VideoSuggested";
 import Comments from "../components/videos/Comments";
 import { selectCurrentUser } from "../app/slices/authSlice";
@@ -36,9 +34,8 @@ function VideoDetail() {
   const handleLike = async (e) => {
     e.preventDefault();
     if (videoId) {
-      dispatch(likeVideo({ videoId }))
-        .unWrap()
-        .then(dispatch(getVideoLike({ videoId })));
+      await dispatch(likeVideo({ videoId })).unwrap();
+      dispatch(getVideoLike({ videoId }));
     }
   };
 
@@ -60,6 +57,7 @@ function VideoDetail() {
             src={video.videoFile}
             poster={video?.thumbnail}
             controls
+            autoPlay
             className="w-full sm:w-[70rem] h-auto sm:h-[30rem] border-2"
           ></video>
           <div className="border-2 p-4">
