@@ -31,8 +31,8 @@ const VideoCard = ({
           />
         </Link>
         <div>
-          <h3 className="text-lg font-semibold text-wrap inline-block">
-            {title?.slice(0, 60)}
+          <h3 className="text-lg font-semibold text-ellipsis line-clamp-2 text-wrap inline-block">
+            {title}
           </h3>
           <p className="text-sm text-gray-400 truncate">{fullName}</p>
           <p className="text-sm text-gray-500 truncate">

@@ -42,7 +42,7 @@ function DashBoardSideBar() {
   return (
     <aside className={`${collapse ? "w-[5%] mr-14" : "w-[25%] mr-14 lg:mr-0"} relative hidden sm:block z-40`}>
       <div
-        className={`fixed h-[90%] bg-black border-r border-white flex flex-col justify-between ${collapse ? "w-fit" : "w-[20%]"} `}
+        className={`fixed h-[90%] bg-zinc-950 border-r border-white flex flex-col justify-between ${collapse ? "w-fit" : "w-[20%]"} `}
       >
         <div className="px-2 flex text-start flex-col gap-2 mt-2">
           <div className="border-b-2 py-2">

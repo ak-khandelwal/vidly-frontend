@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  selectCurrentChannel,
-  setActive,
-} from "../app/slices/channelSlice";
+import { selectCurrentChannel, setActive } from "../app/slices/channelSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addTweets,
@@ -30,7 +27,7 @@ function ChannelTweets() {
     if (content !== "") {
       try {
         await dispatch(addTweets({ content })).unwrap();
-        await dispatch(getTweets({ userId: user?._id }));
+        dispatch(getTweets({ userId: user?._id }));
         setContent("");
       } catch (error) {
         console.error("Failed to add comment:", error);
@@ -67,6 +64,7 @@ function ChannelTweets() {
             content={item.content}
             avatar={user.avatar}
             fullname={user.fullName}
+            username={user.userName}
             createdAt={item.createdAt}
           />
         ))}

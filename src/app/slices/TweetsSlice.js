@@ -2,11 +2,15 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { apiClient } from "../api/axiosInstance";
 
 export const getTweets = createAsyncThunk("getTweets", async ({ userId }) => {
-  if (!userId) {
-    throw new Error("userId required");
+  try {
+    if (!userId) {
+      throw new Error("userId required");
+    }
+    const response = await apiClient(`/tweets/user/${userId}`);
+    return response.data.data;
+  } catch (err) {
+    throw new Error(err);
   }
-  const response = await apiClient(`/tweets/user/${userId}`);
-  return response.data.data;
 });
 
 export const addTweets = createAsyncThunk("addTweets", async ({ content }) => {

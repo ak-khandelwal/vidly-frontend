@@ -1,12 +1,7 @@
 import { useState } from "react";
 import { IoMdCheckmark } from "react-icons/io";
-import {  useSelector } from "react-redux";
-import {
-  selectCurrentVideos,
-} from "../../app/slices/videoSlice";
 
-const AddVideosModal = ({ isOpen, onClose, playlist }) => {
-  const videos = useSelector(selectCurrentVideos);
+const DeleteVideosModal = ({ isOpen, onClose, playlist }) => {
   const [selectedVideos, setSelectedVideos] = useState([]);
 
   const handleToggleVideo = (videoId) => {
@@ -17,8 +12,8 @@ const AddVideosModal = ({ isOpen, onClose, playlist }) => {
     );
   };
 
-  const handleSave = async () => {
-    // Implement save logic
+  const handleDelete = async () => {
+    // Implement delete logic
     onClose();
   };
 
@@ -35,24 +30,23 @@ const AddVideosModal = ({ isOpen, onClose, playlist }) => {
       >
         <div className="p-4 border-b border-purple-400">
           <h2 className="text-xl font-bold text-white">
-            Add Videos to Playlist
+            Remove Videos from Playlist
           </h2>
         </div>
 
         <div className="p-4">
           <div className="max-h-96 overflow-y-auto space-y-2">
-            {videos.map((video) => (
+            {playlist?.videos?.map((video) => (
               <div
                 key={video._id}
                 onClick={() => handleToggleVideo(video._id)}
                 className="flex items-center gap-3 p-2 rounded cursor-pointer hover:bg-purple-400/10"
               >
                 <div
-                  className={`w-5 h-5 rounded border ${
-                    selectedVideos.includes(video._id)
-                      ? "border-purple-400 bg-purple-400"
-                      : "border-purple-400"
-                  } flex items-center justify-center`}
+                  className={`w-5 h-5 rounded border ${selectedVideos.includes(video._id)
+                      ? "border-red-400 bg-red-400"
+                      : "border-red-400"
+                    } flex items-center justify-center`}
                 >
                   {selectedVideos.includes(video._id) && (
                     <IoMdCheckmark className="text-black" />
@@ -78,12 +72,12 @@ const AddVideosModal = ({ isOpen, onClose, playlist }) => {
             Cancel
           </button>
           <button
-            onClick={handleSave}
-            className="px-4 py-2 border border-purple-400 rounded-md text-sm 
-                     font-medium text-white bg-purple-400/20 
-                     hover:bg-purple-400/40"
+            onClick={handleDelete}
+            className="px-4 py-2 border border-red-400 rounded-md text-sm 
+                     font-medium text-white bg-red-400/20 
+                     hover:bg-red-400/40"
           >
-            Add Selected Videos
+            Remove Selected Videos
           </button>
         </div>
       </div>
@@ -91,4 +85,4 @@ const AddVideosModal = ({ isOpen, onClose, playlist }) => {
   );
 };
 
-export default AddVideosModal;
+export default DeleteVideosModal;

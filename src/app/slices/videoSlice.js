@@ -52,7 +52,7 @@ export const togglePublishStatus = createAsyncThunk(
   async ({ videoId }) => {
     try {
       if (!videoId) throw new Error("videoId required");
-      apiClient.patch(`/videos/toggle/publish/${videoId}`);
+      await apiClient.patch(`/videos/toggle/publish/${videoId}`);
     } catch (err) {
       console.log(err);
       throw new Error(err);
@@ -64,13 +64,16 @@ export const updateVideo = createAsyncThunk(
   async ({ videoId, formData }) => {
     try {
       if (!videoId) throw new Error("videoId required");
-      const response = await apiMultipartClient.patch(`/videos/${videoId}`, formData);
+      const response = await apiMultipartClient.patch(
+        `/videos/${videoId}`,
+        formData,
+      );
       return response.data;
     } catch (err) {
       console.log(err);
       throw new Error(err);
     }
-  }
+  },
 );
 export const deleteVideo = createAsyncThunk(
   "deleteVideo",
@@ -83,7 +86,7 @@ export const deleteVideo = createAsyncThunk(
       console.error(err);
       throw new Error(err?.message || "Failed to delete video");
     }
-  }
+  },
 );
 export const getVideoById = createAsyncThunk(
   "getVideoById",
@@ -110,12 +113,14 @@ export const getVideoLike = createAsyncThunk(
   },
 );
 export const likeVideo = createAsyncThunk("likeVideo", async ({ videoId }) => {
-  if (!videoId) {
-    throw new Error("video id is required");
+  try {
+    if (!videoId) {
+      throw new Error("video id is required");
+    }
+    await apiClient.post("/likes/toggle/v/" + videoId);
+  } catch (err) {
+    throw new Error(err);
   }
-
-  const response = await apiClient.post("/likes/toggle/v/" + videoId);
-  return response;
 });
 export const getComments = createAsyncThunk(
   "getComments",
