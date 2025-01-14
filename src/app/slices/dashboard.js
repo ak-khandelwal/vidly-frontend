@@ -17,6 +17,5 @@ const dashboard = createSlice({
 
 export default dashboard.reducer;
 export const { setActive } = dashboard.actions;
-export const selectCurrentChannel = (state) => state.dashboard.dashboard;
 export const selectLoading = (state) => state.dashboard.loading;
 export const selectActive = (state) => state.dashboard.active;

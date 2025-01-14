@@ -1,7 +1,31 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { apiClient } from "../api/axiosInstance";
+import { apiClient, apiMultipartClient } from "../api/axiosInstance";
 import { BASE_URL } from "../../constants/BASE_URL";
 // Get all videos by userId
+export const addVideo = createAsyncThunk(
+  "addVideo",
+  async ({ title, description, videoFile, thumbnail }) => {
+    try {
+      if (!title && !description) {
+        throw new Error("title and description in  required");
+      }
+      if (!videoFile && !thumbnail) {
+        throw new Error("video and thumbnail in  required");
+      }
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("thumbnail", thumbnail);
+      formData.append("videoFile", videoFile);
+
+      const response = await apiMultipartClient.post("videos/", formData);
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+      throw new Error(err);
+    }
+  },
+);
 export const getVideos = createAsyncThunk(
   "getVideos",
   async ({ userId, sortBy, sortType, query, page, limit }) => {
@@ -21,7 +45,48 @@ export const getVideos = createAsyncThunk(
     } catch (error) {
       throw new Error(error?.message || error);
     }
-  }
+  },
+);
+export const togglePublishStatus = createAsyncThunk(
+  "togglePublishStatus",
+  async ({ videoId }) => {
+    try {
+      if (!videoId) throw new Error("videoId required");
+      await apiClient.patch(`/videos/toggle/publish/${videoId}`);
+    } catch (err) {
+      console.log(err);
+      throw new Error(err);
+    }
+  },
+);
+export const updateVideo = createAsyncThunk(
+  "updateVideo",
+  async ({ videoId, formData }) => {
+    try {
+      if (!videoId) throw new Error("videoId required");
+      const response = await apiMultipartClient.patch(
+        `/videos/${videoId}`,
+        formData,
+      );
+      return response.data;
+    } catch (err) {
+      console.log(err);
+      throw new Error(err);
+    }
+  },
+);
+export const deleteVideo = createAsyncThunk(
+  "deleteVideo",
+  async ({ videoId }) => {
+    try {
+      if (!videoId) throw new Error("videoId required");
+      await apiClient.delete(`/videos/${videoId}`);
+      return videoId;
+    } catch (err) {
+      console.error(err);
+      throw new Error(err?.message || "Failed to delete video");
+    }
+  },
 );
 export const getVideoById = createAsyncThunk(
   "getVideoById",
@@ -35,7 +100,7 @@ export const getVideoById = createAsyncThunk(
     } catch (error) {
       throw new Error(error?.message || error);
     }
-  }
+  },
 );
 export const getVideoLike = createAsyncThunk(
   "getVideoLike",
@@ -45,15 +110,17 @@ export const getVideoLike = createAsyncThunk(
     }
     const response = await apiClient.get(`/likes/video/${videoId}`);
     return response.data.data;
-  }
+  },
 );
 export const likeVideo = createAsyncThunk("likeVideo", async ({ videoId }) => {
-  if (!videoId) {
-    throw new Error("video id is required");
+  try {
+    if (!videoId) {
+      throw new Error("video id is required");
+    }
+    await apiClient.post("/likes/toggle/v/" + videoId);
+  } catch (err) {
+    throw new Error(err);
   }
-
-  const response = await apiClient.post("/likes/toggle/v/" + videoId);
-  return response;
 });
 export const getComments = createAsyncThunk(
   "getComments",
@@ -70,22 +137,24 @@ export const getComments = createAsyncThunk(
     } catch (error) {
       throw new Error(error?.message || error);
     }
-  }
+  },
 );
 export const addComment = createAsyncThunk(
   "addComment",
-  async ({videoId, content}) => {
+  async ({ videoId, content }) => {
     try {
-      if(!videoId || !content){
-        throw new Error("videoid and content is required")
+      if (!videoId || !content) {
+        throw new Error("videoid and content is required");
       }
-      const response = await apiClient.post(`/comments/${videoId}`, {content})
-      return response.data
+      const response = await apiClient.post(`/comments/${videoId}`, {
+        content,
+      });
+      return response.data;
     } catch (error) {
-      throw new Error(error?.message || error)
+      throw new Error(error?.message || error);
     }
-  }
-)
+  },
+);
 
 const initialState = {
   videos: [],
@@ -119,7 +188,7 @@ const videoSlice = createSlice({
     clearCommentState: (state) => {
       state.comments = [];
       state.hashMoreComments = true;
-      state.commentCount  = 0;
+      state.commentCount = 0;
     },
   },
   extraReducers: (builder) => {
@@ -130,8 +199,8 @@ const videoSlice = createSlice({
       state.hasMore = state.videos.length < state.videoCount;
     });
     builder.addCase(getVideos.rejected, (state) => {
-     state.videoError = true; 
-    })
+      state.videoError = true;
+    });
     builder.addCase(getComments.fulfilled, (state, action) => {
       const newComments = action.payload.comments;
       state.comments.push(...newComments);

@@ -7,10 +7,7 @@ import {
   selectCurrentVideos,
   selectCurrentHasMore,
 } from "../app/slices/videoSlice";
-import {
-  selectCurrentChannel,
-  setActive,
-} from "../app/slices/channelSlice";
+import { selectCurrentChannel, setActive } from "../app/slices/channelSlice";
 
 function ChannelVideos() {
   const dispatch = useDispatch();
@@ -18,21 +15,19 @@ function ChannelVideos() {
   const hasMore = useSelector(selectCurrentHasMore);
   const user = useSelector(selectCurrentChannel);
 
-  const [page, setPage] = useState(1); // Tracks current page
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const elementRef = useRef(null);
 
-  // Clear video state on component mount or when the user changes
   useEffect(() => {
     if (user) {
       dispatch(clearVideoState());
-      setPage(1); // Reset pagination
+      setPage(1);
     }
   }, [dispatch, user]);
   useEffect(() => {
     dispatch(setActive([1, 0, 0, 0]));
   }, [dispatch]);
-  // Fetch videos when the observer detects the element
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -42,7 +37,7 @@ function ChannelVideos() {
           dispatch(getVideos({ userId: user?._id, page, limit: 6 }))
             .unwrap()
             .then(() => {
-              setPage((prev) => prev + 1); // Increment page on success
+              setPage((prev) => prev + 1);
               setLoading(false);
             })
             .catch((err) => {
@@ -51,7 +46,7 @@ function ChannelVideos() {
             });
         }
       },
-      { threshold: 1.0 } // Trigger when the element is fully visible
+      { threshold: 1.0 },
     );
 
     if (elementRef.current) {
@@ -68,14 +63,13 @@ function ChannelVideos() {
       <div className="w-full h-full grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {videos.map((video, i) => (
           <VideoCard
-            key={i} // Use a unique identifier for better rendering
-            thumbnail={video.thumbnail}
-            avatar={video.owner.avatar}
-            description={video.description}
+            key={i}
             title={video.title}
             videoId={video._id}
-          createdAt={video.createdAt}
-          views={video.views}
+            createdAt={video.createdAt}
+            views={video.views}
+            thumbnail={video?.thumbnail}
+            avatar={video?.owner?.avatar}
           />
         ))}
       </div>
