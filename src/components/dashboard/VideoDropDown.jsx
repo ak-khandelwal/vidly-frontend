@@ -9,11 +9,14 @@ import {
 import { useDispatch } from "react-redux";
 import DeleteConfirmationModal from "./DeleteConformationModal";
 import PlaylistSelectorModal from "./PlaylistSelectorModal";
+import TonglePublishConformationModal from "./TonglePublishConformationModal";
 
 const VideoDropdown = ({ video, setPage }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isTonglePublishModalOpen, setIsTonglePublishModalOpen] =
+    useState(false);
   const [isPlaylistModalOpen, setIsPlaylistModalOpen] = useState(false);
   const dispatch = useDispatch();
 
@@ -32,6 +35,11 @@ const VideoDropdown = ({ video, setPage }) => {
     setIsDeleteModalOpen(true);
     setIsOpen(false);
   };
+  const handleTonglePublish = (e) => {
+    e.stopPropagation();
+    setIsTonglePublishModalOpen(true);
+    setIsOpen(false);
+  };
   const handleAddToPlaylist = (e) => {
     e.stopPropagation();
     setIsPlaylistModalOpen(true);
@@ -47,13 +55,12 @@ const VideoDropdown = ({ video, setPage }) => {
       console.error("Failed to delete video:", error);
     }
   };
-  const handleTogglePublish = async (e) => {
-    e.stopPropagation();
+  const conformTongleConform = async () => {
     try {
       await dispatch(togglePublishStatus({ videoId: video?._id })).unwrap();
       dispatch(clearVideoState());
       setPage(1);
-      setIsOpen(false); 
+      setIsOpen(false);
     } catch (error) {
       console.error("Failed to toggle publish status:", error);
     }
@@ -70,7 +77,7 @@ const VideoDropdown = ({ video, setPage }) => {
 
   return (
     <>
-      <div className="pr-20 relative">
+      <div className="relative">
         <button
           onClick={toggleDropdown}
           className="p-1 hover:bg-gray-100 rounded-full"
@@ -86,7 +93,7 @@ const VideoDropdown = ({ video, setPage }) => {
               Edit
             </h1>
             <h1
-              onClick={handleTogglePublish}
+              onClick={handleTonglePublish}
               className="border-purple-400 border-x bg-[#5e3f65b4] px-2 mb-2 cursor-pointer hover:bg-[#6b4975]"
             >
               {video?.isPublished ? "Unpublish" : "Publish"}
@@ -116,6 +123,13 @@ const VideoDropdown = ({ video, setPage }) => {
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={confirmDelete}
         videoTitle={video?.title}
+      />
+      <TonglePublishConformationModal
+        isOpen={isTonglePublishModalOpen}
+        onClose={() => setIsTonglePublishModalOpen(false)}
+        onConfirm={conformTongleConform}
+        videoTitle={video?.title}
+        isPublish={video?.isPublished}
       />
       <PlaylistSelectorModal
         isOpen={isPlaylistModalOpen}
