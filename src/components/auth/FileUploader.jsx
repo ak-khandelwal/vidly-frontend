@@ -1,3 +1,5 @@
+import { FaCloudUploadAlt } from "react-icons/fa";
+
 function FileUploader({ setImage, setBulb, image, width, children}) {
   return (
     <main className={`w-[${width}] h-full border-4 border-dashed border-purple-900 flex flex-col justify-center items-center text-center m-[2px]`}>
@@ -20,7 +22,7 @@ function FileUploader({ setImage, setBulb, image, width, children}) {
           <img src={image} alt="coverImage-preview" className="size-80" />
         ) : (
           <div>
-            <img src="src/assets/auth/upload.svg" className="size-52 pb-8" />
+            <FaCloudUploadAlt className="size-52 pb-8" />
             <div className="w-full ">
               {children}
             </div>
