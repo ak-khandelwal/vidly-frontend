@@ -1,27 +1,29 @@
-import { useEffect, useState } from 'react'
-import GradientBg from './GradientBg'
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { loginUser, selectCurrentStatus } from '../../app/slices/authSlice';
+import { FaUser, FaEnvelope, FaLock, FaTimes } from 'react-icons/fa';
 
-function LoginPopUp() {
+function LoginPopUp({ onClose }) {
   const dispatch = useDispatch();
   const state = useSelector(selectCurrentStatus);
   const [user, setUser] = useState({
-    email: "",
-    password: "",
-    userName: "",
+    email: '',
+    password: '',
+    userName: '',
   });
   const [buttonDisabled, setButtonDisabled] = useState(true);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    dispatch(loginUser(user))
-  }
+    dispatch(loginUser(user));
+  };
 
   useEffect(() => {
     if (
-      [user.fullName, user.email, user.userName, user.password].some((field) => field?.trim() === "")
+      [user.fullName, user.email, user.userName, user.password].some(
+        (field) => field?.trim() === '',
+      )
     ) {
       setButtonDisabled(true);
     } else {
@@ -30,72 +32,108 @@ function LoginPopUp() {
   }, [user]);
 
   return (
-    <div className='h-full w-full sm:w-[40%] flex flex-col gap-6 items-center justify-center'>
-      <div className="relative h-[60%] sm:h-[80%] w-full">
-        <GradientBg style1={"w-[100%]"} style3={"flex m-1 flex-col justify-between p-8"} >
-            <Input
-            lable={"user name"}
+    <div className='fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50'>
+      <div className='relative w-full sm:w-[440px] bg-zinc-900 rounded-xl border border-zinc-800 shadow-xl'>
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className='absolute right-4 top-4 text-gray-400 hover:text-white transition-colors'
+        >
+          <FaTimes size={20} />
+        </button>
+
+        {/* Header */}
+        <div className='p-6 border-b border-zinc-800'>
+          <h2 className='text-2xl font-bold text-white'>Welcome Back</h2>
+          <p className='text-gray-400 mt-1'>Sign in to continue your journey</p>
+        </div>
+
+        {/* Form */}
+        <div className='p-6 space-y-6'>
+          <Input
+            label='Username'
+            icon={<FaUser />}
             value={user.userName}
-            onChange={(e) => setUser({ ...user, userName: e.target.value })} />
-            <Input
-            lable={"Email Id"}
+            onChange={(e) => setUser({ ...user, userName: e.target.value })}
+            placeholder='Enter your username'
+          />
+
+          <Input
+            label='Email'
+            icon={<FaEnvelope />}
             value={user.email}
             onChange={(e) => setUser({ ...user, email: e.target.value })}
-            />
-            <Input
-            lable={"Password"}
+            placeholder='Enter your email'
+            type='email'
+          />
+
+          <Input
+            label='Password'
+            icon={<FaLock />}
             value={user.password}
             onChange={(e) => setUser({ ...user, password: e.target.value })}
-            />
-
-            <div className='h-[5%] w-full text-lg text-purple-500 mb-4 '>
-            Create an account
-            <Link to={"/signup"}>
-              <span  className='text-xl text-pink-400'> Sign Up.</span>
-            </Link>
-            </div>
-        </GradientBg>
-      </div>
-      <Footer handleSubmit={handleSubmit} buttonDisabled={buttonDisabled} loading={state.status === "loading" ? true: false} />
-    </div>
-  )
-}
-
-function Input({lable,value,onChange}){
-  return (
-    <div className='w-full h-[20%] flex flex-col'>
-      <span className='text-xl h-[40%] text-purple-500'>{lable}</span>
-          <input
-          value={value}
-          onChange={onChange}
-            className="border border-purple-600  w-full h-[50%] bg-zinc-900 text-white flex text-xl font-bold justify-center items-center outline-none p-2"
-            aria-hidden="true"
+            placeholder='Enter your password'
+            type='password'
           />
-      </div>
-  )
-}
 
-function Footer({handleSubmit,buttonDisabled,loding}) {
-  return (
-    <div className="h-[10%] w-full flex ">
-      <GradientBg  style1={"w-[70%]"} style3={"flex text-xl font-bold justify-center items-center m-[2px]"} >
-      {"Login An Account"}
-      </GradientBg>
-      <GradientBg style1={"w-[30%]"} style3={"flex text-xl font-bold justify-center items-center m-[2px]"} >
-        <button
+          <div className='flex items-center justify-between pt-4'>
+            <p className='text-gray-400'>
+              New here?{' '}
+              <Link
+                to='/signup'
+                className='text-purple-400 hover:text-purple-300 transition-colors'
+              >
+                Create Account
+              </Link>
+            </p>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className='p-6 bg-zinc-800/50 rounded-b-xl flex gap-4'>
+          <button
             onClick={handleSubmit}
-            disabled={buttonDisabled || loding}
-            className="w-full h-full m-[2px] text-pink-400 flex items-center justify-center"
+            disabled={buttonDisabled || state.status === 'loading'}
+            className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-200 
+              ${
+                buttonDisabled || state.status === 'loading'
+                  ? 'bg-zinc-700 text-zinc-400 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:opacity-90'
+              }`}
           >
-            {loding ? (
-              <img src="src/assets/loding.svg"  className="size-10 animate-spin rotate-180" alt="dd" />
-            ): "NEXT >>"}
-
+            {state.status === 'loading' ? (
+              <div className='flex items-center justify-center'>
+                <div className='animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full' />
+              </div>
+            ) : (
+              'Sign In'
+            )}
           </button>
-      </GradientBg>
+        </div>
+      </div>
     </div>
-  )
-
+  );
 }
 
-export default LoginPopUp
+function Input({ label, icon, value, onChange, type = 'text', placeholder }) {
+  return (
+    <div className='space-y-2'>
+      <label className='flex items-center space-x-2 text-gray-300'>
+        <span className='text-purple-400'>{icon}</span>
+        <span>{label}</span>
+      </label>
+      <input
+        type={type}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className='w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 
+                 text-white placeholder-gray-500
+                 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500
+                 transition-colors duration-200'
+      />
+    </div>
+  );
+}
+
+export default LoginPopUp;

@@ -1,58 +1,58 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import "./index.css";
-import { Provider } from "react-redux";
-import { store } from "./app/store";
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import { Provider } from 'react-redux';
+import { store } from './app/store';
 import {
   createBrowserRouter,
   Navigate,
   RouterProvider,
-} from "react-router-dom";
+} from 'react-router-dom';
 
 // Pages
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import ChannelPlaylist from "./pages/ChannelPlaylist";
-import ChannelTweets from "./pages/ChannelTweets";
-import ChannelSubscribers from "./pages/ChannelSubscribers";
-import SubscribedChannel from "./pages/SubscribedChannel";
-import ChannelVideos from "./pages/ChannelVideos";
-import HomeVideos from "./pages/HomeVideos";
-import SearchVideo from "./pages/SearchVideo";
-import TermsAndConditions from "./pages/TermsAndConditions";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import History from "./pages/History";
-import Playlist from "./pages/Playlist";
+import LoginForm from './pages/LoginForm';
+import Register from './pages/Register';
+import ChannelPlaylist from './pages/ChannelPlaylist';
+import ChannelTweets from './pages/ChannelTweets';
+import ChannelSubscribers from './pages/ChannelSubscribers';
+import SubscribedChannel from './pages/SubscribedChannel';
+import ChannelVideos from './pages/ChannelVideos';
+import HomeVideos from './pages/HomeVideos';
+import SearchVideo from './pages/SearchVideo';
+import TermsAndConditions from './pages/TermsAndConditions';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import History from './pages/History';
+import Playlist from './pages/Playlist';
 
 // Layouts and others
-import AuthLayout from "./components/auth/AuthLayout";
-import App from "./App";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import AuthLayout from './components/auth/AuthLayout';
+import App from './App';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Setting
-import ChangeInformation from "./components/setting/ChangeInformation";
-import ChangePassword from "./components/setting/ChangePassword";
-import SettingLayout from "./components/setting/SettingLayout";
+import ChangeInformation from './components/setting/ChangeInformation';
+import ChangePassword from './components/setting/ChangePassword';
+import SettingLayout from './components/setting/SettingLayout';
 
 // Channel
-import ChannelLayout from "./components/ChannelLayout";
-import VideoDetailLayout from "./components/videos/VideoDetailLayout";
-import Dashboard from "./pages/Dashboard";
-import DashboardContent from "./pages/DashboardContent";
-import DashboardAnalytics from "./pages/DashboardAnalytics";
-import ContentVideo from "./components/dashboard/ContentVideo";
-import ContentTweets from "./components/dashboard/ContentTweets";
-import ContentPlaylist from "./components/dashboard/ContentPlaylist";
+import ChannelLayout from './components/ChannelLayout';
+import VideoDetailLayout from './components/videos/VideoDetailLayout';
+import Dashboard from './pages/Dashboard';
+import DashboardContent from './pages/DashboardContent';
+import DashboardAnalytics from './pages/DashboardAnalytics';
+import ContentVideo from './components/dashboard/ContentVideo';
+import ContentTweets from './components/dashboard/ContentTweets';
+import ContentPlaylist from './components/dashboard/ContentPlaylist';
 
 // Configure router
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <App />,
     children: [
       {
-        path: "/",
+        path: '/',
         element: (
           <AuthLayout authentication={false}>
             <HomeVideos />
@@ -60,7 +60,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/search",
+        path: '/search',
         element: (
           <AuthLayout authentication={false}>
             <SearchVideo />
@@ -68,20 +68,20 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/Setting",
+        path: '/Setting',
         element: (
           <AuthLayout authentication>
             <SettingLayout />
           </AuthLayout>
         ),
         children: [
-          { index: true, element: <Navigate to="ChangeInfo" replace /> },
-          { path: "ChangeInfo", element: <ChangeInformation /> },
-          { path: "ChangePassword", element: <ChangePassword /> },
+          { index: true, element: <Navigate to='ChangeInfo' replace /> },
+          { path: 'ChangeInfo', element: <ChangeInformation /> },
+          { path: 'ChangePassword', element: <ChangePassword /> },
         ],
       },
       {
-        path: "/Subscriptions",
+        path: '/Subscriptions',
         element: (
           <AuthLayout authentication>
             <SubscribedChannel />
@@ -89,7 +89,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/History",
+        path: '/History',
         element: (
           <AuthLayout authentication>
             <History />
@@ -97,7 +97,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/Playlist/:playListId",
+        path: '/Playlist/:playListId',
         element: (
           <AuthLayout authentication>
             <Playlist />
@@ -105,36 +105,36 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/Channel/:userName",
+        path: '/Channel/:userName',
         element: (
           <AuthLayout authentication>
             <ChannelLayout />
           </AuthLayout>
         ),
         children: [
-          { index: true, element: <Navigate to="Videos" replace /> },
-          { path: "Videos", element: <ChannelVideos /> },
-          { path: "PlayList", element: <ChannelPlaylist /> },
-          { path: "Tweets", element: <ChannelTweets /> },
-          { path: "Subscribed", element: <ChannelSubscribers /> },
+          { index: true, element: <Navigate to='Videos' replace /> },
+          { path: 'Videos', element: <ChannelVideos /> },
+          { path: 'PlayList', element: <ChannelPlaylist /> },
+          { path: 'Tweets', element: <ChannelTweets /> },
+          { path: 'Subscribed', element: <ChannelSubscribers /> },
         ],
       },
     ],
   },
   {
-    path: "/watch/:videoId",
+    path: '/watch/:videoId',
     element: <VideoDetailLayout />,
   },
   {
-    path: "/login",
+    path: '/login',
     element: (
       <AuthLayout authentication={false}>
-        <Login />
+        <LoginForm />
       </AuthLayout>
     ),
   },
   {
-    path: "/signup",
+    path: '/signup',
     element: (
       <AuthLayout authentication={false}>
         <Register />
@@ -142,31 +142,31 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/Dashboard",
+    path: '/Dashboard',
     element: <Dashboard />,
     children: [
-      { index: true, element: <Navigate to="Content" replace /> },
+      { index: true, element: <Navigate to='Content' replace /> },
       {
-        path: "Content",
+        path: 'Content',
         element: <DashboardContent />,
         children: [
-          { index: true, element: <Navigate to="videos" replace /> },
-          { path: "videos", element: <ContentVideo /> },
-          { path: "tweets", element: <ContentTweets /> },
-          { path: "Playlists", element: <ContentPlaylist /> },
+          { index: true, element: <Navigate to='videos' replace /> },
+          { path: 'videos', element: <ContentVideo /> },
+          { path: 'tweets', element: <ContentTweets /> },
+          { path: 'Playlists', element: <ContentPlaylist /> },
         ],
       },
-      { path: "Analytics", element: <DashboardAnalytics /> },
+      { path: 'Analytics', element: <DashboardAnalytics /> },
     ],
   },
-  { path: "/TermsAndConditions", element: <TermsAndConditions /> },
-  { path: "/PrivacyPolicy", element: <PrivacyPolicy /> },
+  { path: '/TermsAndConditions', element: <TermsAndConditions /> },
+  { path: '/PrivacyPolicy', element: <PrivacyPolicy /> },
 ]);
-createRoot(document.getElementById("root")).render(
+createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
       <RouterProvider router={router} />
-      <ToastContainer position="top-right" />
+      <ToastContainer position='top-right' />
     </Provider>
   </StrictMode>,
 );
