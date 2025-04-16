@@ -1,55 +1,64 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import { avatarUpdate, coverImageUpdate, selectCurrentUser } from "../../app/slices/authSlice";
+import {
+  avatarUpdate,
+  coverImageUpdate,
+  selectCurrentUser,
+} from "../../app/slices/authSlice";
 import FileUploadPopUp from "./FileUploadPopUp";
-import { RiImageAddFill } from "react-icons/ri";
+import {
+  RiImageAddFill,
+  RiUser3Line,
+  RiLockLine,
+  RiArrowRightLine,
+} from "react-icons/ri";
 
 function SettingLayout() {
   const user = useSelector(selectCurrentUser);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const activeClass =
-    "bg-white h-[60%] text-purple-600 border-b-2 border-purple-500";
+
   const [avatar, setAvatar] = useState(null);
   const [cover, setCover] = useState(null);
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
-
   const [active, setActive] = useState([1, 0]);
   const [showPopUp, setShowPopUp] = useState([0, 0]); // [coverImage, avatarImage]
 
-  const handleAvatarUpload = async() => {
+  const handleAvatarUpload = async () => {
     if (avatar) {
       setLoading(true);
-      const res = await dispatch(avatarUpdate({avatar}));
-      if(res.type === "avatarUpdate/fulfilled"){
+      const res = await dispatch(avatarUpdate({ avatar }));
+      if (res.type === "avatarUpdate/fulfilled") {
         setLoading(false);
-        setImage(null)
+        setImage(null);
         cancelPopUp();
-      }else{
+      } else {
         setLoading(false);
       }
     }
   };
-  const handleCoverUpload = async() => {
+
+  const handleCoverUpload = async () => {
     if (cover) {
       setLoading(true);
-      const res = await dispatch(coverImageUpdate({coverImage:cover}));
-      if(res.type === "CoverImageUpdate/fulfilled"){
+      const res = await dispatch(coverImageUpdate({ coverImage: cover }));
+      if (res.type === "CoverImageUpdate/fulfilled") {
         cancelPopUp();
         setImage(null);
-      }else{
+      } else {
         setLoading(false);
       }
     }
   };
+
   const handleActive = (index) => {
     const newActive = [0, 0];
     newActive[index] = 1;
     setActive(newActive);
-    if (newActive[1] == 1) navigate("ChangePassword");
-    if (newActive[0] == 1) navigate("ChangeInfo");
+    if (newActive[1] === 1) navigate("ChangePassword");
+    if (newActive[0] === 1) navigate("ChangeInfo");
   };
 
   const handlePopUp = (index) => {
@@ -57,56 +66,113 @@ function SettingLayout() {
     newPopUp[index] = 1;
     setShowPopUp(newPopUp);
   };
+
   const cancelPopUp = () => {
-    setCover(() => null);
+    setCover(null);
     setAvatar(null);
-    setLoading(false)
+    setLoading(false);
     setShowPopUp([0, 0]);
   };
 
   return (
-    <div className="h-full overflow-y-scroll no-scrollbar">
-      <div className="h-[45%]">
-        <CoverImage user={user} handlePopUp={handlePopUp} />
-        <div className="h-[25%] flex justify-between items-center">
-          <div className="h-full flex gap-16 sm:items-center">
-            <AvatarImage user={user} handlePopUp={handlePopUp} />
-            <div>
-              <h2 className="font-semibold text-white text-xl">
-                {user?.fullName}
-              </h2>
-              <h2 className="text-white text-lg">@{user?.userName}</h2>
-            </div>
+    <div className="h-full overflow-y-auto bg-zinc-900 rounded-lg shadow-xl">
+      {/* Profile Header */}
+      <div className="relative">
+        {/* Cover Image */}
+        <div
+          className="h-48 sm:h-64 w-full relative overflow-hidden rounded-t-lg group"
+          onClick={() => handlePopUp(0)}
+        >
+          <img
+            src={user?.coverImage}
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            alt="Cover"
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+            <RiImageAddFill className="text-white text-3xl" />
           </div>
-          <Link
-            to={`/Channel/${user?.userName}`}
-            className="h-full flex justify-between sm:items-center"
-          >
-            <div className="w-32 h-[40%] bg-[#ae7aff] py-4 text-black font-bold shadow-[5px_5px_#4f4e4e] active:shadow-none active:translate-x-1 active:translate-y-1 flex flex-col text-center justify-center mr-9 select-none">
-              View Channel
-            </div>
-          </Link>
         </div>
-        <div className="h-[20%] border-b-2 flex px-4 sm:px-10 text-white items-center overflow-x-auto justify-around">
-          <div
-            className={`px-20 sm:px-32 flex text-center items-center cursor-pointer ${
-              active[0] === 1 ? activeClass : ""
-            }`}
-            onClick={() => handleActive(0)}
-          >
-            Personal information
-          </div>
-          <div
-            className={`px-20 sm:px-32 flex text-center items-center cursor-pointer ${
-              active[1] === 1 ? activeClass : ""
-            }`}
-            onClick={() => handleActive(1)}
-          >
-            Change password
+
+        {/* Avatar */}
+        <div
+          className="absolute left-8 -bottom-16 group cursor-pointer"
+          onClick={() => handlePopUp(1)}
+        >
+          <div className="relative">
+            <img
+              src={user?.avatar}
+              className="w-32 h-32 rounded-full border-4 border-zinc-900 object-cover"
+              alt="Avatar"
+            />
+            <div className="absolute inset-0 bg-black bg-opacity-40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+              <RiImageAddFill className="text-white text-xl" />
+            </div>
           </div>
         </div>
       </div>
-      <div className="h-[55%] text-white relative">
+
+      {/* User Info & Channel Button - Improved Layout */}
+      <div className="pt-20 px-8 pb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+        <div className="mb-4 sm:mb-0">
+          <h2 className="text-2xl font-bold text-white transition-colors hover:text-purple-400">
+            {user?.fullName}
+          </h2>
+          <h3 className="text-lg text-gray-400 flex items-center gap-1">
+            <span className="text-sm text-gray-500">@</span>
+            {user?.userName}
+          </h3>
+        </div>
+
+        <Link
+          to={`/Channel/${user?.userName}`}
+          className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 text-white px-5 py-2.5 rounded-md transition-all duration-300 shadow-lg hover:shadow-purple-900/30 w-full sm:w-auto"
+        >
+          <span className="font-medium">View Channel</span>
+          <RiArrowRightLine className="text-lg" />
+        </Link>
+      </div>
+
+      {/* Navigation Tabs - Improved Design */}
+      <div className="px-8">
+        <div className="flex border-b border-zinc-700">
+          <button
+            className={`px-6 py-4 flex items-center gap-2 transition-all duration-300 relative ${
+              active[0] === 1
+                ? "text-purple-400 font-medium"
+                : "text-gray-400 hover:text-gray-300"
+            }`}
+            onClick={() => handleActive(0)}
+          >
+            <RiUser3Line
+              className={`text-lg ${active[0] === 1 ? "text-purple-500" : ""}`}
+            />
+            <span>Personal Information</span>
+            {active[0] === 1 && (
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-purple-500 to-purple-400"></span>
+            )}
+          </button>
+          <button
+            className={`px-6 py-4 flex items-center gap-2 transition-all duration-300 relative ${
+              active[1] === 1
+                ? "text-purple-400 font-medium"
+                : "text-gray-400 hover:text-gray-300"
+            }`}
+            onClick={() => handleActive(1)}
+          >
+            <RiLockLine
+              className={`text-lg ${active[1] === 1 ? "text-purple-500" : ""}`}
+            />
+            <span>Change Password</span>
+            {active[1] === 1 && (
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-purple-500 to-purple-400"></span>
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Content Area */}
+      <div className="p-8">
+        {/* Upload Popups */}
         {showPopUp[0] === 1 && (
           <FileUploadPopUp
             cancelPopUp={cancelPopUp}
@@ -115,8 +181,8 @@ function SettingLayout() {
             image={image}
             handleSubmit={handleCoverUpload}
             loading={loading}
-            >
-            <span>Upload new cover image</span>
+          >
+            <span className="text-lg font-medium">Upload new cover image</span>
           </FileUploadPopUp>
         )}
         {showPopUp[1] === 1 && (
@@ -128,46 +194,15 @@ function SettingLayout() {
             handleSubmit={handleAvatarUpload}
             loading={loading}
           >
-            <span>Upload new avatar</span>
+            <span className="text-lg font-medium">Upload new avatar</span>
           </FileUploadPopUp>
         )}
+
+        {/* Outlet for nested routes */}
         <Outlet />
       </div>
     </div>
   );
 }
-function CoverImage({ user, handlePopUp }) {
-  return (
-    <div className="h-[55%] sm:relative" onClick={() => handlePopUp(0)}>
-      <img
-        src={user?.coverImage}
-        className="h-full bg-cover object-cover w-full"
-      />
-      <RiImageAddFill
-        src="src/assets/auth/upload.svg"
-        className="absolute top-[18%] left-1/2 h-10 w-10 cursor-pointer text-yellow-300"
-        alt="edit"
-      />
-    </div>
-  );
-}
 
-function AvatarImage({ user, handlePopUp }) {
-  return (
-    <div
-      className="h-full relative flex justify-center items-center "
-      onClick={() => handlePopUp(1)}
-    >
-      <img
-        src={user?.avatar}
-        className="bg-cover object-cover size-20 sm:size-28 rounded-full -translate-y-8 translate-x-10 "
-      />
-      <RiImageAddFill
-        src="src/assets/auth/upload.svg"
-        className="absolute inset-0 m-auto h-6 w-6 cursor-pointer -translate-y-8 translate-x-10  text-yellow-300"
-        alt="edit"
-      />
-    </div>
-  );
-}
 export default SettingLayout;

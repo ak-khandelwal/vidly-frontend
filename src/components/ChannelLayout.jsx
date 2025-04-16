@@ -14,11 +14,14 @@ function ChannelLayout() {
   const dispatch = useDispatch();
   const channel = useSelector(selectCurrentChannel);
   const loading = useSelector(selectLoading);
-  const active = useSelector(selectActive)
+  const active = useSelector(selectActive);
   const { userName } = useParams();
   const [error, setError] = useState(false);
+
   const activeClass =
-    "bg-white p-1 text-purple-600 border-b-2 border-purple-500";
+    "bg-white p-2 text-purple-600 border-b-2 border-purple-500 font-medium";
+  const inactiveClass = "p-2 hover:bg-zinc-800 transition-colors";
+
   useEffect(() => {
     (async () => {
       const res = await dispatch(getChannel(userName));
@@ -30,83 +33,90 @@ function ChannelLayout() {
 
   if (error) {
     return (
-      <div className="w-full h-full flex justify-center bg-white items-center">
-        <div className="bg-[#4e4a4a7a] border-4 border-red-500 w-[50%] h-[30%] flex flex-col gap-6 justify-center items-center text-center font-extrabold text-4xl text-red-500">
-          unable to get this user
-          <CgDanger />
+      <div className="w-full h-full flex justify-center items-center py-8">
+        <div className="bg-zinc-800 border-2 border-red-500 rounded-lg w-full max-w-md p-8 flex flex-col gap-6 justify-center items-center text-center font-bold text-2xl text-red-500">
+          <span>Unable to get this user</span>
+          <CgDanger className="text-4xl" />
         </div>
       </div>
     );
   }
-  return loading ? (
-    <div className="w-full h-full flex justify-center text-center items-center font-extrabold text-7xl text-white">
-      <AiOutlineLoading3Quarters className="animate-spin" />
-    </div>
-  ) : (
-    <div className="h-full overflow-y-scroll no-scrollbar">
-      <div className="h-[45%]">
-        <div className="h-[50%]">
+
+  if (loading) {
+    return (
+      <div className="w-full h-64 flex justify-center items-center">
+        <AiOutlineLoading3Quarters className="animate-spin text-5xl text-purple-500" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-full overflow-hidden flex flex-col">
+      {/* Cover Image Section */}
+      <div className="relative">
+        <div className="h-40 sm:h-48 md:h-56 overflow-hidden">
           <img
             src={channel?.coverImage}
-            className="h-full bg-cover object-cover w-full"
+            alt={`${channel?.fullName}'s cover`}
+            className="h-full w-full object-cover"
           />
         </div>
-        <div className="h-[20%] flex justify-between items-center">
-          <div className="h-full flex gap-16 sm:items-center ">
-            <div className="h-full relative flex justify-center items-center">
+
+        {/* Profile Section */}
+        <div className="relative px-4 sm:px-8 pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-end gap-4 -mt-12 sm:-mt-16">
+            {/* Avatar */}
+            <div className="flex justify-start">
               <img
                 src={channel?.avatar}
-                className=" bg-cover object-cover size-20 sm:size-28 rounded-full -translate-y-8 translate-x-10 "
+                alt={channel?.fullName}
+                className="size-24 sm:size-32 rounded-full border-4 border-zinc-900 bg-zinc-900 object-cover"
               />
             </div>
-            <div>
-              <h2 className="font-semibold text-white text-xl">
+
+            {/* Channel Info */}
+            <div className="pt-2 sm:pb-2">
+              <h2 className="font-bold text-xl sm:text-2xl">
                 {channel?.fullName}
               </h2>
-              <h2 className=" text-white text-lg">@{channel?.userName}</h2>
+              <h3 className="text-zinc-400 text-sm sm:text-base">
+                @{channel?.userName}
+              </h3>
             </div>
           </div>
         </div>
-        <div className="h-[20%] cursor-pointer border-b-2 flex px-4 sm:px-10 text-white items-center justify-around overflow-x-auto">
-          <Link to={"Videos"}>
-          <div
-            className={`px-16 sm:px-24 flex text-center items-center ${
-              active[0] === 1 ? activeClass : ""
-              }`}
-              >
-            Videos
-          </div>
-          </Link>
-          <Link to={"PlayList"}>
-          <div
-            className={`px-16 flex text-center items-center ${
-              active[1] === 1 ? activeClass : ""
-              }`}
-              >
-            PlayList
-          </div>
-          </Link>
-          <Link to={"Tweets"}>
-          <div
-            className={`px-16 flex text-center items-center ${
-              active[2] === 1 ? activeClass : ""
-              }`}
-              >
-            Tweets
-          </div>
-          </Link>
-          <Link to={"Subscribed"}>
-          <div
-            className={`px-16 flex text-center items-center ${
-              active[3] === 1 ? activeClass : ""
-              }`}
-              >
-            Subscribed
-          </div>
-          </Link>
+      </div>
+
+      {/* Navigation Tabs */}
+      <div className="border-b border-zinc-800 mb-4">
+        <div className="flex overflow-x-auto no-scrollbar">
+          <nav className="flex w-full px-2 sm:px-8 gap-2 sm:gap-4">
+            <Link to="Videos" className="whitespace-nowrap">
+              <div className={active[0] === 1 ? activeClass : inactiveClass}>
+                Videos
+              </div>
+            </Link>
+            <Link to="PlayList" className="whitespace-nowrap">
+              <div className={active[1] === 1 ? activeClass : inactiveClass}>
+                Playlists
+              </div>
+            </Link>
+            <Link to="Tweets" className="whitespace-nowrap">
+              <div className={active[2] === 1 ? activeClass : inactiveClass}>
+                Tweets
+              </div>
+            </Link>
+            <Link to="Subscribed" className="whitespace-nowrap">
+              <div className={active[3] === 1 ? activeClass : inactiveClass}>
+                Subscribed
+              </div>
+            </Link>
+          </nav>
         </div>
       </div>
-      <div className="text-white">
+
+      {/* Content Area */}
+      <div className="flex-grow overflow-y-auto">
         <Outlet />
       </div>
     </div>

@@ -9,6 +9,13 @@ import {
 } from "../../app/slices/videoSlice";
 import { selectCurrentUser } from "../../app/slices/authSlice";
 import VideoDropdown from "./VideoDropDown";
+import { BiPlay, BiTime } from "react-icons/bi";
+import {
+  MdOutlineVisibility,
+  MdOutlinePublic,
+  MdOutlineLock,
+  MdOutlineInfo,
+} from "react-icons/md";
 
 const ContentVideo = () => {
   const dispatch = useDispatch();
@@ -16,7 +23,7 @@ const ContentVideo = () => {
   const hasMore = useSelector(selectCurrentHasMore);
   const user = useSelector(selectCurrentUser);
 
-  const [page, setPage] = useState(1); // Tracks current page
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const elementRef = useRef(null);
 
@@ -54,83 +61,139 @@ const ContentVideo = () => {
       if (observer) observer.disconnect();
     };
   }, [dispatch, page, user, hasMore, loading]);
+
   useEffect(() => {
     dispatch(setActive([1, 0, 0]));
   }, [dispatch]);
+
   return (
-    <div className="overflow-x-auto">
-      <div className="flex w-[240%] sm:w-full p-4">
-        <div className="w-[22rem] sm:w-[28rem]">Videos</div>
-        <div className="w-[12rem]">Visibility</div>
-        <div className="w-[12rem]">Views</div>
-        <div className="w-[10rem]">Date</div>
-        <div className="">options</div>
+    <div className="bg-[#1e1e1e] rounded-xl shadow-lg overflow-hidden border border-gray-800">
+      {/* Table Header */}
+      <div className="grid grid-cols-12 gap-4 p-4 bg-[#272727] text-gray-300 font-medium border-b border-gray-700 sticky top-0 z-10">
+        <div className="col-span-5 pl-2 flex items-center">
+          <span>Video</span>
+        </div>
+        <div className="col-span-2 text-center flex justify-center items-center">
+          <span>Visibility</span>
+        </div>
+        <div className="col-span-2 text-center flex justify-center items-center">
+          <span className="flex items-center gap-1">
+            <MdOutlineVisibility className="size-4" />
+            <span>Views</span>
+          </span>
+        </div>
+        <div className="col-span-2 text-center flex justify-center items-center">
+          <span className="flex items-center gap-1">
+            <BiTime className="size-4" />
+            <span>Date</span>
+          </span>
+        </div>
+        <div className="col-span-1 text-center flex justify-center items-center">
+          <span>Actions</span>
+        </div>
       </div>
-      <div>
-        {videos.map((item, index) => (
-          <div
-            key={index}
-            className="flex items-center w-[240%] sm:w-full p-4 border-b border-gray-700"
-          >
-            {/* Video Details */}
-            <div className="flex gap-4 w-[28rem] sm:w-[30rem] items-start">
-              <div className="relative">
-                <img
-                  src={item?.thumbnail}
-                  alt="Video Thumbnail"
-                  className="w-[10rem] h-[5rem] sm:w-[11rem] sm:h-[6rem] object-cover rounded-md"
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <h1
-                  className="text-lg font-semibold text-white line-clamp-2 text-ellipsis max-w-[10rem] sm:max-w-[16rem]"
-                  title={item?.title}
-                >
-                  {item?.title}
-                </h1>
-                <p
-                  className="text-sm text-gray-400 overflow-hidden text-ellipsis line-clamp-2 max-w-[10rem] sm:max-w-[16rem]"
-                  title={item?.description}
-                >
-                  {item?.description}
-                </p>
-              </div>
-            </div>
 
-            {/* Visibility */}
-            <div className="w-[6rem]">
-              {item?.isPublished ? (
-                <span className="px-4 py-1 text-green-400 border border-green-400 rounded-full text-sm">
-                  Published
-                </span>
-              ) : (
-                <span className="px-4 py-1 text-red-400 border border-red-400 rounded-full text-sm">
-                  UnPublished
-                </span>
-              )}
+      {/* Table Body */}
+      <div className="overflow-x-auto">
+        {videos.length === 0 ? (
+          <div className="text-center py-16 text-gray-400 flex flex-col items-center">
+            <div className="bg-[#272727] rounded-full p-6 mb-4">
+              <MdOutlineInfo className="size-10 text-gray-500" />
             </div>
-
-            {/* Views */}
-            <div className="w-[12rem] text-center">{item?.views || 0}</div>
-
-            {/* Date */}
-            <div className="w-[15rem] text-center">
-              {new Date(item?.createdAt).toLocaleDateString()}
-            </div>
-
-            {/* Options */}
-            <div>
-              <VideoDropdown video={item} setPage={setPage} />
-            </div>
+            <p className="text-lg mb-2 font-medium text-gray-300">
+              No videos found
+            </p>
+            <p className="text-sm text-gray-500 max-w-md">
+              Your video library is empty. Start uploading videos to build your
+              content collection.
+            </p>
+            <button className="mt-6 bg-gradient-to-r from-[#ae7aff] to-[#8a5fff] hover:from-[#9d6aff] hover:to-[#7946ff] text-white font-medium py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-105">
+              Upload New Video
+            </button>
           </div>
-        ))}
+        ) : (
+          videos.map((item, index) => (
+            <div
+              key={index}
+              className="grid grid-cols-12 gap-4 p-4 items-center border-b border-gray-700 hover:bg-[#272727] transition-colors group"
+            >
+              {/* Video Details */}
+              <div className="col-span-5 flex gap-4">
+                <div className="relative flex-shrink-0 rounded-lg overflow-hidden shadow-md">
+                  <img
+                    src={item?.thumbnail}
+                    alt="Video Thumbnail"
+                    className="w-20 h-12 sm:w-28 sm:h-16 object-cover rounded-md"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                    <div className="bg-white bg-opacity-20 rounded-full p-2">
+                      <BiPlay className="text-white text-2xl" />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col justify-center">
+                  <h3 className="font-medium text-white text-sm sm:text-base line-clamp-1 mb-1 group-hover:text-[#ae7aff] transition-colors">
+                    {item?.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-400 line-clamp-2">
+                    {item?.description}
+                  </p>
+                </div>
+              </div>
+
+              {/* Visibility */}
+              <div className="col-span-2 text-center">
+                {item?.isPublished ? (
+                  <span className="inline-flex items-center gap-1 px-3 py-1.5 text-green-400 bg-green-400 bg-opacity-10 rounded-full text-xs font-medium">
+                    <MdOutlinePublic className="size-3.5 sm:size-4" />
+                    <span className="hidden sm:inline">Public</span>
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 px-3 py-1.5 text-yellow-400 bg-yellow-400 bg-opacity-10 rounded-full text-xs font-medium">
+                    <MdOutlineLock className="size-3.5 sm:size-4" />
+                    <span className="hidden sm:inline">Private</span>
+                  </span>
+                )}
+              </div>
+
+              {/* Views */}
+              <div className="col-span-2 text-center flex items-center justify-center gap-1.5 text-sm">
+                <MdOutlineVisibility className="size-4 text-gray-400" />
+                <span className="font-medium">
+                  {item?.views?.toLocaleString() || 0}
+                </span>
+              </div>
+
+              {/* Date */}
+              <div className="col-span-2 text-center flex items-center justify-center gap-1.5 text-sm">
+                <BiTime className="size-4 text-gray-400" />
+                <span className="font-medium">
+                  {new Date(item?.createdAt).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </span>
+              </div>
+
+              {/* Options */}
+              <div className="col-span-1 text-center flex justify-center">
+                <VideoDropdown video={item} setPage={setPage} />
+              </div>
+            </div>
+          ))
+        )}
       </div>
+
+      {/* Loading indicator */}
       {hasMore && (
-        <div ref={elementRef} className="text-center w-full py-4">
-          Loading more videos...
+        <div ref={elementRef} className="text-center py-6 text-gray-400">
+          <div className="w-10 h-10 border-t-2 border-[#ae7aff] border-r-2 rounded-full animate-spin mx-auto mb-3"></div>
+          <span className="text-sm font-medium">Loading more videos...</span>
         </div>
       )}
     </div>
   );
 };
+
 export default ContentVideo;

@@ -8,87 +8,106 @@ import { useState } from "react";
 import VideoPopUp from "../components/dashboard/VideoPopUp";
 import PlaylistPopup from "../components/dashboard/PlaylistPopup";
 import TweetPopUp from "../components/dashboard/TweetPopUp";
+
 const DashboardContent = () => {
   const active = useSelector(selectActive);
-  const activeClass = "border-x-2 px-9 border-purple-400 bg-[#5e3f65b4] ";
   const [uploadPopup, setUploadPopup] = useState(false);
-  const handleUploadPopup = () => setUploadPopup((i) => !i);
-
   const [popUps, setPopups] = useState([0, 0, 0]);
+
+  const handleUploadPopup = () => setUploadPopup((prev) => !prev);
+
   const handlePopUps = (index) => {
     const newArray = [0, 0, 0];
-    newArray[index] = popUps[index] == 1 ? 0 : 1;
+    newArray[index] = popUps[index] === 1 ? 0 : 1;
     setPopups(newArray);
+    setUploadPopup(false); // Close the dropdown when an option is selected
   };
 
   return (
-    <div className="relative">
-      <div className="flex justify-end sm:justify-between mb-10">
-        <div className={`${uploadPopup && "hidden sm:block"}`}>
-          <h1 className="font-bold text-xl">Channel content</h1>
-          <p className="text-gray-200">
-            Seamless Video Management, Elevated Results.
+    <div className="p-6 relative">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
+        <div className={`${uploadPopup && "hidden sm:block"} mb-4 sm:mb-0`}>
+          <h1 className="font-bold text-2xl">Channel Content</h1>
+          <p className="text-gray-400 mt-1">
+            Seamless video management, elevated results
           </p>
         </div>
-        <div className="relative mb-10 sm:mb-4">
+
+        <div className="relative w-full sm:w-auto">
+          <button
+            onClick={handleUploadPopup}
+            className="bg-gradient-to-r from-[#8a63d2] to-[#ae7aff] text-black rounded-full py-2.5 px-6 font-bold flex items-center gap-2 hover:opacity-90 transition-opacity w-full sm:w-auto justify-center"
+          >
+            Create <TbVideoPlus className="size-5" />
+          </button>
+
           {uploadPopup && (
-            <div className="absolute w-56 sm:w-80 min-h-10 right-40 flex flex-col gap-3 sm:right-52">
+            <div className="absolute mt-2 right-0 w-full sm:w-64 z-50 rounded-lg overflow-hidden shadow-xl bg-[#1e1e1e] border border-gray-700">
               <div
-                className="bg-[#4f4e4e7d] border-x-2 border-purple-400 w-full h-full flex items-center justify-center gap-4 py-1 "
+                className="flex items-center gap-3 p-4 hover:bg-[#272727] cursor-pointer transition-colors"
                 onClick={() => handlePopUps(0)}
               >
-                <TbUpload className="size-6 sm:size-7" /> Upload Video{" "}
+                <TbUpload className="size-5 text-[#ae7aff]" />
+                <span>Upload Video</span>
               </div>
               <div
-                className="bg-[#4f4e4e7d] border-x-2 border-purple-400 w-full h-full flex items-center justify-center gap-4 py-1 "
+                className="flex items-center gap-3 p-4 hover:bg-[#272727] cursor-pointer transition-colors"
                 onClick={() => handlePopUps(1)}
               >
-                <RiPlayListAddFill className="size-6 sm:size-7" /> Create
-                Playlist{" "}
+                <RiPlayListAddFill className="size-5 text-[#ae7aff]" />
+                <span>Create Playlist</span>
               </div>
               <div
-                className="bg-[#4f4e4e7d] border-x-2 border-purple-400 w-full h-full flex items-center justify-center gap-4 py-1 "
+                className="flex items-center gap-3 p-4 hover:bg-[#272727] cursor-pointer transition-colors"
                 onClick={() => handlePopUps(2)}
               >
-                <IoCreateOutline className="size-6 sm:size-7" /> Post Tweet{" "}
+                <IoCreateOutline className="size-5 text-[#ae7aff]" />
+                <span>Post Tweet</span>
               </div>
             </div>
           )}
-          <button
-            onClick={() => handleUploadPopup()}
-            className="bg-[#ae7aff] text-[#4b4545] rounded-md shadow-[#998c8c7d] shadow-[5px_5px_#4f4e4e] active:shadow-none active:translate-x-1 active:translate-y-1  p-2 sm:mr-14 mt-4 flex font-bold text-lg sm:text-xl justify-center items-center gap-1"
-          >
-            Create <TbVideoPlus className=" size-8 sm:size-10" />
-          </button>
         </div>
       </div>
-      <div className="flex gap-4 sm:gap-10 font-bold text-xl overflow-x-auto">
-        <Link to={"videos"}>
-          <div className={`px-9 ${active[0] === 1 ? activeClass : ""}`}>
-            Video
+
+      <div className="flex mb-6 border-b border-gray-700">
+        <Link to="videos" className="mr-8">
+          <div
+            className={`pb-3 px-2 font-medium text-lg relative ${active[0] === 1 ? "text-white" : "text-gray-400 hover:text-gray-200"}`}
+          >
+            Videos
+            {active[0] === 1 && (
+              <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#ae7aff]"></div>
+            )}
           </div>
         </Link>
-        <Link to={"playlists"}>
-          <div className={`px-9 ${active[1] === 1 ? activeClass : ""}`}>
-            Playlist
+        <Link to="playlists" className="mr-8">
+          <div
+            className={`pb-3 px-2 font-medium text-lg relative ${active[1] === 1 ? "text-white" : "text-gray-400 hover:text-gray-200"}`}
+          >
+            Playlists
+            {active[1] === 1 && (
+              <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#ae7aff]"></div>
+            )}
           </div>
         </Link>
-        <Link to={"tweets"}>
-          <div className={`px-9 ${active[2] === 1 ? activeClass : ""}`}>
+        <Link to="tweets" className="mr-8">
+          <div
+            className={`pb-3 px-2 font-medium text-lg relative ${active[2] === 1 ? "text-white" : "text-gray-400 hover:text-gray-200"}`}
+          >
             Tweets
+            {active[2] === 1 && (
+              <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#ae7aff]"></div>
+            )}
           </div>
         </Link>
       </div>
-      {popUps[0] === 1 && (
-          <VideoPopUp onClose={() => handlePopUps(0)} />
-      )}
-      {popUps[1] === 1 && (
-          <PlaylistPopup onClose={() => handlePopUps(1)} />
-      )}
-      {popUps[2] === 1 && (
-        <TweetPopUp onClose={() => handlePopUps(2)}/> 
-      )}
-      <div className="border-t-2 mt-4">
+
+      {/* Modal popups */}
+      {popUps[0] === 1 && <VideoPopUp onClose={() => handlePopUps(0)} />}
+      {popUps[1] === 1 && <PlaylistPopup onClose={() => handlePopUps(1)} />}
+      {popUps[2] === 1 && <TweetPopUp onClose={() => handlePopUps(2)} />}
+
+      <div className="mt-4">
         <Outlet />
       </div>
     </div>

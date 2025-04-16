@@ -1,50 +1,86 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   IoFolderOpenOutline,
+  IoFolderOpen,
   IoHomeOutline,
-  IoSettingsOutline,
+  IoHome,
   IoVideocamOutline,
+  IoVideocam,
 } from "react-icons/io5";
-import { RiUserHeartLine } from "react-icons/ri";
+import { RiUserHeartLine, RiUserHeartFill } from "react-icons/ri";
 import { GiKiwiBird } from "react-icons/gi";
 
 const BottomBar = () => {
-  const itemsList1 = [
+  const location = useLocation();
+
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
+
+  const itemsList = [
     {
-      iconComponent: <IoHomeOutline className="size-5"/>,
+      icon: isActive("/") ? (
+        <IoHome className="size-6" />
+      ) : (
+        <IoHomeOutline className="size-6" />
+      ),
+      name: "Home",
       path: "/",
     },
     {
-      iconComponent: <GiKiwiBird className="size-5"/>,
-      path: "/",
+      icon: (
+        <GiKiwiBird
+          className={`size-6 ${isActive("/tweets") ? "text-purple-500" : ""}`}
+        />
+      ),
+      name: "Tweets",
+      path: "/tweets",
     },
     {
-      iconComponent: <IoVideocamOutline className="size-5"/>,
+      icon: isActive("/Dashboard") ? (
+        <IoVideocam className="size-6" />
+      ) : (
+        <IoVideocamOutline className="size-6" />
+      ),
+      name: "Content",
       path: "/Dashboard",
     },
     {
-      iconComponent: <IoFolderOpenOutline className="size-5"/>,
-      path: "/",
+      icon: isActive("/collections") ? (
+        <IoFolderOpen className="size-6" />
+      ) : (
+        <IoFolderOpenOutline className="size-6" />
+      ),
+      name: "Library",
+      path: "/collections",
     },
     {
-      iconComponent: <RiUserHeartLine className="size-5"/>,
+      icon: isActive("/Subscriptions") ? (
+        <RiUserHeartFill className="size-6" />
+      ) : (
+        <RiUserHeartLine className="size-6" />
+      ),
+      name: "Subs",
       path: "/Subscriptions",
-    },
-    {
-      iconComponent: <IoSettingsOutline className="size-5" />,
-      path: "/Setting",
     },
   ];
 
   return (
-    <div className="sm:hidden fixed w-full bg-black lg:h-[10%] border-y-2  px-2 bottom-0 flex justify-between">
-      {itemsList1.map((item, index) => (
-        <Link key={index} to={item.path}>
-        <div className="p-2 text-white">
-          {item.iconComponent}
-        </div>
-        </Link>
-      ))}
+    <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-800 z-50">
+      <div className="flex justify-between items-center px-2">
+        {itemsList.map((item, index) => (
+          <Link
+            key={index}
+            to={item.path}
+            className={`flex flex-col items-center py-2 px-3 ${
+              isActive(item.path) ? "text-white" : "text-zinc-400"
+            }`}
+          >
+            <div className="mb-1">{item.icon}</div>
+            <span className="text-xs">{item.name}</span>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 };

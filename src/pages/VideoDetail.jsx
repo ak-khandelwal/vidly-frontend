@@ -11,11 +11,13 @@ import {
   selectVideoLike,
   selectVideoPlay,
 } from "../app/slices/videoSlice";
-import { BiLike, BiSolidLike } from "react-icons/bi";
+import { BiLike, BiSolidLike, BiTime, BiPlay } from "react-icons/bi";
+import { FaShare, FaBookmark } from "react-icons/fa";
 import { toggleSubscription } from "../app/slices/SubscriberSlice";
 import VideoSuggested from "../components/videos/VideoSuggested";
 import Comments from "../components/videos/Comments";
 import { selectCurrentUser } from "../app/slices/authSlice";
+
 function VideoDetail() {
   const dispatch = useDispatch();
   const video = useSelector(selectVideoPlay);
@@ -49,78 +51,118 @@ function VideoDetail() {
     dispatch(clearVideoState());
     dispatch(clearCommentState());
   }, [dispatch, videoId]);
+
   return (
-    <div className="w-full h-full pl-4 text-white flex flex-col sm:flex-row gap-4">
-      <div className="w-full sm:w-[65%]">
-        <div className="w-full">
+    <div className="w-full h-full px-4 py-6 text-white flex flex-col lg:flex-row gap-6 bg-[#121212]">
+      <div className="w-full lg:w-[70%]">
+        {/* Video Player */}
+        <div className="w-full rounded-lg overflow-hidden shadow-xl">
           <video
             src={video.videoFile}
             poster={video?.thumbnail}
             controls
             autoPlay
-            className="w-full sm:w-[70rem] h-auto sm:h-[30rem] border-2"
+            className="w-full aspect-video object-cover"
           ></video>
-          <div className="border-2 p-4">
-            <div className="w-full flex justify-between">
-              <div>
-                <h1>{video.title}</h1>
-                <p className="text-gray-300 text-sm">{video.views} views</p>
-              </div>
-              <div
-                className="border-2 rounded-lg p-1 px-6 h-[50%] flex justify-between gap-2 items-center select-none"
+        </div>
+
+        {/* Video Info */}
+        <div className="mt-4 p-5 bg-[#1e1e1e] rounded-lg shadow-md">
+          <h1 className="text-2xl font-bold mb-2">{video.title}</h1>
+
+          <div className="flex flex-wrap items-center justify-between gap-4 py-3 border-b border-gray-700">
+            <div className="flex items-center gap-2">
+              <BiPlay className="text-gray-400" />
+              <span className="text-gray-300 text-sm">{video.views} views</span>
+            </div>
+
+            <div className="flex gap-4">
+              <button
+                className={`flex items-center gap-2 px-4 py-2 rounded-full ${liked ? "bg-[#323232]" : "bg-[#272727] hover:bg-[#323232]"} transition-colors`}
                 onClick={(e) => handleLike(e)}
               >
-                <span className="border-r-2 items-center pr-3">
-                  {liked ? (
-                    <BiSolidLike className="size-5" />
-                  ) : (
-                    <BiLike className="size-5" />
-                  )}
-                </span>
+                {liked ? (
+                  <BiSolidLike className="size-5 text-[#ae7aff]" />
+                ) : (
+                  <BiLike className="size-5" />
+                )}
                 <span>{videoLike}</span>
-              </div>
-            </div>
-            <div className="flex justify-between mt-6">
-              <div className="flex gap-4">
-                <img
-                  src={video?.owner?.avatar}
-                  className="size-10 rounded-full"
-                />
-                <div>
-                  <h1>{video?.owner?.fullName}</h1>
-                  <h2 className="text-gray-500 text-sm">
-                    {video?.owner?.subscriberCount} subscribers
-                  </h2>
-                </div>
-              </div>
-              {video?.owner?._id == currentUser?._id ? (
-                <Link
-                  to={`/channel/${currentUser?.userName}`}
-                  className="p-3  text-black font-bold shadow-[5px_5px_#4f4e4e] active:shadow-none active:translate-x-1 active:translate-y-1 flex flex-col text-center justify-center bg-slate-400"
-                >
-                  view channel
-                </Link>
-              ) : (
-                <div
-                  className={`p-3  text-black font-bold shadow-[5px_5px_#4f4e4e] active:shadow-none active:translate-x-1 active:translate-y-1 flex flex-col text-center justify-center ${!video?.owner?.isSubscribed ? "bg-[#ae7aff]" : "bg-slate-400"} `}
-                  onClick={(e) => handleSubscribe(e)}
-                >
-                  {video?.owner?.isSubscribed ? "Subscribed" : "Subscribe"}
-                </div>
-              )}
+              </button>
+
+              <button className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#272727] hover:bg-[#323232] transition-colors">
+                <FaShare className="size-4" />
+                <span>Share</span>
+              </button>
+
+              <button className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#272727] hover:bg-[#323232] transition-colors">
+                <FaBookmark className="size-4" />
+                <span>Save</span>
+              </button>
             </div>
           </div>
+
+          {/* Channel Info */}
+          <div className="flex justify-between items-center mt-4">
+            <div className="flex gap-4 items-center">
+              <img
+                src={video?.owner?.avatar}
+                alt="Channel avatar"
+                className="size-12 rounded-full border-2 border-[#ae7aff]"
+              />
+              <div>
+                <h1 className="font-bold text-lg">{video?.owner?.fullName}</h1>
+                <h2 className="text-gray-400 text-sm">
+                  {video?.owner?.subscriberCount} subscribers
+                </h2>
+              </div>
+            </div>
+
+            {video?.owner?._id === currentUser?._id ? (
+              <Link
+                to={`/channel/${currentUser?.userName}`}
+                className="px-6 py-2.5 bg-gradient-to-r from-[#8a63d2] to-[#ae7aff] text-black font-bold rounded-full hover:opacity-90 transition-opacity"
+              >
+                View Channel
+              </Link>
+            ) : (
+              <button
+                className={`px-6 py-2.5 rounded-full font-bold transition-colors ${
+                  !video?.owner?.isSubscribed
+                    ? "bg-gradient-to-r from-[#8a63d2] to-[#ae7aff] text-black"
+                    : "bg-[#323232] text-white border border-gray-600"
+                }`}
+                onClick={(e) => handleSubscribe(e)}
+              >
+                {video?.owner?.isSubscribed ? "Subscribed" : "Subscribe"}
+              </button>
+            )}
+          </div>
         </div>
-        <div className="border-2 rounded-b-xl p-2">
-          <h1>{video?.description}</h1>
+
+        {/* Video Description */}
+        <div className="mt-4 p-5 bg-[#1e1e1e] rounded-lg shadow-md">
+          <div className="whitespace-pre-line">
+            <h3 className="font-semibold text-gray-300 mb-2">Description</h3>
+            <p className="text-gray-400">{video?.description}</p>
+          </div>
         </div>
-        <Comments videoId={video?._id} />
+
+        {/* Comments Section */}
+        <div className="mt-4">
+          <Comments videoId={video?._id} />
+        </div>
       </div>
-      <div className="w-[35%] h-fit border-2 rounded-lg">
-        <h1 className="border-b-2 text-center font-bold text-lg p-2 w-full">
-          MORE VIDEOS OF CHANNEL
-        </h1>
-        <VideoSuggested userId={video?.owner?._id} />
+
+      {/* Suggested Videos */}
+      <div className="w-full lg:w-[30%]">
+        <div className="bg-[#1e1e1e] rounded-lg shadow-md overflow-hidden">
+          <h2 className="border-b border-gray-700 text-center font-bold text-lg p-3 w-full bg-[#272727]">
+            More From This Channel
+          </h2>
+          <div className="max-h-[calc(100vh-120px)] overflow-y-auto">
+            <VideoSuggested userId={video?.owner?._id} />
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -8,22 +8,22 @@ import BottomBar from "./components/BottomBar";
 
 function App() {
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(getCurrentUser());
   }, [dispatch]);
 
   return (
-    <div className="w-screen h-screen overflow-x-hidden">
-      <div className="relative w-full h-[7%] sm:h-[10%]">
-        <NavBar />
-      </div>
-      <div className="h-[90%] flex w-full">
-        <div className="hidden sm:block relative w-[20%] h-full">
-          <SideBar />
-        </div>
-        <div className="w-full sm:w-[80%] h-full ">
+    <div className="min-h-screen bg-zinc-900 text-gray-100">
+      <NavBar />
+
+      <div className="flex pt-16">
+        {" "}
+        {/* Add padding-top to account for fixed navbar */}
+        <SideBar hidden={true} />
+        <main className="w-full sm:ml-[240px] px-4 py-6">
           <Outlet />
-        </div>
+        </main>
         <BottomBar />
       </div>
     </div>

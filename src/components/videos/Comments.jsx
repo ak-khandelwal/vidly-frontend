@@ -8,14 +8,21 @@ import {
   selectHashMoreComments,
 } from "../../app/slices/videoSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { BiMessageDetail } from "react-icons/bi";
 
 function Comments({ videoId }) {
   const totalComments = useSelector(selectCommentsCount);
   const [page, setPage] = useState(1);
+
   return (
-    <div className="border-2 rounded-lg mt-4">
-      <CommentInput totalComments={totalComments} videoId={videoId} setPage={setPage} />
-      <CommentRender videoId={videoId} setPage={setPage} page={page}/>
+    <div className="p-5 bg-[#1e1e1e] rounded-lg shadow-md mt-4">
+      <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+        <BiMessageDetail className="text-gray-400" />
+        Comments ({totalComments})
+      </h2>
+
+      <CommentInput videoId={videoId} setPage={setPage} />
+      <CommentRender videoId={videoId} setPage={setPage} page={page} />
     </div>
   );
 }
@@ -24,7 +31,6 @@ const CommentRender = ({ videoId, page, setPage }) => {
   const dispatch = useDispatch();
   const comments = useSelector(selectComments);
   const hasMore = useSelector(selectHashMoreComments);
-
   const [loading, setLoading] = useState(false);
   const elementRef = useRef(null);
 
@@ -54,9 +60,10 @@ const CommentRender = ({ videoId, page, setPage }) => {
       if (observer) observer.disconnect();
     };
   }, [dispatch, page, hasMore, loading, videoId, comments]);
+
   return (
-    <div>
-      <div>
+    <div className="mt-4">
+      <div className="space-y-4 divide-y divide-gray-700">
         {comments.map((item, index) => (
           <CommentList
             key={index}
@@ -66,37 +73,50 @@ const CommentRender = ({ videoId, page, setPage }) => {
           />
         ))}
       </div>
+
       {hasMore === true && (
-        <div ref={elementRef} className="text-center py-4 ">
-          Loading comments...
+        <div ref={elementRef} className="text-center py-4 text-gray-400">
+          <div className="w-8 h-8 border-t-2 border-[#ae7aff] border-r-2 rounded-full animate-spin mx-auto mb-2"></div>
+          Loading more comments...
+        </div>
+      )}
+
+      {comments.length === 0 && !loading && (
+        <div className="text-center py-8 text-gray-400">
+          No comments yet. Be the first to comment!
         </div>
       )}
     </div>
   );
 };
+
 const CommentList = ({ content, username, avatar }) => {
   return (
-    <div className="p-4 flex gap-4 w-full">
-      <img src={avatar} alt="" className="size-10 rounded-full" />
+    <div className="py-4 flex gap-4 w-full">
+      <img
+        src={avatar}
+        alt={`${username}'s avatar`}
+        className="size-10 rounded-full border border-gray-700"
+      />
       <div className="w-full">
-        <h1 className="inline-block">@{username}</h1>
-        <p>{content}</p>
+        <h3 className="font-medium text-[#ae7aff]">@{username}</h3>
+        <p className="mt-1 text-gray-300">{content}</p>
       </div>
     </div>
   );
 };
-const CommentInput = ({ videoId, totalComments, setPage }) => {
+
+const CommentInput = ({ videoId, setPage }) => {
   const dispatch = useDispatch();
   const [content, setContent] = useState("");
 
   const handleSumbit = async (e) => {
     e.preventDefault();
-
-    if (content !== "") {
+    if (content.trim() !== "") {
       try {
         await dispatch(addComment({ videoId, content })).unwrap();
         await dispatch(clearCommentState());
-        setPage(0)
+        setPage(0);
         setContent("");
       } catch (error) {
         console.error("Failed to add comment:", error);
@@ -105,26 +125,26 @@ const CommentInput = ({ videoId, totalComments, setPage }) => {
   };
 
   return (
-    <div className="flex gap-4 items-start border-b-2 p-4">
-      <div className="p-2">
-        <div className="border-r-2 mb-4">
-          <h1 className="h-full">{totalComments}</h1>
-          <h1 className="h-full">Comments</h1>
-        </div>
+    <div className="flex flex-col">
+      <textarea
+        className="w-full bg-[#272727] text-white font-normal px-4 py-3 border border-gray-700 rounded-lg resize-none focus:outline-none focus:border-[#ae7aff] focus:ring-1 focus:ring-[#ae7aff] transition-colors"
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+        placeholder="Add a comment..."
+        rows="3"
+      ></textarea>
+      <div className="flex justify-end mt-3">
         <button
-          className="bg-[#ae7aff] text-black p-2 rounded-sm"
+          className={`px-6 py-2 rounded-full font-bold transition-colors ${content.trim() !== ""
+              ? "bg-gradient-to-r from-[#8a63d2] to-[#ae7aff] text-black hover:opacity-90"
+              : "bg-[#323232] text-gray-400 cursor-not-allowed"
+            }`}
           onClick={(e) => handleSumbit(e)}
+          disabled={content.trim() === ""}
         >
           Comment
         </button>
       </div>
-      <textarea
-        className="w-full bg-transparent font-semibold px-2 py-1 border border-gray-300 rounded-md resize-none focus:outline-none "
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        placeholder="Write your valuable comment here..."
-        rows="4" // Sets the initial height
-      ></textarea>
     </div>
   );
 };

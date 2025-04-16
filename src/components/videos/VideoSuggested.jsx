@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getVideos, selectCurrentVideos } from "../../app/slices/videoSlice";
 import { useEffect } from "react";
+import { BiPlay } from "react-icons/bi";
 
 const VideoSuggested = ({ userId }) => {
   const dispatch = useDispatch();
@@ -11,21 +12,27 @@ const VideoSuggested = ({ userId }) => {
     if (userId) dispatch(getVideos({ userId }));
   }, [dispatch, userId]);
 
+  if (videos.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-40 text-gray-400">
+        No more videos from this channel
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full h-full flex flex-col gap-4">
-      {videos.map((item, index) => {
-        return (
-          <Video
-            key={index}
-            videoId={item?._id}
-            thumbnail={item?.thumbnail}
-            avatar={item?.owner?.avatar}
-            title={item?.title}
-            views={item?.views}
-            channalName={item?.owner?.fullName}
-          />
-        );
-      })}
+    <div className="w-full flex flex-col divide-y divide-gray-700">
+      {videos.map((item, index) => (
+        <Video
+          key={index}
+          videoId={item?._id}
+          thumbnail={item?.thumbnail}
+          avatar={item?.owner?.avatar}
+          title={item?.title}
+          views={item?.views}
+          channalName={item?.owner?.fullName}
+        />
+      ))}
     </div>
   );
 };
@@ -33,21 +40,33 @@ const VideoSuggested = ({ userId }) => {
 const Video = ({ videoId, thumbnail, avatar, title, views, channalName }) => (
   <Link
     to={"/watch/" + videoId}
-    className="video-card flex w-full gap-4 border-b-2 p-4"
+    className="p-3 hover:bg-[#272727] transition-colors flex gap-3"
   >
-    <img
-      src={thumbnail}
-      alt="Video Thumbnail"
-      className="w-[280px] h-[150px] object-cover"
-    />
-    <div className="mt-2 w-80 flex flex-col justify-between">
-      <div>
-        <h3 className="text-lg font-semibold">{title}</h3>
-        <p className="text-sm text-gray-500">{views} views</p>
+    <div className="relative flex-shrink-0">
+      <img
+        src={thumbnail}
+        alt="Video Thumbnail"
+        className="w-36 h-20 object-cover rounded-md"
+      />
+      <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+        <div className="bg-black bg-opacity-60 p-2 rounded-full">
+          <BiPlay className="text-white size-6" />
+        </div>
       </div>
-      <div className="flex gap-4">
-        <img src={avatar} alt="Video Thumbnail" className="w-10 rounded-full" />
-        <h1 className=""> {channalName}</h1>
+    </div>
+
+    <div className="flex flex-col justify-between overflow-hidden">
+      <div>
+        <h3 className="text-sm font-medium line-clamp-2">{title}</h3>
+        <div className="flex items-center text-xs text-gray-400 mt-1">
+          <BiPlay className="mr-1" />
+          <span>{views} views</span>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2 mt-1">
+        <img src={avatar} alt={channalName} className="w-5 h-5 rounded-full" />
+        <span className="text-xs text-gray-400 truncate">{channalName}</span>
       </div>
     </div>
   </Link>

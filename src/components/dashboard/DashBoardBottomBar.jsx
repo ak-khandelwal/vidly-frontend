@@ -1,44 +1,87 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { TbBrandGoogleAnalytics } from "react-icons/tb";
 import { BiSolidVideos } from "react-icons/bi";
-import { RiFeedbackLine } from "react-icons/ri";
-import { IoHomeOutline, IoSettingsOutline } from "react-icons/io5";
+import { MdOutlineVideoLibrary } from "react-icons/md";
+import { RiFeedbackLine, RiFeedbackFill } from "react-icons/ri";
+import {
+  IoHomeOutline,
+  IoHome,
+  IoSettingsOutline,
+  IoSettings,
+} from "react-icons/io5";
+import { FaChartBar } from "react-icons/fa";
+
 const DashBoardBottomBar = () => {
-  const itemsList1 = [
+  const location = useLocation();
+
+  const isActive = (path) => {
+    return location.pathname === path || location.pathname.endsWith(path);
+  };
+
+  const itemsList = [
     {
-      iconComponent: <IoHomeOutline className="w-full h-full" />,
+      icon: isActive("/") ? (
+        <IoHome className="size-6" />
+      ) : (
+        <IoHomeOutline className="size-6" />
+      ),
       name: "Home",
       path: "/",
     },
     {
-      iconComponent: <BiSolidVideos className="w-full h-full" />,
+      icon: isActive("/Content") ? (
+        <BiSolidVideos className="size-6" />
+      ) : (
+        <MdOutlineVideoLibrary className="size-6" />
+      ),
       name: "Content",
       path: "Content",
     },
     {
-      iconComponent: <TbBrandGoogleAnalytics className="w-full h-full" />,
+      icon: isActive("/Analytics") ? (
+        <FaChartBar className="size-6" />
+      ) : (
+        <TbBrandGoogleAnalytics className="size-6" />
+      ),
       name: "Analytics",
       path: "Analytics",
     },
     {
-      iconComponent: <RiFeedbackLine className="w-full h-full" />,
-      name: "Send Feedback",
+      icon: isActive("/SendFeedback") ? (
+        <RiFeedbackFill className="size-6" />
+      ) : (
+        <RiFeedbackLine className="size-6" />
+      ),
+      name: "Feedback",
       path: "/SendFeedback",
     },
     {
-      iconComponent: <IoSettingsOutline className="w-full h-full" />,
-      name: "Setting",
+      icon: isActive("/Setting") ? (
+        <IoSettings className="size-6" />
+      ) : (
+        <IoSettingsOutline className="size-6" />
+      ),
+      name: "Settings",
       path: "/Setting",
     },
   ];
 
   return (
-    <div className="sm:hidden fixed w-full bg-black lg:h-[10%] border-y-2  px-2 bottom-0 flex justify-between">
-      {itemsList1.map((item, index) => (
-        <Link key={index} to={item.path}>
-          <div className="p-2 text-white">{item.iconComponent}</div>
-        </Link>
-      ))}
+    <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-800 z-50">
+      <div className="flex justify-between items-center px-2">
+        {itemsList.map((item, index) => (
+          <Link
+            key={index}
+            to={item.path}
+            className={`flex flex-col items-center py-2 px-3 ${
+              isActive(item.path) ? "text-white" : "text-zinc-400"
+            }`}
+          >
+            <div className="mb-1">{item.icon}</div>
+            <span className="text-xs">{item.name}</span>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 };

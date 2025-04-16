@@ -1,75 +1,190 @@
-import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import {
+  IoHomeOutline,
+  IoHome,
+  IoSettingsOutline,
+  IoSettings,
+  IoChevronForwardOutline,
+  IoChevronBackOutline,
+} from "react-icons/io5";
 import { BiSolidVideos } from "react-icons/bi";
-import { RiFeedbackLine } from "react-icons/ri";
-import { IoHomeOutline, IoSettingsOutline } from "react-icons/io5";
-import { TbBaselineDensityMedium } from "react-icons/tb";
-import { Link } from "react-router-dom";
+import { MdOutlineVideoLibrary } from "react-icons/md";
+import { RiFeedbackLine, RiFeedbackFill } from "react-icons/ri";
 import { TbBrandGoogleAnalytics } from "react-icons/tb";
-function DashBoardSideBar() {
+import { FaChartBar } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../app/slices/authSlice";
+
+function DashBoardSideBar({ defaultCollapsed = true, onToggle }) {
+  const [collapsed, setCollapsed] = useState(defaultCollapsed);
+  const location = useLocation();
+  const user = useSelector(selectCurrentUser);
+
+  // Update parent component when sidebar state changes
+  useEffect(() => {
+    if (onToggle) {
+      onToggle(collapsed);
+    }
+  }, [collapsed, onToggle]);
+
+  const isActive = (path) => {
+    const pathSegments = location.pathname.split("/").filter(Boolean); // Remove empty segments
+    return pathSegments.includes(path);
+  };
+
   const itemsList1 = [
     {
-      iconComponent: <IoHomeOutline className="w-full h-full" />,
+      icon: isActive("/") ? (
+        <IoHome className="size-5" />
+      ) : (
+        <IoHomeOutline className="size-5" />
+      ),
       name: "Home",
       path: "/",
     },
     {
-      iconComponent: <BiSolidVideos className="w-full h-full" />,
+      icon: isActive("/Content") ? (
+        <BiSolidVideos className="size-5" />
+      ) : (
+        <MdOutlineVideoLibrary className="size-5" />
+      ),
       name: "Content",
       path: "Content",
     },
     {
-      iconComponent: <TbBrandGoogleAnalytics className="w-full h-full" />,
+      icon: isActive("Analytics") ? (
+        <FaChartBar className="size-5" />
+      ) : (
+        <TbBrandGoogleAnalytics className="size-5" />
+      ),
       name: "Analytics",
       path: "Analytics",
     },
   ];
+
   const itemsList2 = [
     {
-      iconComponent: <RiFeedbackLine className="w-full h-full" />,
+      icon: isActive("/SendFeedback") ? (
+        <RiFeedbackFill className="size-5" />
+      ) : (
+        <RiFeedbackLine className="size-5" />
+      ),
       name: "Send Feedback",
       path: "/SendFeedback",
     },
     {
-      iconComponent: <IoSettingsOutline className="w-full h-full" />,
-      name: "Setting",
+      icon: isActive("/Setting") ? (
+        <IoSettings className="size-5" />
+      ) : (
+        <IoSettingsOutline className="size-5" />
+      ),
+      name: "Settings",
       path: "/Setting",
     },
   ];
 
-  const [collapse, setCollapse] = useState(false);
-  const handalCollapse = () => setCollapse((i) => !i);
+  const handleCollapse = () => {
+    setCollapsed(!collapsed);
+  };
 
   return (
-    <aside className={`${collapse ? "w-[5%] mr-14" : "w-[25%] mr-14 lg:mr-0"} relative hidden sm:block z-40`}>
-      <div
-        className={`fixed h-[90%] bg-zinc-950 border-r border-white flex flex-col justify-between ${collapse ? "w-fit" : "w-[20%]"} `}
-      >
-        <div className="px-2 flex text-start flex-col gap-2 mt-2">
-          <div className="border-b-2 py-2">
-            <TbBaselineDensityMedium
-              className="size-6 "
-              onClick={() => handalCollapse()}
-            />
-          </div>
-          {itemsList1.map((e, i) => (
-            <Link to={e.path} key={i} className={`border flex gap-2 p-2 `}>
-              <div className="size-5">{e.iconComponent}</div>
-              <div className={`${collapse ? "hidden" : "block"}`}>{e.name}</div>
-            </Link>
-          ))}
-        </div>
-        <div className="p-2 flex flex-col gap-2">
-          {itemsList2.map((e, i) => (
-            <Link key={i} to={e.path}>
-              <div className="border flex gap-2 p-2">
-                <div className="size-5">{e.iconComponent}</div>
-                <div className={`${collapse ? "hidden" : "block"}`}>
-                  {e.name}
+    <aside
+      className={`fixed left-0 top-16 h-[calc(100vh-64px)] bg-zinc-900 border-r border-zinc-800 
+                  transition-all duration-300 z-40 
+                  ${collapsed ? "w-16" : "w-60"} 
+                  hidden sm:block`}
+    >
+      <div className="h-full flex flex-col justify-between py-4">
+        {/* Collapse button */}
+        <button
+          onClick={handleCollapse}
+          className="absolute -right-3 top-4 bg-zinc-800 rounded-full p-1 border border-zinc-700 text-white"
+        >
+          {collapsed ? (
+            <IoChevronForwardOutline className="size-4" />
+          ) : (
+            <IoChevronBackOutline className="size-4" />
+          )}
+        </button>
+
+        {/* User profile if logged in */}
+        {user && (
+          <div
+            className={`px-3 mb-6 ${collapsed ? "flex justify-center" : ""}`}
+          >
+            <Link
+              to={`/Channel/${user.userName}`}
+              className="flex items-center space-x-3"
+            >
+              <img
+                src={user.avatar}
+                alt={user.fullName || user.userName}
+                className={`rounded-full object-cover border-2 border-purple-500 
+                            ${collapsed ? "size-10" : "size-8"}`}
+              />
+              {!collapsed && (
+                <div className="flex flex-col">
+                  <span className="font-medium truncate max-w-40">
+                    {user.fullName || user.userName}
+                  </span>
+                  <span className="text-xs text-zinc-400">
+                    @{user.userName}
+                  </span>
                 </div>
+              )}
+            </Link>
+          </div>
+        )}
+
+        {/* Main navigation */}
+        <div className="flex-1 overflow-y-auto scrollbar-hide">
+          <div className="space-y-1 px-2">
+            {itemsList1.map((item, i) => (
+              <Link
+                to={item.path}
+                key={i}
+                className={`flex items-center rounded-lg px-3 py-2 transition-colors
+                          ${isActive(item.path)
+                    ? "bg-zinc-800 text-white"
+                    : "text-zinc-400 hover:bg-zinc-800/50 hover:text-white"
+                  }`}
+              >
+                <div className={`${collapsed ? "mx-auto" : "mr-3"}`}>
+                  {item.icon}
+                </div>
+                {!collapsed && <span>{item.name}</span>}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Footer navigation */}
+        <div className="space-y-1 px-2 pt-4 border-t border-zinc-800">
+          {itemsList2.map((item, i) => (
+            <Link
+              to={item.path}
+              key={i}
+              className={`flex items-center rounded-lg px-3 py-2 transition-colors
+                        ${isActive(item.path)
+                  ? "bg-zinc-800 text-white"
+                  : "text-zinc-400 hover:bg-zinc-800/50 hover:text-white"
+                }`}
+            >
+              <div className={`${collapsed ? "mx-auto" : "mr-3"}`}>
+                {item.icon}
               </div>
+              {!collapsed && <span>{item.name}</span>}
             </Link>
           ))}
         </div>
+
+        {/* App version or copyright */}
+        {!collapsed && (
+          <div className="px-3 pt-4 pb-2 text-xs text-zinc-500">
+            Vidly Dashboard v1.0.0
+          </div>
+        )}
       </div>
     </aside>
   );
