@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import {
@@ -126,11 +126,10 @@ function VideoDetail() {
               </Link>
             ) : (
               <button
-                className={`px-6 py-2.5 rounded-full font-bold transition-colors ${
-                  !video?.owner?.isSubscribed
-                    ? "bg-gradient-to-r from-[#8a63d2] to-[#ae7aff] text-black"
-                    : "bg-[#323232] text-white border border-gray-600"
-                }`}
+                className={`px-6 py-2.5 rounded-full font-bold transition-colors ${!video?.owner?.isSubscribed
+                  ? "bg-gradient-to-r from-[#8a63d2] to-[#ae7aff] text-black"
+                  : "bg-[#323232] text-white border border-gray-600"
+                  }`}
                 onClick={(e) => handleSubscribe(e)}
               >
                 {video?.owner?.isSubscribed ? "Subscribed" : "Subscribe"}
@@ -140,13 +139,7 @@ function VideoDetail() {
         </div>
 
         {/* Video Description */}
-        <div className="mt-4 p-5 bg-[#1e1e1e] rounded-lg shadow-md">
-          <div className="whitespace-pre-line">
-            <h3 className="font-semibold text-gray-300 mb-2">Description</h3>
-            <p className="text-gray-400">{video?.description}</p>
-          </div>
-        </div>
-
+        {video.description && <Description text={video.description} />}
         {/* Comments Section */}
         <div className="mt-4">
           <Comments videoId={video?._id} />
@@ -160,12 +153,32 @@ function VideoDetail() {
             More From This Channel
           </h2>
           <div className="max-h-[calc(100vh-120px)] overflow-y-auto">
-            <VideoSuggested userId={video?.owner?._id} />
+            <VideoSuggested videoId={video?._id} userId={video?.owner?._id} />
           </div>
         </div>
       </div>
     </div>
   );
 }
+function Description({ text }) {
+  const [seeMore, setSeeMore] = useState(false);
+  const maxLength = 200
+  const isLong = text.length > maxLength;
 
+
+  const displayText = seeMore || !isLong ? text : text.slice(0, maxLength) + "...";
+
+  const handleToggle = () => setSeeMore(!seeMore);
+  return (
+    <div className="mt-4 p-5 bg-[#1e1e1e] rounded-lg shadow-md">
+      <div className="whitespace-pre-line">
+        <h3 className="font-semibold text-gray-300 mb-2">Description</h3>
+        <div>
+          <p className={`text-gray-400 `}>{displayText}</p>
+          {isLong && <button onClick={handleToggle} className="text-blue-400">{seeMore ? "see less" : "..see more"}</button>}
+        </div>
+      </div>
+    </div>
+  )
+}
 export default VideoDetail;
