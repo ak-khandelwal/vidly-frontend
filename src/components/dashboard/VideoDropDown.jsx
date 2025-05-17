@@ -11,7 +11,7 @@ import DeleteConfirmationModal from "./DeleteConformationModal";
 import PlaylistSelectorModal from "./PlaylistSelectorModal";
 import TonglePublishConformationModal from "./TonglePublishConformationModal";
 
-const VideoDropdown = ({ video, setPage }) => {
+const VideoDropdown = ({ video }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -49,7 +49,6 @@ const VideoDropdown = ({ video, setPage }) => {
     try {
       await dispatch(deleteVideo({ videoId: video?._id })).unwrap();
       dispatch(clearVideoState());
-      setPage(1);
       setIsDeleteModalOpen(false);
     } catch (error) {
       console.error("Failed to delete video:", error);
@@ -59,7 +58,6 @@ const VideoDropdown = ({ video, setPage }) => {
     try {
       await dispatch(togglePublishStatus({ videoId: video?._id })).unwrap();
       dispatch(clearVideoState());
-      setPage(1);
       setIsOpen(false);
     } catch (error) {
       console.error("Failed to toggle publish status:", error);

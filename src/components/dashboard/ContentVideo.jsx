@@ -4,7 +4,9 @@ import { setActive } from "../../app/slices/dashboard";
 import {
   clearVideoState,
   getVideos,
+  incrementPageState,
   selectCurrentHasMore,
+  selectCurrentPage,
   selectCurrentVideos,
 } from "../../app/slices/videoSlice";
 import { selectCurrentUser } from "../../app/slices/authSlice";
@@ -22,28 +24,27 @@ const ContentVideo = () => {
   const dispatch = useDispatch();
   const videos = useSelector(selectCurrentVideos);
   const hasMore = useSelector(selectCurrentHasMore);
+  const page = useSelector(selectCurrentPage);
   const user = useSelector(selectCurrentUser);
 
-  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const elementRef = useRef(null);
 
   useEffect(() => {
     if (user) {
       dispatch(clearVideoState());
-      setPage(1);
     }
   }, [dispatch, user]);
-
+  console.log(page, hasMore)
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       const entry = entries[0];
       if (entry.isIntersecting && hasMore && !loading) {
         setLoading(true);
-        dispatch(getVideos({ userId: user?._id, page, limit: 6 }))
+        dispatch(getVideos({ userId: user?._id, page, limit: 2 }))
           .unwrap()
           .then(() => {
-            setPage((prev) => prev + 1);
+            dispatch(incrementPageState());
             setLoading(false);
           })
           .catch((err) => {
@@ -51,21 +52,15 @@ const ContentVideo = () => {
             setLoading(false);
           });
       }
-      if (!hasMore) setPage(1);
     });
 
     if (elementRef.current) {
       observer.observe(elementRef.current);
     }
-
     return () => {
       if (observer) observer.disconnect();
     };
   }, [dispatch, page, user, hasMore, loading]);
-
-  useEffect(() => {
-    dispatch(setActive([1, 0, 0]));
-  }, [dispatch]);
 
   return (
     <div className="bg-[#1e1e1e] rounded-xl shadow-lg overflow-hidden border border-gray-800">
@@ -179,7 +174,7 @@ const ContentVideo = () => {
 
               {/* Options */}
               <div className="col-span-1 text-center flex justify-center">
-                <VideoDropdown video={item} setPage={setPage} />
+                <VideoDropdown video={item} />
               </div>
             </div>
           ))

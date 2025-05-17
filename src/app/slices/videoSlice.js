@@ -161,6 +161,7 @@ const initialState = {
   videoError: false,
   videoCount: 0,
   hasMore: true,
+  page: 1,
   videoPlay: {},
   videoLike: 0,
   liked: false,
@@ -173,11 +174,15 @@ const videoSlice = createSlice({
   name: "video",
   initialState,
   reducers: {
+    incrementPageState: (state) => {
+      state.page++
+    },
     clearVideoState: (state) => {
       state.videos = [];
       state.videoError = false;
       state.videoCount = 0;
       state.hasMore = true;
+      state.page = 1;
       state.videoPlay = {};
       state.videoPlayStatus = false;
       state.videoLike = 0;
@@ -219,11 +224,12 @@ const videoSlice = createSlice({
 });
 
 export default videoSlice.reducer;
-export const { clearVideoState, clearCommentState } = videoSlice.actions;
+export const { clearVideoState, clearCommentState, incrementPageState } = videoSlice.actions;
 export const selectCurrentVideos = (state) => state.video.videos;
 export const selectError = (state) => state.video.videoError;
 export const selectCurrentVideosCount = (state) => state.video.videoCount;
 export const selectCurrentHasMore = (state) => state.video.hasMore;
+export const selectCurrentPage = (state) => state.video.page;
 
 export const selectVideoPlay = (state) => state.video.videoPlay;
 export const selectVideoLike = (state) => state.video.videoLike;
