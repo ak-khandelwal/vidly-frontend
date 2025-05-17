@@ -55,7 +55,7 @@ function HomeVideos() {
         }
         // Debounce the dispatch
         const newTimeout = setTimeout(() => {
-          dispatch(getVideos({ page, limit: 9 }))
+          dispatch(getVideos({ page, limit: 12 }))
             .unwrap()
             .then(() => {
               setPage((prev) => prev + 1);
@@ -98,10 +98,9 @@ function HomeVideos() {
               key={index}
               onClick={() => handleCategoryClick(index)}
               className={`px-4 py-1.5 rounded-full text-sm whitespace-nowrap transition-all
-                ${
-                  category.active
-                    ? "bg-white text-black font-medium"
-                    : "bg-zinc-800 text-zinc-200 hover:bg-zinc-700"
+                ${category.active
+                  ? "bg-white text-black font-medium"
+                  : "bg-zinc-800 text-zinc-200 hover:bg-zinc-700"
                 }`}
             >
               {category.name}
