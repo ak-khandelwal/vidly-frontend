@@ -16,6 +16,7 @@ import {
   MdOutlineLock,
   MdOutlineInfo,
 } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const ContentVideo = () => {
   const dispatch = useDispatch();
@@ -119,7 +120,7 @@ const ContentVideo = () => {
             >
               {/* Video Details */}
               <div className="col-span-5 flex gap-4">
-                <div className="relative flex-shrink-0 rounded-lg overflow-hidden shadow-md">
+                <Link to={`/watch/` + item?._id} className="relative flex-shrink-0 rounded-lg overflow-hidden shadow-md">
                   <img
                     src={item?.thumbnail}
                     alt="Video Thumbnail"
@@ -130,7 +131,7 @@ const ContentVideo = () => {
                       <BiPlay className="text-white text-2xl" />
                     </div>
                   </div>
-                </div>
+                </Link>
                 <div className="flex flex-col justify-center">
                   <h3 className="font-medium text-white text-sm sm:text-base line-clamp-1 mb-1 group-hover:text-[#ae7aff] transition-colors">
                     {item?.title}
