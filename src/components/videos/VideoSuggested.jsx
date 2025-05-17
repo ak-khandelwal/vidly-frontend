@@ -4,7 +4,7 @@ import { getVideos, selectCurrentVideos } from "../../app/slices/videoSlice";
 import { useEffect } from "react";
 import { BiPlay } from "react-icons/bi";
 
-const VideoSuggested = ({ userId }) => {
+const VideoSuggested = ({ videoId, userId }) => {
   const dispatch = useDispatch();
   const videos = useSelector(selectCurrentVideos);
 
@@ -22,7 +22,9 @@ const VideoSuggested = ({ userId }) => {
 
   return (
     <div className="w-full flex flex-col divide-y divide-gray-700">
-      {videos.map((item, index) => (
+      {videos.filter((item) => {
+        return item._id != videoId
+      }).map((item, index) => (
         <Video
           key={index}
           videoId={item?._id}
