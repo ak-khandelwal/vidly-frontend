@@ -43,7 +43,7 @@ const NavBar = () => {
 
   return (
     <nav className="fixed top-0 w-full bg-zinc-900 h-16 border-b border-zinc-800 z-50 px-4">
-      <div className="h-full max-w-7xl mx-auto flex justify-between items-center">
+      <div className="h-full  mx-auto flex justify-between items-center">
         {/* Logo - hidden when search is open on mobile */}
         <Link
           to="/"
