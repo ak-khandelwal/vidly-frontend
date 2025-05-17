@@ -108,7 +108,7 @@ function ChannelLayout() {
             </Link>
             <Link to="Subscribed" className="whitespace-nowrap">
               <div className={active[3] === 1 ? activeClass : inactiveClass}>
-                Subscribed
+                Subscribers
               </div>
             </Link>
           </nav>
