@@ -22,22 +22,75 @@ const VideoPopUp = ({ onClose }) => {
     }));
   };
 
+  // const handleFileChange = (e, type) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       [type]: file,
+  //     }));
+  //     
+  //     // Create preview URL for thumbnail
+  //     if (type === "thumbnail") {
+  //       const url = URL.createObjectURL(file);
+  //       setPreviewUrl(url);
+  //     }
+  //   }
+  // };
+
   const handleFileChange = (e, type) => {
     const file = e.target.files[0];
-    if (file) {
+    if (!file) return;
+
+    if (type === "video") {
+      setFormData((prev) => ({ ...prev, video: file }));
+
+      const video = document.createElement("video");
+      video.src = URL.createObjectURL(file);
+      video.crossOrigin = "anonymous";
+      video.muted = true;
+      video.preload = "metadata";
+
+      video.onloadedmetadata = () => {
+        video.currentTime = 1;
+      };
+
+      video.onseeked = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const thumbnailFile = new File([blob], "thumbnail.jpg", {
+              type: "image/jpeg",
+            });
+
+            setFormData((prev) => ({
+              ...prev,
+              thumbnail: thumbnailFile,
+            }));
+
+            const thumbnailUrl = URL.createObjectURL(thumbnailFile);
+            setPreviewUrl(thumbnailUrl);
+          }
+        }, "image/jpeg");
+      };
+    }
+
+    // For manual fallback or custom image upload (if you still want it)
+    if (type === "thumbnail") {
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
       setFormData((prev) => ({
         ...prev,
-        [type]: file,
+        thumbnail: file,
       }));
-
-      // Create preview URL for thumbnail
-      if (type === "thumbnail") {
-        const url = URL.createObjectURL(file);
-        setPreviewUrl(url);
-      }
     }
   };
-
   const handleSubmit = async () => {
     const { title, description, thumbnail, video } = formData;
 
@@ -200,7 +253,6 @@ const VideoPopUp = ({ onClose }) => {
               />
             </div>
           </div>
-
           {/* Title */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
