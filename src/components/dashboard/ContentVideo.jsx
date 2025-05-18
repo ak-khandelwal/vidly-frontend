@@ -19,6 +19,7 @@ import {
   MdOutlineInfo,
 } from "react-icons/md";
 import { Link } from "react-router-dom";
+import VideoPopUp from "./VideoPopUp";
 
 const ContentVideo = () => {
   const dispatch = useDispatch();
@@ -28,11 +29,17 @@ const ContentVideo = () => {
   const user = useSelector(selectCurrentUser);
 
   const [loading, setLoading] = useState(false);
+  const [uploadVideoPopUp, setUploadVideoPopUp] = useState(false);
+
   const elementRef = useRef(null);
 
+  const handleUploadVideoPopUp = () => {
+    setUploadVideoPopUp((value) => !value);
+  }
   useEffect(() => {
     dispatch(setActive([1, 0, 0]));
   }, [dispatch]);
+
   useEffect(() => {
     if (user) {
       dispatch(clearVideoState());
@@ -106,7 +113,7 @@ const ContentVideo = () => {
               Your video library is empty. Start uploading videos to build your
               content collection.
             </p>
-            <button className="mt-6 bg-gradient-to-r from-[#ae7aff] to-[#8a5fff] hover:from-[#9d6aff] hover:to-[#7946ff] text-white font-medium py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-105">
+            <button onClick={handleUploadVideoPopUp} className="mt-6 bg-gradient-to-r from-[#ae7aff] to-[#8a5fff] hover:from-[#9d6aff] hover:to-[#7946ff] text-white font-medium py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-105">
               Upload New Video
             </button>
           </div>
@@ -191,6 +198,8 @@ const ContentVideo = () => {
           <span className="text-sm font-medium">Loading more videos...</span>
         </div>
       )}
+
+      {uploadVideoPopUp && <VideoPopUp onClose={() => handleUploadVideoPopUp()} />}
     </div>
   );
 };
