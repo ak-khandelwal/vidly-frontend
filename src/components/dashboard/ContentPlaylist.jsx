@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setActive } from "../../app/slices/dashboard";
 import { selectCurrentUser } from "../../app/slices/authSlice";
@@ -14,12 +14,18 @@ import {
   MdOutlineVideoLibrary,
   MdOutlineInfo,
 } from "react-icons/md";
+import PlaylistPopup from "./PlaylistPopup";
 
 const ContentPlaylist = () => {
   const dispatch = useDispatch();
   const playlists = useSelector(selectCurrentPlayLists);
   const user = useSelector(selectCurrentUser);
 
+  const [uploadPlaylistPopUp, setUploadPlaylistPopUp] = useState(false);
+
+  const handleUploadPlayListPopUp = () => {
+    setUploadPlaylistPopUp((value) => !value);
+  }
   useEffect(() => {
     if (user) {
       dispatch(clearPlayListState());
@@ -72,7 +78,7 @@ const ContentPlaylist = () => {
               You haven{"'"}t created any playlists yet. Create a playlist to
               organize your videos.
             </p>
-            <button className="mt-6 bg-gradient-to-r from-[#ae7aff] to-[#8a5fff] hover:from-[#9d6aff] hover:to-[#7946ff] text-white font-medium py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-105">
+            <button onClick={handleUploadPlayListPopUp} className="mt-6 bg-gradient-to-r from-[#ae7aff] to-[#8a5fff] hover:from-[#9d6aff] hover:to-[#7946ff] text-white font-medium py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-105">
               Create New Playlist
             </button>
           </div>
@@ -132,7 +138,9 @@ const ContentPlaylist = () => {
           ))
         )}
       </div>
-    </div>
+
+      {uploadPlaylistPopUp && <PlaylistPopup onClose={() => handleUploadPlayListPopUp()} />}
+    </div >
   );
 };
 
