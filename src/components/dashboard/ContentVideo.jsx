@@ -31,11 +31,14 @@ const ContentVideo = () => {
   const elementRef = useRef(null);
 
   useEffect(() => {
+    dispatch(setActive([1, 0, 0]));
+  }, [dispatch]);
+  useEffect(() => {
     if (user) {
       dispatch(clearVideoState());
     }
   }, [dispatch, user]);
-  console.log(page, hasMore)
+
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       const entry = entries[0];
