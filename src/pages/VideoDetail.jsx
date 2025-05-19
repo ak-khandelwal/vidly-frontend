@@ -63,7 +63,9 @@ function VideoDetail() {
             controls
             autoPlay
             className="w-full aspect-video object-cover"
-          ></video>
+          >
+            <source src={video.videoFile.replace('http://', 'https://')} type="video/mp4" />
+          </video>
         </div>
 
         {/* Video Info */}
