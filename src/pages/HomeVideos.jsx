@@ -19,16 +19,21 @@ function HomeVideos() {
   const elementRef = useRef(null);
   const [debounceTimeout, setDebounceTimeout] = useState(null);
   const [loading, setLoading] = useState(false);
+  // Get user tags from auth state
+  const userTags = useSelector((state) => state.auth.user?.tags || []);
   const [categories, setCategories] = useState([
     { name: "All", active: true },
-    { name: "Music", active: false },
-    { name: "Gaming", active: false },
-    { name: "News", active: false },
-    { name: "Sports", active: false },
-    { name: "Entertainment", active: false },
-    { name: "Education", active: false },
-    { name: "Technology", active: false },
   ]);
+
+  // Update categories when userTags change
+  useEffect(() => {
+    if (userTags && userTags.length > 0) {
+      setCategories([
+        { name: "All", active: true },
+        ...userTags.map(tag => ({ name: tag.name, active: false }))
+      ]);
+    }
+  }, [userTags]);
 
   const handleCategoryClick = (clickedIndex) => {
     setCategories(
@@ -37,6 +42,10 @@ function HomeVideos() {
         active: index === clickedIndex,
       })),
     );
+
+    // Get the selected category name
+    const selectedCategory = categories[clickedIndex].name;
+    const tag = selectedCategory === "All" ? null : selectedCategory;
 
     // Here you would usually filter videos by category
     dispatch(clearVideoState());
@@ -53,9 +62,13 @@ function HomeVideos() {
         if (error) {
           time = 3000;
         }
+        // Get the active category
+        const activeCategory = categories.find(cat => cat.active);
+        const tag = activeCategory.name === "All" ? null : activeCategory.name;
+
         // Debounce the dispatch
         const newTimeout = setTimeout(() => {
-          dispatch(getVideos({ page, limit: 12 }))
+          dispatch(getVideos({ page, limit: 12, tag }))
             .unwrap()
             .then(() => {
               setPage((prev) => prev + 1);
@@ -75,7 +88,7 @@ function HomeVideos() {
     return () => {
       if (observer) observer.disconnect();
     };
-  }, [dispatch, page, hasMore, loading, debounceTimeout, error]);
+  }, [dispatch, page, hasMore, loading, debounceTimeout, error, categories]);
 
   useEffect(() => {
     dispatch(clearVideoState());
