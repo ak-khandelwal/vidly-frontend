@@ -24,8 +24,8 @@ const DashboardContent = () => {
   };
 
   return (
-    <div className="p-6 relative">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
+    <div className="h-full flex flex-col p-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
         <div className={`${uploadPopup && "hidden sm:block"} mb-4 sm:mb-0`}>
           <h1 className="font-bold text-2xl">Channel Content</h1>
           <p className="text-gray-400 mt-1">
@@ -102,14 +102,14 @@ const DashboardContent = () => {
         </Link>
       </div>
 
+      <div className="flex-1 overflow-hidden">
+        <Outlet />
+      </div>
+
       {/* Modal popups */}
       {popUps[0] === 1 && <VideoPopUp onClose={() => handlePopUps(0)} />}
       {popUps[1] === 1 && <PlaylistPopup onClose={() => handlePopUps(1)} />}
       {popUps[2] === 1 && <TweetPopUp onClose={() => handlePopUps(2)} />}
-
-      <div className="mt-4">
-        <Outlet />
-      </div>
     </div>
   );
 };

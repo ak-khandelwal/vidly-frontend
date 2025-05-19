@@ -26,12 +26,12 @@ function Dashboard() {
         <div className="relative w-full h-[7%] sm:h-[10%] z-40">
           <NavBar />
         </div>
-        <div className="flex w-full h-full">
+        <div className="flex w-full ">
           <DashBoardSideBar defaultCollapsed={true} onToggle={toggleSidebar} />
           <div
-            className={`h-full overflow-y-auto transition-all duration-300 ${sidebarCollapsed
-                ? "w-full sm:w-[calc(100%-4rem)] sm:ml-16"
-                : "w-full sm:w-[calc(100%-15rem)] sm:ml-60"
+            className={`transition-all duration-300 ${sidebarCollapsed
+              ? "w-full sm:w-[calc(100%-4rem)] sm:ml-16"
+              : "w-full sm:w-[calc(100%-15rem)] sm:ml-60"
               }`}
           >
             <Outlet />
