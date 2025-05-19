@@ -9,10 +9,12 @@ const VideoPopUp = ({ onClose }) => {
     description: "",
     thumbnail: null,
     video: null,
+    tags: [],
   });
   const [previewUrl, setPreviewUrl] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [currentTag, setCurrentTag] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -22,21 +24,35 @@ const VideoPopUp = ({ onClose }) => {
     }));
   };
 
-  // const handleFileChange = (e, type) => {
-  //   const file = e.target.files[0];
-  //   if (file) {
-  //     setFormData((prev) => ({
-  //       ...prev,
-  //       [type]: file,
-  //     }));
-  //     
-  //     // Create preview URL for thumbnail
-  //     if (type === "thumbnail") {
-  //       const url = URL.createObjectURL(file);
-  //       setPreviewUrl(url);
-  //     }
-  //   }
-  // };
+  // Handle tag input
+  const handleTagInputChange = (e) => {
+    setCurrentTag(e.target.value);
+  };
+
+  const handleTagInputKeyPress = (e) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      addTag();
+    }
+  };
+
+  const addTag = () => {
+    const trimmedTag = currentTag.trim();
+    if (trimmedTag && !formData.tags.includes(trimmedTag)) {
+      setFormData((prev) => ({
+        ...prev,
+        tags: [...prev.tags, trimmedTag],
+      }));
+      setCurrentTag("");
+    }
+  };
+
+  const removeTag = (tagToRemove) => {
+    setFormData((prev) => ({
+      ...prev,
+      tags: prev.tags.filter(tag => tag !== tagToRemove),
+    }));
+  };
 
   const handleFileChange = (e, type) => {
     const file = e.target.files[0];
@@ -91,11 +107,12 @@ const VideoPopUp = ({ onClose }) => {
       }));
     }
   };
-  const handleSubmit = async () => {
-    const { title, description, thumbnail, video } = formData;
 
-    if (!title || !description || !thumbnail || !video) {
-      alert("All fields marked with * are required!");
+  const handleSubmit = async () => {
+    const { title, description, thumbnail, video, tags } = formData;
+
+    if (!title || !description || !thumbnail || !video || tags.length === 0) {
+      alert("All fields marked with * are required! You must add at least one tag.");
       return;
     }
     setIsUploading(true);
@@ -108,13 +125,13 @@ const VideoPopUp = ({ onClose }) => {
         });
       };
       const progressInterval = setInterval(simulateProgress, 500);
-
       await dispatch(
         addVideo({
           title,
           description,
           thumbnail,
           videoFile: video,
+          tags,
         }),
       ).unwrap();
       clearInterval(progressInterval);
@@ -253,6 +270,7 @@ const VideoPopUp = ({ onClose }) => {
               />
             </div>
           </div>
+
           {/* Title */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -285,6 +303,69 @@ const VideoPopUp = ({ onClose }) => {
                        text-white px-3 py-2 focus:outline-none focus:ring-2 
                        focus:ring-purple-400/50"
             />
+          </div>
+
+          {/* Tags */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Tags * (At least one tag required)
+            </label>
+            <div className="space-y-3">
+              {/* Tags Display */}
+              {formData.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {formData.tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="inline-flex items-center gap-1 px-3 py-1 
+                               bg-purple-400/20 border border-purple-400 
+                               rounded-full text-sm text-white"
+                    >
+                      {tag}
+                      <button
+                        type="button"
+                        onClick={() => removeTag(tag)}
+                        className="ml-1 hover:bg-purple-400/30 rounded-full p-0.5"
+                      >
+                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                          <path
+                            fillRule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Tag Input */}
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={currentTag}
+                  onChange={handleTagInputChange}
+                  onKeyPress={handleTagInputKeyPress}
+                  placeholder="Type a tag and press Enter or comma"
+                  className="flex-1 rounded border border-purple-400 bg-black/50 
+                           text-white px-3 py-2 focus:outline-none focus:ring-2 
+                           focus:ring-purple-400/50"
+                />
+                <button
+                  type="button"
+                  onClick={addTag}
+                  className="px-4 py-2 border border-purple-400 rounded-md text-sm 
+                           font-medium text-white bg-purple-400/20 
+                           hover:bg-purple-400/40"
+                >
+                  Add
+                </button>
+              </div>
+              <p className="text-xs text-gray-400">
+                Press Enter or comma to add a tag. At least one tag is required.
+              </p>
+            </div>
           </div>
         </div>
       </div>

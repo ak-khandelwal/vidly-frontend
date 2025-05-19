@@ -4,9 +4,9 @@ import { BASE_URL } from "../../constants/BASE_URL";
 // Get all videos by userId
 export const addVideo = createAsyncThunk(
   "addVideo",
-  async ({ title, description, videoFile, thumbnail }) => {
+  async ({ title, description, videoFile, thumbnail, tags = [] }) => {
     try {
-      if (!title && !description) {
+      if (!title && !description && tags.length == 0) {
         throw new Error("title and description in  required");
       }
       if (!videoFile && !thumbnail) {
@@ -17,6 +17,7 @@ export const addVideo = createAsyncThunk(
       formData.append("description", description);
       formData.append("thumbnail", thumbnail);
       formData.append("videoFile", videoFile);
+      formData.append("tags", JSON.stringify(tags));
 
       const response = await apiMultipartClient.post("videos/", formData);
       console.log(response);
@@ -28,7 +29,7 @@ export const addVideo = createAsyncThunk(
 );
 export const getVideos = createAsyncThunk(
   "getVideos",
-  async ({ userId, sortBy, sortType, query, page, limit }) => {
+  async ({ userId, sortBy, sortType, query, page, limit, tag }) => {
     try {
       const url = new URL(`${BASE_URL}/videos/`);
 
@@ -36,6 +37,7 @@ export const getVideos = createAsyncThunk(
       if (query) url.searchParams.set("query", query);
       if (page) url.searchParams.set("page", page);
       if (limit) url.searchParams.set("limit", limit);
+      if (tag) url.searchParams.set("tag", tag);
       if (sortBy && sortType) {
         url.searchParams.set("sortBy", sortBy);
         url.searchParams.set("sortType", sortType);
@@ -64,6 +66,13 @@ export const updateVideo = createAsyncThunk(
   async ({ videoId, formData }) => {
     try {
       if (!videoId) throw new Error("videoId required");
+      // Ensure tags are properly handled if they exist in formData
+      if (formData.get("tags")) {
+        const tags = formData.get("tags");
+        // If tags is already a string (JSON), parse it
+        const parsedTags = typeof tags === 'string' ? JSON.parse(tags) : tags;
+        formData.set("tags", JSON.stringify(parsedTags));
+      }
       const response = await apiMultipartClient.patch(
         `/videos/${videoId}`,
         formData,
