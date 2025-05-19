@@ -1,19 +1,33 @@
 import { useState } from "react";
-
+import { useDispatch, useSelector } from "react-redux";
+import { selectCurrentChannel } from "../../app/slices/channelSlice";
+import {
+  addTweets,
+  clearTweetState,
+  getTweets,
+} from "../../app/slices/TweetsSlice";
 const TweetPopUp = ({ onClose }) => {
+  const dispatch = useDispatch();
   const [content, setContent] = useState("");
+  const user = useSelector(selectCurrentChannel);
 
   const handleInputChange = (e) => {
     setContent(e.target.value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!content.trim()) {
       alert("Tweet content is required!");
       return;
     }
 
-    console.log("Tweet Created:", content);
+    try {
+      await dispatch(addTweets({ content })).unwrap();
+      dispatch(clearTweetState());
+      setContent("");
+    } catch (error) {
+      console.error("Failed to add comment:", error);
+    }
     onClose?.();
   };
 
