@@ -1,5 +1,21 @@
-const DeleteTweetModal = ({ isOpen, onClose, tweet, onConfirm }) => {
+import { useDispatch } from 'react-redux';
+import { deleteTweet } from '../app/slices/TweetsSlice';
+import { toast } from 'react-toastify';
+
+const DeleteTweetModal = ({ isOpen, onClose, tweet }) => {
+  const dispatch = useDispatch();
+
   if (!isOpen) return null;
+
+  const handleDelete = async () => {
+    try {
+      await dispatch(deleteTweet({ tweetId: tweet._id })).unwrap();
+      toast.success('Tweet deleted successfully');
+      onClose();
+    } catch (error) {
+      toast.error(error.message || 'Failed to delete tweet');
+    }
+  };
 
   return (
     <div
@@ -30,7 +46,7 @@ const DeleteTweetModal = ({ isOpen, onClose, tweet, onConfirm }) => {
             Cancel
           </button>
           <button
-            onClick={onConfirm}
+            onClick={handleDelete}
             className="px-4 py-2 border border-red-400 rounded-md text-sm 
                      font-medium text-white bg-red-400/20 
                      hover:bg-red-400/40"
