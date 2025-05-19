@@ -1,10 +1,29 @@
 import { useState } from "react";
+import { useDispatch } from 'react-redux';
+import { editTweet } from '../app/slices/TweetsSlice';
+import { toast } from 'react-toastify';
+
 const EditTweetModal = ({ isOpen, onClose, tweet }) => {
+  const dispatch = useDispatch();
   const [content, setContent] = useState(tweet?.content || "");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSave = async () => {
-    // Implement save logic
-    onClose();
+    if (!content.trim()) {
+      toast.error('Tweet content cannot be empty');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      await dispatch(editTweet({ tweetId: tweet._id, content })).unwrap();
+      toast.success('Tweet updated successfully');
+      onClose();
+    } catch (error) {
+      toast.error(error.message || 'Failed to update tweet');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -30,6 +49,7 @@ const EditTweetModal = ({ isOpen, onClose, tweet }) => {
                      text-white px-3 py-2 focus:outline-none focus:ring-2 
                      focus:ring-purple-400/50"
             placeholder="What's happening?"
+            disabled={isSubmitting}
           />
         </div>
 
@@ -38,6 +58,7 @@ const EditTweetModal = ({ isOpen, onClose, tweet }) => {
             onClick={onClose}
             className="px-4 py-2 border border-purple-400 rounded-md text-sm 
                      font-medium text-white hover:bg-purple-400/20"
+            disabled={isSubmitting}
           >
             Cancel
           </button>
@@ -45,9 +66,10 @@ const EditTweetModal = ({ isOpen, onClose, tweet }) => {
             onClick={handleSave}
             className="px-4 py-2 border border-purple-400 rounded-md text-sm 
                      font-medium text-white bg-purple-400/20 
-                     hover:bg-purple-400/40"
+                     hover:bg-purple-400/40 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={isSubmitting}
           >
-            Save Changes
+            {isSubmitting ? 'Saving...' : 'Save Changes'}
           </button>
         </div>
       </div>
@@ -55,4 +77,4 @@ const EditTweetModal = ({ isOpen, onClose, tweet }) => {
   );
 };
 
-export default EditTweetModal
+export default EditTweetModal;
