@@ -65,7 +65,7 @@ const ContentPlaylist = () => {
       </div>
 
       {/* Table Body */}
-      <div className="flex-1 overflow-y-auto max-h-[calc(100vh-200px)] sm:max-h-[60vh]">
+      <div className="flex-1 overflow-y-auto min-h-[calc(100vh-400px)] max-h-[calc(100vh-200px)] sm:max-h-[60vh]">
         {playlists.length === 0 ? (
           <div className="text-center py-16 text-gray-400 flex flex-col items-center">
             <div className="bg-[#272727] rounded-full p-6 mb-4">

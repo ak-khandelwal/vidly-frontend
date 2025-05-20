@@ -1,6 +1,11 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { createPlaylist } from "../../app/slices/playListSlice";
 
 const PlaylistPopup = ({ onClose }) => {
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.playlist);
+  
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -14,7 +19,7 @@ const PlaylistPopup = ({ onClose }) => {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const { title, description } = formData;
 
     if (!title || !description) {
@@ -22,8 +27,12 @@ const PlaylistPopup = ({ onClose }) => {
       return;
     }
 
-    console.log("Playlist Created:", { title, description });
-    onClose?.();
+    try {
+      await dispatch(createPlaylist({ title, description })).unwrap();
+      onClose?.();
+    } catch (error) {
+      console.error("Failed to create playlist:", error);
+    }
   };
 
   return (
@@ -35,24 +44,32 @@ const PlaylistPopup = ({ onClose }) => {
           <div className="flex gap-3">
             <button
               onClick={onClose}
+              disabled={loading}
               className="px-4 py-2 border border-purple-400 rounded-md text-sm 
-                       font-medium text-white hover:bg-purple-400/20"
+                       font-medium text-white hover:bg-purple-400/20 disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               onClick={handleSubmit}
+              disabled={loading}
               className="px-4 py-2 border border-purple-400 rounded-md text-sm 
                        font-medium text-white bg-purple-400/20 
-                       hover:bg-purple-400/40"
+                       hover:bg-purple-400/40 disabled:opacity-50"
             >
-              Save
+              {loading ? "Creating..." : "Save"}
             </button>
           </div>
         </div>
 
         {/* Form Content */}
         <div className="p-6 space-y-6">
+          {error && (
+            <div className="text-red-500 text-sm mb-4">
+              {error}
+            </div>
+          )}
+          
           {/* Title */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -64,9 +81,10 @@ const PlaylistPopup = ({ onClose }) => {
               value={formData.title}
               onChange={handleInputChange}
               placeholder="Enter playlist title"
+              disabled={loading}
               className="w-full rounded border border-purple-400 bg-black/50 
                        text-white px-3 py-2 focus:outline-none focus:ring-2 
-                       focus:ring-purple-400/50"
+                       focus:ring-purple-400/50 disabled:opacity-50"
             />
           </div>
 
@@ -80,10 +98,11 @@ const PlaylistPopup = ({ onClose }) => {
               value={formData.description}
               onChange={handleInputChange}
               rows={6}
+              disabled={loading}
               placeholder="Enter playlist description"
               className="w-full rounded border border-purple-400 bg-black/50 
                        text-white px-3 py-2 focus:outline-none focus:ring-2 
-                       focus:ring-purple-400/50"
+                       focus:ring-purple-400/50 disabled:opacity-50"
             />
           </div>
         </div>
