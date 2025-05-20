@@ -40,9 +40,39 @@ export const addVideoToPlaylist = createAsyncThunk(
   }
 )
 
+export const createPlaylist = createAsyncThunk(
+  "createPlaylist",
+  async ({ title, description }) => {
+    try {
+      if (!title || !description) throw new Error("Title and description are required");
+      
+      const response = await apiClient.post("/playlist", { title, description });
+      return response.data.data;
+    } catch (error) {
+      throw new Error(error?.message || error);
+    }
+  }
+);
+
+export const deletePlaylist = createAsyncThunk(
+  "deletePlaylist",
+  async ({ playlistId }) => {
+    try {
+      if (!playlistId) throw new Error("Playlist ID is required");
+      
+      await apiClient.delete(`/playlist/${playlistId}`);
+      return playlistId;
+    } catch (error) {
+      throw new Error(error?.message || error);
+    }
+  }
+);
+
 const initialState = {
   playLists: [],
   playList: {},
+  loading: false,
+  error: null
 };
 
 const PlayListSlice = createSlice({
@@ -52,15 +82,46 @@ const PlayListSlice = createSlice({
     clearPlayListState: (state) => {
       state.playLists = [];
       state.playList = {};
+      state.loading = false;
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getUserPlaylists.fulfilled, (state, action) => {
-      state.playLists = action.payload;
-    });
-    builder.addCase(getPlaylist.fulfilled, (state, action) => {
-      state.playList = action.payload;
-    });
+    builder
+      .addCase(getUserPlaylists.fulfilled, (state, action) => {
+        state.playLists = action.payload;
+        state.loading = false;
+      })
+      .addCase(getPlaylist.fulfilled, (state, action) => {
+        state.playList = action.payload;
+        state.loading = false;
+      })
+      .addCase(createPlaylist.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createPlaylist.fulfilled, (state, action) => {
+        state.playLists.push(action.payload);
+        state.loading = false;
+      })
+      .addCase(createPlaylist.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(deletePlaylist.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deletePlaylist.fulfilled, (state, action) => {
+        state.playLists = state.playLists.filter(
+          (playlist) => playlist._id !== action.payload
+        );
+        state.loading = false;
+      })
+      .addCase(deletePlaylist.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      });
   },
 });
 
