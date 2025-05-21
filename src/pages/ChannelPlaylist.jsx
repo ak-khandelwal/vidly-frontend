@@ -23,14 +23,15 @@ function ChannelPlaylist() {
   }, [dispatch, user]);
 
   return (
-    <div className="grid grid-cols-3 gap-4 p-5">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-4">
       {playList.map((items, i) => (
         <PlayList
-          key={i} // Use a unique identifier for better rendering
+          key={i}
           thumbnail={items.thumbnail}
           description={items.description}
           playlistName={items.playlistName}
           playlistId={items._id}
+          videos={items.videos}
         />
       ))}
     </div>
