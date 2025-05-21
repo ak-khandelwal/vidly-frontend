@@ -9,6 +9,8 @@ import {
 } from "../app/slices/channelSlice";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { CgDanger } from "react-icons/cg";
+import { toggleSubscription } from "../app/slices/SubscriberSlice";
+import { selectCurrentUser } from "../app/slices/authSlice";
 
 function ChannelLayout() {
   const dispatch = useDispatch();
@@ -17,6 +19,7 @@ function ChannelLayout() {
   const active = useSelector(selectActive);
   const { userName } = useParams();
   const [error, setError] = useState(false);
+  const currentUser = useSelector(selectCurrentUser);
 
   const activeClass =
     "bg-white p-2 text-purple-600 border-b-2 border-purple-500 font-medium";
@@ -30,6 +33,11 @@ function ChannelLayout() {
       }
     })();
   }, [dispatch, userName]);
+
+  const handleSubscribe = async () => {
+    await dispatch(toggleSubscription({ channelId: channel?._id }));
+    dispatch(getChannel(userName));
+  };
 
   if (error) {
     return (
@@ -75,13 +83,34 @@ function ChannelLayout() {
             </div>
 
             {/* Channel Info */}
-            <div className="pt-2 sm:pb-2">
-              <h2 className="font-bold text-xl sm:text-2xl">
-                {channel?.fullName}
-              </h2>
-              <h3 className="text-zinc-400 text-sm sm:text-base">
-                @{channel?.userName}
-              </h3>
+            <div className="pt-2 sm:pb-2 flex items-center justify-between w-full">
+              <div>
+                <h2 className="font-bold text-xl sm:text-2xl">
+                  {channel?.fullName}
+                </h2>
+                <h3 className="text-zinc-400 text-sm sm:text-base">
+                  @{channel?.userName}
+                </h3>
+              </div>
+              {channel?._id === currentUser?._id ? (
+                <Link
+                  to={`/channel/${currentUser?.userName}`}
+                  className="px-6 py-2.5 bg-gradient-to-r from-[#8a63d2] to-[#ae7aff] text-black font-bold rounded-full hover:opacity-90 transition-opacity"
+                >
+                  View Channel
+                </Link>
+              ) : (
+                <button
+                  className={`px-6 py-2.5 rounded-full font-bold transition-colors ${
+                    !channel?.isSubscribed
+                      ? "bg-gradient-to-r from-[#8a63d2] to-[#ae7aff] text-black"
+                      : "bg-[#323232] text-white border border-gray-600"
+                  }`}
+                  onClick={handleSubscribe}
+                >
+                  {channel?.isSubscribed ? "Subscribed" : "Subscribe"}
+                </button>
+              )}
             </div>
           </div>
         </div>
