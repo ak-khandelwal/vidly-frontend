@@ -30,7 +30,7 @@ const NavBar = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
+      navigate(`/search?query=${searchQuery}`);
       setIsSearchOpen(false);
     }
   };
