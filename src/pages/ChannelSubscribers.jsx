@@ -8,11 +8,13 @@ import {
   selectChannelSubscriber,
   toggleSubscription,
 } from "../app/slices/SubscriberSlice";
+import { selectCurrentUser } from "../app/slices/authSlice";
 
 function ChannelSubscribers() {
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentChannel);
   const subscribers = useSelector(selectChannelSubscriber);
+  const currentUser = useSelector(selectCurrentUser);
 
   useEffect(() => {
     if (user) {
@@ -47,6 +49,7 @@ function ChannelSubscribers() {
           subscribed={item?.isSubscribed}
           channelId={item?._id}
           handleSubscribe={handleSubscribe}
+          currentUserId={currentUser?._id}
         />
       ))}
     </div>
