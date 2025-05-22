@@ -30,7 +30,7 @@ function Playlist() {
           {/* Playlist Thumbnail */}
           <div className="aspect-video w-full bg-purple-800/20 rounded-lg overflow-hidden mb-4">
             <img
-              src={playlist?.videos[0].thumbnail}
+              src={playlist?.videos?.length > 0 ? playlist?.videos[0].thumbnail : "/src/assets/EmptyPlaylist.png"}
               alt="Playlist thumbnail"
               className="w-full h-full object-cover"
             />

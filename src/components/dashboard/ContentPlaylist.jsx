@@ -93,7 +93,7 @@ const ContentPlaylist = () => {
               <div className="col-span-5 flex gap-4">
                 <div className="relative flex-shrink-0 rounded-lg  shadow-md">
                   <img
-                    src={playlist?.thumbnail || "/src/assets/EmptyPlaylist.png"}
+                    src={playlist?.videos > 0 ? playlist?.thumbnail : "/src/assets/EmptyPlaylist.png"}
                     alt="Playlist Thumbnail"
                     className="w-20 h-12 sm:w-28 sm:h-16 object-cover rounded-md"
                   />
