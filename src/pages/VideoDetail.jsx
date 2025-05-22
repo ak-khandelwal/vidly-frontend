@@ -105,11 +105,13 @@ function VideoDetail() {
           {/* Channel Info */}
           <div className="flex justify-between items-center mt-4">
             <div className="flex gap-4 items-center">
-              <img
-                src={video?.owner?.avatar}
-                alt="Channel avatar"
-                className="size-12 rounded-full border-2 border-[#ae7aff]"
-              />
+              <Link to={`/channel/${video?.owner?.userName}`}>
+                <img
+                  src={video?.owner?.avatar}
+                  alt="Channel avatar"
+                  className="size-12 rounded-full border-2 border-[#ae7aff]"
+                />
+              </Link>
               <div>
                 <h1 className="font-bold text-lg">{video?.owner?.fullName}</h1>
                 <h2 className="text-gray-400 text-sm">
