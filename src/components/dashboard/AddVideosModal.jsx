@@ -26,8 +26,6 @@ const AddVideosModal = ({ isOpen, onClose, playlist }) => {
 
   // Get existing video IDs from playlist
   const existingVideoIds = playlistData?.videos?.map(video => video._id) || [];
-  console.log(existingVideoIds, "existingVideoIds");
-  console.log(playlistData, "playlistData");
   
   // Fetch playlist details
   useEffect(() => {

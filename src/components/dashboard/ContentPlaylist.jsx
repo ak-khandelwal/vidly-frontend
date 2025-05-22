@@ -15,6 +15,7 @@ import {
   MdOutlineInfo,
 } from "react-icons/md";
 import PlaylistPopup from "./PlaylistPopup";
+import { Link } from "react-router-dom";
 
 const ContentPlaylist = () => {
   const dispatch = useDispatch();
@@ -101,9 +102,12 @@ const ContentPlaylist = () => {
                   </div>
                 </div>
                 <div className="flex flex-col justify-center">
-                  <h3 className="font-medium text-white text-sm sm:text-base line-clamp-1 mb-1 group-hover:text-[#ae7aff] transition-colors">
+                  <Link 
+                    to={`/Playlist/${playlist?._id}`}
+                    className="font-medium text-white text-sm sm:text-base line-clamp-1 mb-1 group-hover:text-[#ae7aff] transition-colors"
+                  >
                     {playlist?.playlistName}
-                  </h3>
+                  </Link>
                   <p className="text-xs sm:text-sm text-gray-400 line-clamp-2">
                     {playlist?.description || "No description"}
                   </p>
