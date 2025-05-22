@@ -86,6 +86,20 @@ export const updatePlaylist = createAsyncThunk(
   }
 );
 
+export const removeVideoFromPlaylist = createAsyncThunk(
+  "removeVideoFromPlaylist",
+  async ({ playlistId, videoId }) => {
+    try {
+      if (!playlistId || !videoId) throw new Error("playlistId and videoId are required");
+      
+      await apiClient.patch(`playlist/remove/${videoId}/${playlistId}`);
+      return { playlistId, videoId };
+    } catch (error) {
+      throw new Error(error?.message || error);
+    }
+  }
+);
+
 const initialState = {
   playLists: [],
   playList: {},
@@ -151,6 +165,17 @@ const PlayListSlice = createSlice({
         state.loading = false;
       })
       .addCase(updatePlaylist.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(removeVideoFromPlaylist.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(removeVideoFromPlaylist.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(removeVideoFromPlaylist.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });
