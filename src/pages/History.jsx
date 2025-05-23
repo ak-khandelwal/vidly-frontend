@@ -1,21 +1,29 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getHistory, selectHistory } from "../app/slices/authSlice";
+import { getHistory, selectHistory, selectHistoryPagination } from "../app/slices/authSlice";
 import VideoList from "../components/videos/VideoList";
 import { MdOutlineHistory, MdOutlineInfo } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 function History() {
   const dispatch = useDispatch();
   const videos = useSelector(selectHistory);
+  const pagination = useSelector(selectHistoryPagination);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 10;
 
   useEffect(() => {
     setLoading(true);
-    dispatch(getHistory())
+    dispatch(getHistory({ page: currentPage, limit }))
       .unwrap()
       .then(() => setLoading(false))
       .catch(() => setLoading(false));
-  }, [dispatch]);
+  }, [dispatch, currentPage]);
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
 
   return (
     <div className="text-white max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
@@ -40,26 +48,51 @@ function History() {
             Videos you watch will appear here. Explore some videos to start
             building your watch history.
           </p>
-          <button className="mt-6 bg-gradient-to-r from-[#ae7aff] to-[#8a5fff] hover:from-[#9d6aff] hover:to-[#7946ff] text-white font-medium py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-105">
+          <Link to={'/'} className="mt-6 bg-gradient-to-r from-[#ae7aff] to-[#8a5fff] hover:from-[#9d6aff] hover:to-[#7946ff] text-white font-medium py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-105">
             Explore Videos
-          </button>
+          </Link>
         </div>
       ) : (
-        <div className="flex flex-col gap-6">
-          {videos.map((video, index) => (
-            <VideoList
-              key={index}
-              thumbnail={video?.thumbnail}
-              avatar={video?.owner?.avatar}
-              title={video?.title}
-              description={video?.description}
-              videoId={video._id}
-              views={video?.views}
-              channalName={video?.owner?.userName}
-              createdAt={video?.createdAt}
-            />
-          ))}
-        </div>
+        <>
+          <div className="flex flex-col gap-6">
+            {videos.map((historyItem) => (
+              <VideoList
+                key={historyItem._id}
+                thumbnail={historyItem.video?.thumbnail}
+                avatar={historyItem.video?.owner?.avatar}
+                title={historyItem.video?.title}
+                description={historyItem.video?.description}
+                videoId={historyItem.video?._id}
+                views={historyItem.video?.views}
+                channalName={historyItem.video?.owner?.userName}
+                createdAt={historyItem.watchedAt}
+              />
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {pagination.totalPages > 1 && (
+            <div className="flex justify-center items-center gap-2 mt-8">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-4 py-2 rounded-lg bg-[#272727] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#333333] transition-colors"
+              >
+                Previous
+              </button>
+              <span className="text-gray-400">
+                Page {currentPage} of {pagination.totalPages}
+              </span>
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === pagination.totalPages}
+                className="px-4 py-2 rounded-lg bg-[#272727] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#333333] transition-colors"
+              >
+                Next
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

@@ -143,13 +143,11 @@ export const coverImageUpdate = createAsyncThunk(
 );
 export const getHistory = createAsyncThunk(
   "getHistory", 
-  async () => {
+  async ({ page = 1, limit = 10 }) => {
     try {
-     const response = await apiClient.get("/users/history") 
+     const response = await apiClient.get(`/users/history?page=${page}&limit=${limit}`) 
       return response.data.data;
-    } catch (
-      error
-    ) {
+    } catch (error) {
      throw new Error(error) 
     }
   }
@@ -157,6 +155,11 @@ export const getHistory = createAsyncThunk(
 const initialState = {
   user: null,
   userHistory: [],
+  historyPagination: {
+    currentPage: 1,
+    totalPages: 1,
+    totalHistory: 0
+  },
   status: false,
 };
 
@@ -191,7 +194,12 @@ const authSlice = createSlice({
       state.status = false;
     });
     builder.addCase(getHistory.fulfilled, (state, action) => {
-      state.userHistory = action.payload;
+      state.userHistory = action.payload.history;
+      state.historyPagination = {
+        currentPage: action.payload.currentPage,
+        totalPages: action.payload.totalPages,
+        totalHistory: action.payload.totalHistory
+      };
     })
   },
 });
@@ -201,3 +209,4 @@ export default authSlice.reducer;
 export const selectCurrentUser = (state) => state.auth.user;
 export const selectCurrentStatus = (state) => state.auth.status;
 export const selectHistory = (state) => state.auth.userHistory;
+export const selectHistoryPagination = (state) => state.auth.historyPagination;
