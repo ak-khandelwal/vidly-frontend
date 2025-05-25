@@ -1,15 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
-import { TbBrandGoogleAnalytics } from "react-icons/tb";
 import { BiSolidVideos } from "react-icons/bi";
 import { MdOutlineVideoLibrary } from "react-icons/md";
-import { RiFeedbackLine, RiFeedbackFill } from "react-icons/ri";
 import {
   IoHomeOutline,
   IoHome,
   IoSettingsOutline,
   IoSettings,
 } from "react-icons/io5";
-import { FaChartBar } from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
 
 const DashBoardBottomBar = () => {
   const location = useLocation();
@@ -38,22 +36,10 @@ const DashBoardBottomBar = () => {
       path: "Content",
     },
     {
-      icon: isActive("/Analytics") ? (
-        <FaChartBar className="size-6" />
-      ) : (
-        <TbBrandGoogleAnalytics className="size-6" />
-      ),
-      name: "Analytics",
-      path: "Analytics",
-    },
-    {
-      icon: isActive("/SendFeedback") ? (
-        <RiFeedbackFill className="size-6" />
-      ) : (
-        <RiFeedbackLine className="size-6" />
-      ),
-      name: "Feedback",
-      path: "/SendFeedback",
+      icon: <FaGithub className="size-6" />,
+      name: "GitHub",
+      path: "https://github.com/SugamChaudharry",
+      external: true
     },
     {
       icon: isActive("/Setting") ? (
@@ -70,16 +56,29 @@ const DashBoardBottomBar = () => {
     <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-800 z-50">
       <div className="flex justify-between items-center px-2">
         {itemsList.map((item, index) => (
-          <Link
-            key={index}
-            to={item.path}
-            className={`flex flex-col items-center py-2 px-3 ${
-              isActive(item.path) ? "text-white" : "text-zinc-400"
-            }`}
-          >
-            <div className="mb-1">{item.icon}</div>
-            <span className="text-xs">{item.name}</span>
-          </Link>
+          item.external ? (
+            <a
+              key={index}
+              href={item.path}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center py-2 px-3 text-zinc-400 hover:text-white"
+            >
+              <div className="mb-1">{item.icon}</div>
+              <span className="text-xs">{item.name}</span>
+            </a>
+          ) : (
+            <Link
+              key={index}
+              to={item.path}
+              className={`flex flex-col items-center py-2 px-3 ${
+                isActive(item.path) ? "text-white" : "text-zinc-400"
+              }`}
+            >
+              <div className="mb-1">{item.icon}</div>
+              <span className="text-xs">{item.name}</span>
+            </Link>
+          )
         ))}
       </div>
     </div>

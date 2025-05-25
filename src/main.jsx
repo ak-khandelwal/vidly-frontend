@@ -40,7 +40,6 @@ import ChannelLayout from './components/ChannelLayout';
 import VideoDetailLayout from './components/videos/VideoDetailLayout';
 import Dashboard from './pages/Dashboard';
 import DashboardContent from './pages/DashboardContent';
-import DashboardAnalytics from './pages/DashboardAnalytics';
 import ContentVideo from './components/dashboard/ContentVideo';
 import ContentTweets from './components/dashboard/ContentTweets';
 import ContentPlaylist from './components/dashboard/ContentPlaylist';
@@ -156,7 +155,6 @@ const router = createBrowserRouter([
           { path: 'Playlists', element: <ContentPlaylist /> },
         ],
       },
-      { path: 'Analytics', element: <DashboardAnalytics /> },
     ],
   },
   { path: '/TermsAndConditions', element: <TermsAndConditions /> },

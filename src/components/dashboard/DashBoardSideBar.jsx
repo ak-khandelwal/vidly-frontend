@@ -10,9 +10,7 @@ import {
 } from "react-icons/io5";
 import { BiSolidVideos } from "react-icons/bi";
 import { MdOutlineVideoLibrary } from "react-icons/md";
-import { RiFeedbackLine, RiFeedbackFill } from "react-icons/ri";
-import { TbBrandGoogleAnalytics } from "react-icons/tb";
-import { FaChartBar } from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../app/slices/authSlice";
 
@@ -52,26 +50,14 @@ function DashBoardSideBar({ defaultCollapsed = true, onToggle }) {
       name: "Content",
       path: "Content",
     },
-    {
-      icon: isActive("Analytics") ? (
-        <FaChartBar className="size-5" />
-      ) : (
-        <TbBrandGoogleAnalytics className="size-5" />
-      ),
-      name: "Analytics",
-      path: "Analytics",
-    },
   ];
 
   const itemsList2 = [
     {
-      icon: isActive("/SendFeedback") ? (
-        <RiFeedbackFill className="size-5" />
-      ) : (
-        <RiFeedbackLine className="size-5" />
-      ),
-      name: "Send Feedback",
-      path: "/SendFeedback",
+      icon: <FaGithub className="size-5" />,
+      name: "GitHub",
+      path: "https://github.com/SugamChaudharry",
+      external: true
     },
     {
       icon: isActive("/Setting") ? (
@@ -162,20 +148,35 @@ function DashBoardSideBar({ defaultCollapsed = true, onToggle }) {
         {/* Footer navigation */}
         <div className="space-y-1 px-2 pt-4 border-t border-zinc-800">
           {itemsList2.map((item, i) => (
-            <Link
-              to={item.path}
-              key={i}
-              className={`flex items-center rounded-lg px-3 py-2 transition-colors
-                        ${isActive(item.path)
-                  ? "bg-zinc-800 text-white"
-                  : "text-zinc-400 hover:bg-zinc-800/50 hover:text-white"
-                }`}
-            >
-              <div className={`${collapsed ? "mx-auto" : "mr-3"}`}>
-                {item.icon}
-              </div>
-              {!collapsed && <span>{item.name}</span>}
-            </Link>
+            item.external ? (
+              <a
+                href={item.path}
+                target="_blank"
+                rel="noopener noreferrer"
+                key={i}
+                className="flex items-center rounded-lg px-3 py-2 transition-colors text-zinc-400 hover:bg-zinc-800/50 hover:text-white"
+              >
+                <div className={`${collapsed ? "mx-auto" : "mr-3"}`}>
+                  {item.icon}
+                </div>
+                {!collapsed && <span>{item.name}</span>}
+              </a>
+            ) : (
+              <Link
+                to={item.path}
+                key={i}
+                className={`flex items-center rounded-lg px-3 py-2 transition-colors
+                          ${isActive(item.path)
+                    ? "bg-zinc-800 text-white"
+                    : "text-zinc-400 hover:bg-zinc-800/50 hover:text-white"
+                  }`}
+              >
+                <div className={`${collapsed ? "mx-auto" : "mr-3"}`}>
+                  {item.icon}
+                </div>
+                {!collapsed && <span>{item.name}</span>}
+              </Link>
+            )
           ))}
         </div>
 
