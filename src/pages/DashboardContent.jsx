@@ -1,18 +1,27 @@
 import { useSelector } from "react-redux";
-import { selectActive } from "../app/slices/dashboard";
+import { selectActive, selectStats, getChannelStats } from "../app/slices/dashboard";
 import { Link, Outlet } from "react-router-dom";
 import { TbUpload, TbVideoPlus } from "react-icons/tb";
 import { IoCreateOutline } from "react-icons/io5";
 import { RiPlayListAddFill } from "react-icons/ri";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import VideoPopUp from "../components/dashboard/VideoPopUp";
 import PlaylistPopup from "../components/dashboard/PlaylistPopup";
 import TweetPopUp from "../components/dashboard/TweetPopUp";
+import StatsGrid from "../components/dashboard/StatsGrid";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const DashboardContent = () => {
+  const dispatch = useDispatch();
   const active = useSelector(selectActive);
+  const stats = useSelector(selectStats);
   const [uploadPopup, setUploadPopup] = useState(false);
   const [popUps, setPopups] = useState([0, 0, 0]);
+
+  useEffect(() => {
+    dispatch(getChannelStats());
+  }, [dispatch]);
 
   const handleUploadPopup = () => setUploadPopup((prev) => !prev);
 
@@ -20,11 +29,23 @@ const DashboardContent = () => {
     const newArray = [0, 0, 0];
     newArray[index] = popUps[index] === 1 ? 0 : 1;
     setPopups(newArray);
-    setUploadPopup(false); // Close the dropdown when an option is selected
+    setUploadPopup(false);
   };
 
   return (
     <div className="h-full flex flex-col p-6">
+      {/* Stats Section */}
+      <div className="mb-8">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="font-bold text-2xl">Channel Analytics</h1>
+          <div className="text-sm text-gray-400">
+            {new Date().toLocaleString()}
+          </div>
+        </div>
+        <StatsGrid stats={stats} />
+      </div>
+
+      {/* Content Section */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
         <div className={`${uploadPopup && "hidden sm:block"} mb-4 sm:mb-0`}>
           <h1 className="font-bold text-2xl">Channel Content</h1>
