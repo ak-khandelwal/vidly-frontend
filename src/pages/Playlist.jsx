@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getPlaylist, selectPlayList } from "../app/slices/playListSlice";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { FaRegClock } from "react-icons/fa";
 
 function Playlist() {
@@ -50,7 +50,7 @@ function Playlist() {
       <div className="flex-1 p-6 overflow-y-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {playlist?.videos?.map((video) => (
-            <div
+            <Link to={`/watch/` + video?._id}
               key={video._id}
               className="bg-purple-900/10 rounded-lg overflow-hidden"
             >
@@ -70,11 +70,13 @@ function Playlist() {
               {/* Video Info */}
               <div className="p-4">
                 <div className="flex gap-3 mb-2">
-                  <img
-                    src={playlist?.owner?.avatar}
-                    alt={video.fullName}
-                    className="w-8 h-8 rounded-full"
-                  />
+                  <Link to={`/channel/` + playlist?.owner?.userName} >
+                    <img
+                      src={playlist?.owner?.avatar}
+                      alt={video.fullName}
+                      className="w-10 hover:border-2 hover:rounded-full hover:border-purple-100 h-10 rounded-full object-cover"
+                    />
+                  </Link>
                   <div>
                     <h3 className="font-medium truncate">{video.title}</h3>
                     <p className="text-sm text-gray-400">
@@ -86,11 +88,11 @@ function Playlist() {
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 export default Playlist;
