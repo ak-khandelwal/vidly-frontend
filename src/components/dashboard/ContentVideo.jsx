@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setActive } from "../../app/slices/dashboard";
 import {
   clearVideoState,
-  getVideos,
+  getUserVideos,
   incrementPageState,
   selectCurrentHasMore,
   selectCurrentPage,
@@ -51,7 +51,7 @@ const ContentVideo = () => {
       const entry = entries[0];
       if (entry.isIntersecting && hasMore && !loading) {
         setLoading(true);
-        dispatch(getVideos({ userId: user?._id, page, limit: 2 }))
+        dispatch(getUserVideos({ page, limit: 6 }))
           .unwrap()
           .then(() => {
             dispatch(incrementPageState());
@@ -70,7 +70,7 @@ const ContentVideo = () => {
     return () => {
       if (observer) observer.disconnect();
     };
-  }, [dispatch, page, user, hasMore, loading]);
+  }, [dispatch, page, hasMore, loading]);
 
   return (
     <div className="bg-[#1e1e1e] rounded-xl shadow-lg overflow-hidden border border-gray-800">

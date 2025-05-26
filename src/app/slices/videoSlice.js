@@ -49,6 +49,23 @@ export const getVideos = createAsyncThunk(
     }
   },
 );
+
+export const getUserVideos = createAsyncThunk(
+  "getUserVideos",
+  async ({ page, limit }) => {
+    try {
+      const url = new URL(`${BASE_URL}/videos/user`);
+      if (page) url.searchParams.set("page", page);
+      if (limit) url.searchParams.set("limit", limit);
+      
+      const response = await apiClient.get(url);
+      return response.data.data;
+    } catch (error) {
+      throw new Error(error?.message || error);
+    }
+  }
+);
+
 export const togglePublishStatus = createAsyncThunk(
   "togglePublishStatus",
   async ({ videoId }) => {
@@ -165,6 +182,7 @@ export const addComment = createAsyncThunk(
   },
 );
 
+
 const initialState = {
   videos: [],
   videoError: false,
@@ -207,6 +225,12 @@ const videoSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getVideos.fulfilled, (state, action) => {
+      const newVideos = action.payload.videos;
+      state.videos.push(...newVideos);
+      state.videoCount = action.payload.totalVideos;
+      state.hasMore = state.videos.length < state.videoCount;
+    });
+    builder.addCase(getUserVideos.fulfilled, (state, action) => {
       const newVideos = action.payload.videos;
       state.videos.push(...newVideos);
       state.videoCount = action.payload.totalVideos;
