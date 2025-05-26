@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getHistory, selectHistory, selectHistoryPagination } from "../app/slices/authSlice";
+import { clearWatchHistory } from "../app/slices/authSlice";
 import VideoList from "../components/videos/VideoList";
-import { MdOutlineHistory, MdOutlineInfo } from "react-icons/md";
+import { MdOutlineHistory, MdOutlineInfo, MdOutlineDelete } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 function History() {
@@ -25,11 +26,32 @@ function History() {
     setCurrentPage(newPage);
   };
 
+  const handleClearHistory = async () => {
+    try {
+      await dispatch(clearWatchHistory()).unwrap();
+      // Refresh the history list
+      dispatch(getHistory({ page: 1, limit }));
+    } catch (error) {
+      console.error("Failed to clear history:", error);
+    }
+  };
+
   return (
     <div className="text-white max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-      <div className="flex items-center gap-3 border-b border-gray-700 py-4 mb-6">
-        <MdOutlineHistory className="text-purple-400 size-7" />
-        <h1 className="text-2xl sm:text-3xl font-bold">Your Watch History</h1>
+      <div className="flex items-center justify-between border-b border-gray-700 py-4 mb-6">
+        <div className="flex items-center gap-3">
+          <MdOutlineHistory className="text-purple-400 size-7" />
+          <h1 className="text-2xl sm:text-3xl font-bold">Your Watch History</h1>
+        </div>
+        {videos.length > 0 && (
+          <button
+            onClick={handleClearHistory}
+            className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+          >
+            <MdOutlineDelete className="size-5" />
+            <span>Clear all history</span>
+          </button>
+        )}
       </div>
 
       {loading ? (

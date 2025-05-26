@@ -152,6 +152,32 @@ export const getHistory = createAsyncThunk(
     }
   }
 )
+export const removeFromWatchHistory = createAsyncThunk(
+  "removeFromWatchHistory",
+  async ({ videoId }) => {
+    try {
+      if (!videoId) {
+        throw new Error("videoId is required");
+      }
+      await apiClient.delete(`/videos/watch-history/${videoId}`);
+      return videoId;
+    } catch (error) {
+      throw new Error(error?.message || error);
+    }
+  }
+);
+
+export const clearWatchHistory = createAsyncThunk(
+  "clearWatchHistory",
+  async () => {
+    try {
+      await apiClient.delete("/videos/watch-history");
+      return true;
+    } catch (error) {
+      throw new Error(error?.message || error);
+    }
+  }
+);
 const initialState = {
   user: null,
   userHistory: [],
@@ -201,6 +227,16 @@ const authSlice = createSlice({
         totalHistory: action.payload.totalHistory
       };
     })
+    builder.addCase(removeFromWatchHistory.fulfilled, (state, action) => {
+      state.userHistory = state.userHistory.filter(
+        (video) => video.video._id !== action.payload
+      );
+      toast.success("Video removed from watch history");
+    });
+    builder.addCase(clearWatchHistory.fulfilled, (state) => {
+      state.userHistory = [];
+      toast.success("Watch history cleared");
+    });
   },
 });
 

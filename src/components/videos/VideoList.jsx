@@ -1,9 +1,11 @@
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { timeAgo } from "../../helpers/timeAgo";
 import { Link } from "react-router-dom";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { BiPlay } from "react-icons/bi";
 import { MdOutlineVisibility } from "react-icons/md";
+import { useDispatch } from "react-redux";
+import { removeFromWatchHistory } from "../../app/slices/authSlice";
 
 const VideoList = ({
   videoId,
@@ -18,11 +20,35 @@ const VideoList = ({
   const time = timeAgo(createdAt);
   const [showOptions, setShowOptions] = useState(false);
   const optionsRef = useRef(null);
+  const dispatch = useDispatch();
 
   const toggleOptions = (e) => {
     e.preventDefault();
     setShowOptions(!showOptions);
   };
+
+  const handleRemoveFromHistory = async (e) => {
+    e.preventDefault();
+    try {
+      await dispatch(removeFromWatchHistory({ videoId })).unwrap();
+      setShowOptions(false);
+    } catch (error) {
+      console.error("Failed to remove from history:", error);
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (optionsRef.current && !optionsRef.current.contains(event.target)) {
+        setShowOptions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="bg-[#1e1e1e] rounded-xl shadow-lg overflow-hidden border border-gray-800 hover:border-gray-700 transition-colors group">
@@ -87,14 +113,11 @@ const VideoList = ({
               className="absolute right-0 top-10 bg-[#272727] rounded-lg shadow-lg border border-gray-700 z-10 w-48"
             >
               <ul>
-                <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer transition-colors">
+                <li 
+                  onClick={handleRemoveFromHistory}
+                  className="px-4 py-2 hover:bg-gray-700 cursor-pointer transition-colors text-red-400 hover:text-red-300"
+                >
                   Remove from history
-                </li>
-                <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer transition-colors">
-                  Save to playlist
-                </li>
-                <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer transition-colors">
-                  Share
                 </li>
               </ul>
             </div>
