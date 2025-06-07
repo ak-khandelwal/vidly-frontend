@@ -165,7 +165,7 @@ const PlaylistSelectorModal = ({ isOpen, onClose, video }) => {
                     )
                   )}
                 </div>
-                <span className="text-white">{playlist.playlistName}</span>
+                <span className="text-white">{playlist.name}</span>
               </div>
             ))}
           </div>
