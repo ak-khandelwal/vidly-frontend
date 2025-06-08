@@ -6,10 +6,11 @@ import {
   IoHome,
   IoVideocamOutline,
   IoVideocam,
+  IoTime,
+  IoTimeOutline,
 } from "react-icons/io5";
 import { RiUserHeartLine, RiUserHeartFill } from "react-icons/ri";
-import { GiKiwiBird } from "react-icons/gi";
-
+import { AiOutlineHistory } from "react-icons/ai";
 const BottomBar = () => {
   const location = useLocation();
 
@@ -28,13 +29,13 @@ const BottomBar = () => {
       path: "/",
     },
     {
-      icon: (
-        <GiKiwiBird
-          className={`size-6 ${isActive("/tweets") ? "text-purple-500" : ""}`}
-        />
+      icon: isActive("/History") ? (
+        <IoTime className="size-6" />
+      ) : (
+        <IoTimeOutline className="size-6" />
       ),
-      name: "Tweets",
-      path: "/tweets",
+      name: "History",
+      path: "/History",
     },
     {
       icon: isActive("/Dashboard") ? (
@@ -44,15 +45,6 @@ const BottomBar = () => {
       ),
       name: "Content",
       path: "/Dashboard",
-    },
-    {
-      icon: isActive("/collections") ? (
-        <IoFolderOpen className="size-6" />
-      ) : (
-        <IoFolderOpenOutline className="size-6" />
-      ),
-      name: "Library",
-      path: "/collections",
     },
     {
       icon: isActive("/Subscriptions") ? (
