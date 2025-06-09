@@ -83,11 +83,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👨‍💻 Author
-
-- **Sugam Chaudhary**
-  - GitHub: [@SugamChaudharry](https://github.com/SugamChaudharry)
-
 ## 🙏 Acknowledgments
 
 - Special thanks to the open-source community for their amazing tools and libraries
