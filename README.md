@@ -4,8 +4,11 @@ Vidly is a modern, responsive video streaming platform built with React and Redu
 
 ## 🌐 Live Demo
 
-Visit the live demo at: [https://vidly.sugamwtw.tech/](https://vidly.sugamwtw.tech.app/)
+Visit the live demo at: [Vidly](http://aryan-vidly.netlify.app/)
 
+## 🧰 Backend Link
+
+Visit Backend here: [Vidly Backend](https://github.com/ak-khandelwal/vidly-backend)
 ## 🌟 Features
 
 - 🎥 Modern and responsive UI design
@@ -82,11 +85,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 👨‍💻 Author
-
-- **Sugam Chaudhary**
-  - GitHub: [@SugamChaudharry](https://github.com/SugamChaudharry)
 
 ## 🙏 Acknowledgments
 
